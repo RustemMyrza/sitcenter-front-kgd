@@ -20,8 +20,8 @@ export default {
       <span v-else>Ситуационный центр</span>
     </h1>
 
-     <SidebarLink to="/" icon="fas fa-columns">Dashboard</SidebarLink>
-    <SidebarLink to="/statistics" icon="fas fa-chart-bar">Analytics</SidebarLink>
+     <SidebarLink to="/" icon="fas fa-columns">Главная</SidebarLink>
+    <SidebarLink to="/statistics" icon="fas fa-chart-bar">Статистика</SidebarLink>
     <SidebarLink to="/friends" icon="fas fa-users">Friends</SidebarLink>
     <SidebarLink to="/image" icon="fas fa-image">Images</SidebarLink>
 
