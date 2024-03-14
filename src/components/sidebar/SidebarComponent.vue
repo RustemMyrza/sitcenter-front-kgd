@@ -13,17 +13,17 @@ export default {
 
 <template>
   <div class="sidebar" :style="{ width: sidebarWidth }">
-    <h1>
+    <h5>
       <span v-if="collapsed">
           <div class="fas fa-columns"></div>
       </span>
       <span v-else>Ситуационный центр</span>
-    </h1>
+    </h5>
 
      <SidebarLink to="/" icon="fas fa-columns">Главная</SidebarLink>
     <SidebarLink to="/statistics" icon="fas fa-chart-bar">Статистика</SidebarLink>
-    <SidebarLink to="/friends" icon="fas fa-users">Friends</SidebarLink>
-    <SidebarLink to="/image" icon="fas fa-image">Images</SidebarLink>
+    <SidebarLink to="/monitoring" icon="far fa-eye">Мониторинг</SidebarLink>
+    <SidebarLink to="/chat" icon="far fa-comments">Чат</SidebarLink>
 
     <span
       class="collapse-icon"
@@ -62,7 +62,7 @@ export default {
   flex-direction: column;
 }
 
-.sidebar h1 {
+.sidebar h5 {
   height: 2.5em;
 }
 

@@ -4,13 +4,20 @@ import { defineProps, ref } from "vue";
 
 // import { sidebarWidth } from "@/components/sidebar/state";
 const props = defineProps({
-  info: Object,
-  chart: Object,
+  info: {
+    type:Object,
+    required:true
+  },
+  chart: {
+    type:Object,
+    required:false
+  },
   dynamicComponent: {
     type: Object,
     required: true,
   },
 });
+
 const showModal = ref(false);
 const toggle = () => {
   showModal.value = !showModal.value;
@@ -46,7 +53,7 @@ const toggle = () => {
   <div v-if="showModal" class="chart" >
     <div class="close" @click="toggle()"><i class="fas fa-times"></i></div>
     <div class="header">
-      <div class="title">{{props.chart.title}}</div>
+      <div class="title">{{props.title}}</div>
     </div>
     <!-- <ChartComponent
       v-model:modelValue="showModal"

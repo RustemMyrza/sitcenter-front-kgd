@@ -10,6 +10,9 @@ import '@fortawesome/fontawesome-free/js/all'
 
 import VueApexCharts from "vue3-apexcharts";
 
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
+
 
 
 const app = createApp(App)
