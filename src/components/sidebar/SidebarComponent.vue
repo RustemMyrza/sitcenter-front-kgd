@@ -13,14 +13,21 @@ export default {
 
 <template>
   <div class="sidebar" :style="{ width: sidebarWidth }">
-    <h5>
-      <span v-if="collapsed">
-          <div class="fas fa-columns"></div>
-      </span>
-      <span v-else>Ситуационный центр</span>
-    </h5>
+    <router-link to="/">
+      <h5>
+        <span v-if="collapsed">
+          <img src="../../assets/logo.png" alt="" width="60%">
+        </span>
+        <div v-else class="flex">
+          <img src="../../assets/logo.png" alt="" width="15%"> 
+          <div class="flex justify-center items-center p-2">Ситуационный центр</div> 
+        </div>
+      </h5>
+    </router-link>
+    
 
-     <SidebarLink to="/" icon="fas fa-chart-bar">Временные показатели</SidebarLink>
+     <SidebarLink to="/amount-dash" icon="fas fa-chart-pie">Количественные показатели</SidebarLink>
+     <SidebarLink to="/time-dash" icon="fas fa-chart-bar">Временные показатели</SidebarLink>
      <SidebarLink to="/monitoring" icon="far fa-eye">Мониторинг</SidebarLink>
      <SidebarLink to="/employee-rate" icon="fas fa-poll-h">Рейтинг сотрудников</SidebarLink>
      <SidebarLink to="/tickets" icon="fas fa-ticket-alt">Билеты</SidebarLink>
@@ -67,6 +74,10 @@ export default {
   display: flex;
   flex-direction: column;
 }
+a{
+  text-decoration: none;
+  color: white;
+}
 
 .sidebar h5 {
  
@@ -83,7 +94,7 @@ export default {
   position: absolute;
   bottom: 0;
   padding: .5em;
-
+  
   color: rgba(255, 255, 255, 0.7);
   transition: 0.2s linear;
 }

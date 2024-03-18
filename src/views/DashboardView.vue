@@ -8,7 +8,7 @@ import DashboardTop from "@/components/blocks/dashboard/top/DashboardTop.vue";
 
 <template>
   <main>
-  <div class="title"><h1>Главная страница</h1></div>
+  <div class="title"><h1>Временные показатели</h1></div>
 
   <div class="topBlock">
     <DashboardTop/>

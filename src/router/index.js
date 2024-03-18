@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+
+import MainView from "@/views/MainView";
+import DashboardAmountView from "../views/DashboardAmountView.vue";
 import DashboardView from "@/views/DashboardView.vue";
 import MonitoringViewVue from "@/views/MonitoringView.vue";
 import EmployeeRate from "@/views/EmployeeRate";
@@ -11,10 +14,21 @@ import AlarmView from "@/views/AlarmView.vue";
 
 
 
+
 const routes = [
   {
     path: "/",
-    name: "dashboard",
+    name: "main",
+    component: MainView,
+  },
+  {
+    path: "/amount-dash",
+    name: "amountDash",
+    component: DashboardAmountView,
+  },
+  {
+    path: "/time-dash",
+    name: "timeDash",
     component: DashboardView,
   },
   {
