@@ -18,7 +18,7 @@ export default {
 
 <template>
   <router-link :to="to" class="link" :class="{ active: isActive }">
-    <i class="icon" :class="icon" />
+    <i class="icon" :class="icon"  />
     <transition name="fade">
       <span v-if="!collapsed">
         <slot />
@@ -46,7 +46,7 @@ export default {
   position: relative;
   font-weight: 400;
   user-select: none;
-  font-size: 1.5rem;
+  font-size: 1rem;
   margin: 0.4em 0;
   padding: 1rem;
   border-radius: 0.25em;
@@ -66,8 +66,19 @@ export default {
 
 .link .icon {
   flex-shrink: 0;
-  width: 50px;  
+  width: 20px;  
   margin-right: 1rem;
   
+}
+.link .icon .ring{
+  animation: ring 0.5s infinite alternate;
+}
+@keyframes ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(15deg);
+  }
 }
 </style>

@@ -1,0 +1,5 @@
+
+
+<template>
+    Tickets view
+</template>

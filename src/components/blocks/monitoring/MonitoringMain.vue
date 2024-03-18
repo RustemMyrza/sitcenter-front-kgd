@@ -2,16 +2,12 @@
 import { ref } from "vue";
 
 //monitoring images
-import worker from "@/assets/worker.png";
-import table from "@/assets/table.png";
-import table_transparent from "@/assets/table_transparent.png";
 
-import client from "@/assets/client.png";
-import waiting from "@/assets/waiting.png";
-// import waitin1 from "@/assets/waiting1.png";
-import waiting2 from "@/assets/waiting2.png";
+
 //monitoring images
 
+import WindowComponent from "./WindowComponent.vue";
+import WaitingComponent from "./WaitingComponent.vue";
 
 const infoObject = ref({
   windows: [
@@ -130,8 +126,6 @@ const infoObject = ref({
   ],
 });
 
-
-const isActive = ref(true)
 </script>
 
 <template>
@@ -157,56 +151,37 @@ const isActive = ref(true)
         <div class="indicators flex ">
             <div class="clientIndicator m-2 w-full">
                 <div class="inserviceClient p-2">
-                    <h4>Количество обслуживающихся клиентов: 44</h4>
+                    <h5>Количество обслуживающихся клиентов: 44</h5>
                 </div>
                 <div class="waitClient p-2">
-                    <h4>Количество ожидающих клиентов: 44</h4>
+                    <h5>Количество ожидающих клиентов: 44</h5>
                 </div>
             </div>
             <div class="operatorIndicator m-2 w-full">
                 <div class="onlineOperator p-2">
-                    <h4>Количество операторов в сети: 45</h4>
+                    <h5>Количество операторов в сети: 45</h5>
                 </div>
                 <div class="offlineOperator p-2">
-                    <h4>Количество операторов вне сети: 66</h4>
+                    <h5>Количество операторов вне сети: 66</h5>
                 </div>
             </div>
-            
         </div>
         <div v-if="infoObject" class="windows">
           <div class="waits">
-               
-                <div class="wait">
-                    <div class="status"></div>
-                    <img :src="waiting" alt="">
-                </div>
-               
-                <div class="wait">
-                    <div class="status"></div>
-                    <img :src="waiting2" alt="">
-                </div>
+               <WaitingComponent/>
+                
           </div>
           <div class="tables">
-            <div class="table">
-                <div class="operator">
-                    <div class="operatorInfo " >Алимханов Жанузак</div>
-                    <img :src="(worker)? worker :2" alt="">
-                </div>
-                <div class="tableImg" >
-                    <div class="tableImgInfo " :class="isActive ? 'alert' : 'inactive'">
-                        5
-                    </div>
-                    <img :src="(table_transparent)? table :2" alt="">
-                </div>
-                <div class="client">
-                    <div class="clientInfo ">
-                        Налог на имущество
-                    </div>
-                    <img :src="(client)? client :2" alt="">
-                </div>
-            </div>
+            <WindowComponent operator-name="Alan Brian" :isActive="true" in-service="true" />
+            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
+            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
+            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
+            <WindowComponent operator-name="Alan Brian" :is-active="false" in-service="true" />
+            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
+            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
+            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
+            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
             
-           
             
           </div>
         </div>
@@ -234,13 +209,13 @@ const isActive = ref(true)
     width: 100%;
     height: 100%;
     .indicators{
-        height: 20%;
+        height: fit-content;
         background-color:rgba(44, 44, 44, 0.308);
 
         .operatorIndicator{
             border-left: 2px solid white;
         }
-        h4{
+        h5{
             font-weight: 600;
             color: white;
         }
@@ -260,16 +235,7 @@ const isActive = ref(true)
             flex-wrap: wrap;
             
             padding: 1rem;
-            .wait{
-                width: 10%;
-                margin: 1rem 1rem;
-                .status{
-                    background-color: green;
-                    width: 45%;
-                    height: 5%;
-                    border-radius: 50%;
-                }
-            }
+            
         }
         .tables{
             overflow-y:scroll;
@@ -280,67 +246,7 @@ const isActive = ref(true)
             flex-direction: row;
             flex-wrap: wrap;
             padding: 1rem;
-            .table{
-                
-                width: 20%;
-                height: 20%;
-                position: relative;
-                margin: 2rem auto;
-                font-weight: 700;
-                .operator{
-                    position: absolute;
-                    top: 12%;
-                    left: 20%;
-                    width: 40%;
-                    .operatorInfo{
-                        font-size: .8rem;
-                        
-                        position: absolute;
-                        top: -40%;
-                    }
-
-                    
-                }
-                .tableImg{
-                    position: absolute;
-                    left: 15%;
-                    top: 25%;
-                    width: 40%;
-                    z-index: 1;
-                    .tableImgInfo{
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        position: absolute;
-                        font-size: 1.5rem;
-                        left: -20%;
-                        top: -25%;
-                        width: 40%;
-                        height: 40%;
-                        border-radius: 50%;
-                        background-color:rgba(255, 255, 255, 0.733);
-                    }
-                    .alert{
-                        color: white;
-                        background-color: rgb(238, 32, 32)!important;
-                        animation: pulse-animation 2s infinite;
-                    }
-                }
-                .client{
-                    position:absolute;
-                    left: 10%;
-                    top: 30%;
-                    width: 40%;
-                    z-index: 999;
-                    .clientInfo{
-                        position: absolute;
-                        font-size: 0.8rem;
-                        left: -80%;
-                        top: 80%;
-                    }
-                }
-
-            }
+           
         }
 
     }

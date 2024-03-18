@@ -20,11 +20,17 @@ export default {
       <span v-else>Ситуационный центр</span>
     </h5>
 
-     <SidebarLink to="/" icon="fas fa-columns">Главная</SidebarLink>
-    <SidebarLink to="/statistics" icon="fas fa-chart-bar">Статистика</SidebarLink>
-    <SidebarLink to="/monitoring" icon="far fa-eye">Мониторинг</SidebarLink>
-    <SidebarLink to="/chat" icon="far fa-comments">Чат</SidebarLink>
-
+     <SidebarLink to="/" icon="fas fa-chart-bar">Временные показатели</SidebarLink>
+     <SidebarLink to="/monitoring" icon="far fa-eye">Мониторинг</SidebarLink>
+     <SidebarLink to="/employee-rate" icon="fas fa-poll-h">Рейтинг сотрудников</SidebarLink>
+     <SidebarLink to="/tickets" icon="fas fa-ticket-alt">Билеты</SidebarLink>
+      <span class="divider"></span>
+     <SidebarLink to="/chat" icon="fas fa-comments">Чат</SidebarLink>
+     <SidebarLink to="/users" icon="fas fa-user-tie">Пользователи</SidebarLink>
+     <span class="divider"></span>
+     <SidebarLink to="/server" icon="fas fa-server">Серверы</SidebarLink>
+     <SidebarLink to="/alarm" icon="fas fa-bell" >Alarm</SidebarLink>
+   
     <span
       class="collapse-icon"
       :class="{ 'rotate-180': collapsed }"
@@ -63,7 +69,14 @@ export default {
 }
 
 .sidebar h5 {
+ 
   height: 2.5em;
+}
+.divider{
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  margin: 0.5rem;
 }
 
 .collapse-icon {
@@ -79,4 +92,6 @@ export default {
   transform: rotate(180deg);
   transition: 0.2s linear;
 }
+
+
 </style>

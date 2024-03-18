@@ -1,0 +1,5 @@
+
+
+<template>
+    Servers page
+</template>

@@ -1,45 +1,64 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import DashboardView from '../views/DashboardView.vue'
-import StatView from '../views/StatView.vue'
-import MonitoringViewVue from '@/views/MonitoringView.vue'
-import ChatViewVue from '@/views/ChatView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+
+import DashboardView from "@/views/DashboardView.vue";
+import MonitoringViewVue from "@/views/MonitoringView.vue";
+import EmployeeRate from "@/views/EmployeeRate";
+import TicketsView from "@/views/TicketsView";
+import ChatViewVue from "@/views/ChatView.vue";
+import ServerView from "@/views/ServersView";
+import UsersView from "@/views/UsersView";
+import AlarmView from "@/views/AlarmView.vue";
+
+
 
 const routes = [
   {
-    path: '/',
-    name: 'dashboard',
-    component: DashboardView
+    path: "/",
+    name: "dashboard",
+    component: DashboardView,
   },
   {
-    path: '/statistics',
-    name: 'statistics',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: StatView
+    path: "/monitoring",
+    name: "monitoring",
+    component: MonitoringViewVue,
   },
   {
-    path: '/monitoring',
-    name: 'monitoring',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: MonitoringViewVue
+    path: "/employee-rate",
+    name: "employee-rate",
+    component: EmployeeRate,
   },
   {
-    path: '/chat',
-    name: 'chat',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: ChatViewVue
+    path: "/tickets",
+    name: "tickets",
+    component: TicketsView,
   },
-
-]
+  {
+    path: "/chat",
+    name: "chat",
+    component: ChatViewVue,
+  },
+  {
+    path: "/server",
+    name: "servers",
+    component: ServerView,
+  },
+  {
+    path: "/users",
+    name: "users",
+    component: UsersView,
+  },
+  {
+    path: "/alarm",
+    name: "alarm",
+    component: AlarmView,
+  },
+  
+  
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
