@@ -1,75 +1,75 @@
 <script>
-// const regionsById = [
-//   {
-//     id: "sev-kaz",
-//     name: "Северо-Казахстанская область",
-//   },
-//   {
-//     id: "akm",
-//     name: "Акмолинская область",
-//   },
-//   {
-//     id: "kost",
-//     name: "Костанайская область",
-//   },
-//   {
-//     id: "pavl",
-//     name: "Павлодарская область",
-//   },
-//   {
-//     id: "akt",
-//     name: "Актюбинская область",
-//   },
-//   {
-//     id: "zap-kaz",
-//     name: "Западно-Казахстанская область",
-//   },
-//   {
-//     id: "atr",
-//     name: "Атырауская область",
-//   },
-//   {
-//     id: "man",
-//     name: "Мангистауская область",
-//   },
-//   {
-//     id: "kyz",
-//     name: "Кызылординская область",
-//   },
-//   {
-//     id: "uly",
-//     name: "Улытауская область",
-//   },
-//   {
-//     id: "turk",
-//     name: "Туркестанская область",
-//   },
-//   {
-//     id: "alm",
-//     name: "Алматинская область",
-//   },
-//   {
-//     id: "kar",
-//     name: "Карагандинская область",
-//   },
-//   {
-//     id: "zham",
-//     name: "Жамбыльская область",
-//   },
-//   {
-//     id: "zhet",
-//     name: "Жетысуская область",
-//   },
+const regionsById = [
+  {
+    id: "sev-kaz",
+    name: "Северо-Казахстанская область",
+  },
+  {
+    id: "akm",
+    name: "Акмолинская область",
+  },
+  {
+    id: "kost",
+    name: "Костанайская область",
+  },
+  {
+    id: "pavl",
+    name: "Павлодарская область",
+  },
+  {
+    id: "akt",
+    name: "Актюбинская область",
+  },
+  {
+    id: "zap-kaz",
+    name: "Западно-Казахстанская область",
+  },
+  {
+    id: "atr",
+    name: "Атырауская область",
+  },
+  {
+    id: "man",
+    name: "Мангистауская область",
+  },
+  {
+    id: "kyz",
+    name: "Кызылординская область",
+  },
+  {
+    id: "uly",
+    name: "Улытауская область",
+  },
+  {
+    id: "turk",
+    name: "Туркестанская область",
+  },
+  {
+    id: "alm",
+    name: "Алматинская область",
+  },
+  {
+    id: "kar",
+    name: "Карагандинская область",
+  },
+  {
+    id: "zham",
+    name: "Жамбыльская область",
+  },
+  {
+    id: "zhet",
+    name: "Жетысуская область",
+  },
 
-//   {
-//     id: "vost-kaz",
-//     name: "Восточно-Казахстанская область",
-//   },
-//   {
-//     id: "abai",
-//     name: "Абайская область",
-//   },
-// ];
+  {
+    id: "vost-kaz",
+    name: "Восточно-Казахстанская область",
+  },
+  {
+    id: "abai",
+    name: "Абайская область",
+  },
+];
 export default {
   components: {},
   data() {
@@ -81,15 +81,14 @@ export default {
 
       selectedRegion: "",
       currentRegion: null,
+
+      
     };
   },
   methods: {
-    changeColor() {
-      const mapPart = document.getElementById("sev-kaz");
-      mapPart.style.fill = "yellow";
-    },
     selectRegion(region) {
-      this.selectedRegion = region;
+      this.selectedRegion = regionsById.find((e) => region === e.id).name;
+
       if (this.currentRegion) {
         const previousRegion = document.getElementById(this.currentRegion);
         previousRegion.style.fill = "";
@@ -109,8 +108,10 @@ export default {
 
       mapPart.style.fill = "#4FCB1D";
     },
+   
+
   },
-  mounted() {},
+ 
 };
 </script>
 <template>
@@ -118,6 +119,14 @@ export default {
     <h3>Главная страница</h3>
   </div>
   <div class="main-body">
+    <div
+    v-if="showHoverDiv"
+    :style="{ left: mouseX + 'px', top: mouseY + 'px' }"
+    class="hover-div"
+  >
+    Hovered content
+  </div>
+
     <div class="map">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -596,6 +605,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Западно-Казахстанская область
         </text>
@@ -606,6 +616,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Атырауская область
         </text>
@@ -616,6 +627,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Мангистауская область
         </text>
@@ -626,6 +638,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Актюбинская область
         </text>
@@ -636,6 +649,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Костанайская область
         </text>
@@ -646,6 +660,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Кызылординская область
         </text>
@@ -656,6 +671,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Туркестанская область
         </text>
@@ -666,6 +682,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Жамбылская область
         </text>
@@ -676,6 +693,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Алматинская область
         </text>
@@ -686,6 +704,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Жетысуйская область
         </text>
@@ -696,6 +715,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Восточно-Казахстанская
         </text>
@@ -706,6 +726,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Абайская область
         </text>
@@ -716,6 +737,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Улытауская область
         </text>
@@ -726,6 +748,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Карагандинская область
         </text>
@@ -736,6 +759,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Северо-Казахстанская область
         </text>
@@ -746,6 +770,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Акмолинская область
         </text>
@@ -756,6 +781,7 @@ export default {
           text-anchor="middle"
           fill="black"
           font-weight="bold"
+          style="pointer-events: none"
         >
           Павлодарская область
         </text>
@@ -763,7 +789,7 @@ export default {
     </div>
     <div class="mapInfo mt-4">
       <h1>
-        {{ selectedRegion }}
+        Выбранный регион: {{ selectedRegion ? selectedRegion : "Все регионы" }}
       </h1>
       <div class="info-title">
         <h3>Основная информация</h3>
@@ -817,9 +843,5 @@ svg path:hover {
   stroke-width: 3;
 }
 
-/* Style a specific path using attribute selector */
-[path-title="Aral Sea"] {
-  fill: #0000ff;
-  /* Change fill color for path with title "Aqmola oblysy" */
-}
+
 </style>
