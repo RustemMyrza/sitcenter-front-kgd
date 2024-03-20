@@ -16,10 +16,12 @@ export default {
     <router-link to="/">
       <h5>
         <span v-if="collapsed">
-          <img src="../../assets/logo.png" alt="" width="60%">
+          <span class="flex justify-center items-center"> 
+            <img src="../../assets/logo.png" alt="" width="60%">
+          </span>
         </span>
         <div v-else class="flex">
-          <img src="../../assets/logo.png" alt="" width="15%"> 
+           <img src="../../assets/logo.png" alt="" width="15%"> 
           <div class="flex justify-center items-center p-2">Ситуационный центр</div> 
         </div>
       </h5>
@@ -27,6 +29,7 @@ export default {
     
 
      <SidebarLink to="/amount-dash" icon="fas fa-chart-pie">Количественные показатели</SidebarLink>
+     <!-- <SidebarLink to="/time-dash" icon="fas fa-chart-bar">Временные показатели</SidebarLink> -->
      <SidebarLink to="/time-dash" icon="fas fa-chart-bar">Временные показатели</SidebarLink>
      <SidebarLink to="/monitoring" icon="far fa-eye">Мониторинг</SidebarLink>
      <SidebarLink to="/employee-rate" icon="fas fa-poll-h">Рейтинг сотрудников</SidebarLink>
@@ -38,13 +41,13 @@ export default {
      <SidebarLink to="/server" icon="fas fa-server">Серверы</SidebarLink>
      <SidebarLink to="/alarm" icon="fas fa-bell" >Alarm</SidebarLink>
    
-    <span
+    <!-- <span
       class="collapse-icon"
       :class="{ 'rotate-180': collapsed }"
       @click="toggleSidebar"
     >
       <i class="fas fa-angle-double-left" />
-    </span>
+    </span> -->
   </div>
 </template>
 

@@ -1,6 +1,12 @@
+
+import { toggleSidebar } from '../sidebar/state';
+<script setup>
+import { toggleSidebar,collapsed } from "@/components/sidebar/state";
+</script>
+
 <template>
   <div class="header-container flex justify-between items-center">
-    <div class="toggleIcon p-4">
+    <div @click="toggleSidebar" :class="{ 'rotate-180': collapsed }" class="toggleIcon p-4">
       <i class="fas fa-angle-double-left" />
     </div>
     <div class="headerInfo flex items-center">
@@ -37,10 +43,17 @@
 </template>
 
 <style lang="scss" scoped>
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: 0.2s linear;
+}
 .header-container {
   width: 100%;
 
   background-color: rgb(232, 238, 238);
+  .toggleIcon{
+    cursor: pointer;
+  }
   .headerInfo {
     font: 50px;
     div {

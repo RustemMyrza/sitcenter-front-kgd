@@ -1,7 +1,6 @@
 <script setup>
 
 
-import DashboardTop from "@/components/blocks/dashboard/top/DashboardTop.vue";
 
 
 </script>
@@ -11,7 +10,7 @@ import DashboardTop from "@/components/blocks/dashboard/top/DashboardTop.vue";
   <div class="title"><h1>Временные показатели</h1></div>
 
   <div class="topBlock">
-    <DashboardTop/>
+   
   </div>
 
   

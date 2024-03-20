@@ -64,6 +64,7 @@ export default {
   background-color: var(--sidebar-item-active);
 }
 
+
 .link .icon {
   flex-shrink: 0;
   width: 20px;  

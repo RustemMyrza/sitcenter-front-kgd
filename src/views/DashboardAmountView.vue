@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 const branchTickets = [
   {
     branchName: "Карагандинская область",
@@ -1163,8 +1164,8 @@ const branchTickets = [
     ],
   },
 ];
-
-const series = [
+const categories = ref(branchTickets.map((e) => e.branchName))
+const series = ref([
   {
     name: "Обслуженные",
     data: branchTickets.map((item) => item.stateTickets.COMPLETED),
@@ -1185,7 +1186,7 @@ const series = [
     name: "Alarm",
     data: branchTickets.map((item) => item.stateTickets.ALARM),
   },
-];
+]);
 const chartOptions = {
   chart: {
     type: "bar",
@@ -1198,10 +1199,10 @@ const chartOptions = {
       enabled: true,
     },
     events: {
-    dataPointSelection: (event, chartContext, config) => {
-      console.log("chart",chartContext, config);
-    }
-  }
+      legendClick: function (chartContext, seriesIndex, config) {
+        console.log(chartContext, seriesIndex, config);
+      },
+    },
     // events: {
     //   dataPointSelection: function(event, chartContext, config) {
     //     console.log(event,chartContext,config)
@@ -1242,8 +1243,8 @@ const chartOptions = {
   },
   xaxis: {
     type: "string",
-    categories: branchTickets.map((e) => e.branchName),
-
+    categories: categories.value,
+    // categories: ["<a href='/tickets'> 1991</a>", 1992, 1993, 1994, 1995, 1996, 1997, 1998],
   },
   legend: {
     position: "top",
@@ -1255,13 +1256,46 @@ const chartOptions = {
 };
 
 const handleBarClick = (event, chartContext, config) => {
-    console.log("Bar clicked!", event, chartContext, config);
- 
+  // console.log("Bar clicked!", event, chartContext, config);
+  // console.log(config.selectedDataPoints[0][0]);
+  // console.log(chartContext);
+  const point = config.dataPointIndex;
+  const branch = branchTickets[point];
+  if (branch.children) {
+    console.log(categories.value)
+    categories.value = branch.children.map((e) => e.branchName)
+    console.log(categories.value)
+    series.value = [
+      {
+        name: "Обслуженные",
+        data: branch.children.map((item) => item.stateTickets.COMPLETED),
+      },
+      {
+        name: "Обслуживающиеся",
+        data: branch.children.map((item) => item.stateTickets.INSERVICE),
+      },
+      {
+        name: "Ожидающие",
+        data: branch.children.map((item) => item.stateTickets.NEW),
+      },
+      {
+        name: "Не подошедшие",
+        data: branch.children.map((item) => item.stateTickets.MISSED),
+      },
+      {
+        name: "Alarm",
+        data: branch.children.map((item) => item.stateTickets.ALARM),
+      },
+    ];
+    
+  }
+  console.log();
+
   // Add your custom logic here for handling bar clicks
 };
-const handleXClick = (event, chartContext, config)=>{
-    console.log(event, chartContext, config);
-}
+const handleXClick = (event, chartContext, config) => {
+  console.log(event, chartContext, config);
+};
 // const selectScrollHandler = (e,charts,opts)=>{
 //     console.log(e,charts,opts)
 // }
@@ -1278,9 +1312,8 @@ const handleXClick = (event, chartContext, config)=>{
         height="500"
         :options="chartOptions"
         :series="series"
-       
-        @dataPointSelection = "handleBarClick"
-        @xAxisLabelClick = "handleXClick"
+        @dataPointSelection="handleBarClick"
+        @xAxisLabelClick="handleXClick"
       ></apexchart>
     </div>
     <div class="tickets"></div>
@@ -1290,5 +1323,13 @@ const handleXClick = (event, chartContext, config)=>{
 <style lang="scss" scoped>
 #chart {
   width: 100%;
+}
+::ng-deep.apexcharts-xaxis-label {
+  opacity: 1;
+  pointer-events: all;
+}
+
+::ng-deep.apexcharts-xaxis-label:hover {
+  cursor: pointer;
 }
 </style>

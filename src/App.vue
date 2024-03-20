@@ -2,8 +2,9 @@
 import SidebarComponent from "@/components/sidebar/SidebarComponent.vue";
 import { sidebarWidth } from "@/components/sidebar/state";
 import HeaderComponent from "./components/header/HeaderComponent.vue";
+import DashboardTop from "./components/header/DashboardTop.vue";
 export default {
-  components: { SidebarComponent, HeaderComponent },
+  components: { SidebarComponent, HeaderComponent,DashboardTop },
   setup() {
     return { sidebarWidth };
   },
@@ -17,7 +18,11 @@ export default {
   <div class="main">
     <div :style="{ 'margin-left': sidebarWidth }">
       <div class="head">
-        <header-component />
+        <header-component  />
+        <div class="dashboard">
+          <dashboard-top/>
+        </div>
+        
       </div>
       <router-view />
     </div>
@@ -44,5 +49,9 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.dashboard{
+  margin: 0.5rem auto;
 }
 </style>

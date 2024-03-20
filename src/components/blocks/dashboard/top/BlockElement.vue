@@ -8,25 +8,18 @@ const props = defineProps({
     type:Object,
     required:true
   },
-  chart: {
-    type:Object,
-    required:false
-  },
-  dynamicComponent: {
-    type: Object,
-    required: true,
-  },
+ 
 });
 
 const showModal = ref(false);
-const toggle = () => {
-  showModal.value = !showModal.value;
-};
+// const toggle = () => {
+//   showModal.value = !showModal.value;
+// };
 // console.log(props.info.modalWidth)
 </script>
 
 <template>
-  <div class="container" :style="{ backgroundColor: info.color }">
+  <div class="block-container" :style="{ backgroundColor: info.color }">
     <div v-if="showModal" class="modalBlack"></div>
     <div class="box flex">
       <div class="iconbox">
@@ -34,37 +27,44 @@ const toggle = () => {
           <i :class="props.info.icon"></i>
         </div>
         <div class="button text-white font-sans">
-          <v-btn @click="toggle()" variant="outlined">
-            <i class="fas fa-external-link-alt"></i>
-          </v-btn>
+          <router-link :to="props.info.link" variant="outlined">
+            <i class="fas fa-external-link-alt fa-2xl"></i>
+          </router-link>
         </div>
       </div>
 
-      <div class="textbox">
+      
         <div class="text text-white font-sans">
-          <div class="amount text-white">
+          <div class="amount text-white flex justify-center items-center">
             <h1>{{ props.info.number }}</h1>
           </div>
-          {{ props.info.text }}
-        </div>
+          <div class="textBlock  flex justify-center items-center">
+            {{ props.info.text }}
+          </div>
+          
+        
       </div>
     </div>
   </div>
-  <div v-if="showModal" class="chart" >
+  <!-- <div v-if="showModal" class="chart" >
     <div class="close" @click="toggle()"><i class="fas fa-times"></i></div>
     <div class="header">
       <div class="title">{{props.title}}</div>
     </div>
-    <!-- <ChartComponent
+     <ChartComponent
       v-model:modelValue="showModal"
       :chartOptions="props.chart"
-     /> -->
+     /> 
      <component :is="dynamicComponent" :chartOptions="props.chart" />
-  </div>
+  </div> -->
 </template>
 
 <style lang="scss" scoped>
-.container {
+a{
+  color: white;
+}
+.block-container {
+ 
   padding: 0.5rem auto;
   border-radius: 1rem;
   box-shadow: 5px 8px 5px 0px rgba(0, 0, 0, 0.5);
@@ -72,6 +72,9 @@ const toggle = () => {
     .iconbox {
       padding: 0.5rem;
       border-right: 1px solid rgb(255, 255, 255);
+      .button{
+        margin: .5rem 0 0 0 ;
+      }
     }
   }
   .modalBlack {
@@ -92,12 +95,20 @@ const toggle = () => {
   }
   .amount {
     width: 100%;
-    padding: 0.5rem;
+    height: 50%;
     font-size: 30px;
     font-weight: bold;
+
   }
   .text {
-    padding: 1rem;
+    width: 100%;
+    height: 100%;
+    padding: .5rem;
+    .textBlock{
+      width: 100%;
+      height: 50%;
+    }
+   
   }
 }
 .chart {
