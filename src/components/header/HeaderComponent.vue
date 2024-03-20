@@ -58,7 +58,7 @@ import { toggleSidebar,collapsed } from "@/components/sidebar/state";
     font: 50px;
     div {
       position: relative;
-      margin: 0 1rem 0 1rem;
+      margin: 0 .5rem 0 .5rem;
       .bell-amount {
         position: absolute;
         top: -50%;

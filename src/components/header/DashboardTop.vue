@@ -1131,7 +1131,7 @@ const serverInfo = {
     link:"/time-dash"
 }
 const rateInfo = {
-    color:"green",
+    color:"#10877A",
     icon:"fas fa-vote-yea",
     text:"Средняя оценка",
     number:99,
@@ -1145,15 +1145,15 @@ const badRate = {
     link:"/tickets?tickets=bad"
 }
 const maxWaitTime = {
-    color:"yellow",
-    icon:"fas fa-exclamation-circle",
+    color:"#F38E1B",
+    icon:"fas fa-clock",
     text:"Максимальное время ожидания",
     number:41,
     link:"/time-dash"
 }
 const maxServTime = {
-    color:"orange",
-    icon:"fas fa-exclamation-circle",
+    color:"#6C1895",
+    icon:"fas fa-people-arrows",
     text:"Максимальное время обслуживания",
     number:12,
     link:"/time-dash"

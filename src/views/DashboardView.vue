@@ -1,4 +1,12 @@
-<script setup>
+<script >
+export default{
+  components:{
+
+  },
+  data(){
+    
+  },
+}
 
 
 
@@ -7,7 +15,7 @@
 
 <template>
   <main>
-  <div class="title"><h1>Временные показатели</h1></div>
+  <div class="title"><h3>Временные показатели</h3></div>
 
   <div class="topBlock">
    

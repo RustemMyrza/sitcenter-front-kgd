@@ -64,16 +64,21 @@ a{
   color: white;
 }
 .block-container {
- 
+  
   padding: 0.5rem auto;
   border-radius: 1rem;
   box-shadow: 5px 8px 5px 0px rgba(0, 0, 0, 0.5);
+  
   .box {
     .iconbox {
-      padding: 0.5rem;
+      
       border-right: 1px solid rgb(255, 255, 255);
+      .icon{
+        padding: .5rem;
+        border-bottom: 2px solid rgb(255, 255, 255);
+      }
       .button{
-        margin: .5rem 0 0 0 ;
+        padding: .5rem;
       }
     }
   }

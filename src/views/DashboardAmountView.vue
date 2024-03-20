@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+
 const branchTickets = [
   {
     branchName: "Карагандинская область",
@@ -1164,7 +1165,41 @@ const branchTickets = [
     ],
   },
 ];
-const categories = ref(branchTickets.map((e) => e.branchName))
+
+const isChild = ref(false);
+// const search = ref("");
+// const headers = ref([
+//   {
+//     align: "start",
+//     key: "name",
+//     sortable: false,
+//     title: "Dessert (100g serving)",
+//   },
+//   { key: "calories", title: "Calories" },
+//   { key: "fat", title: "Fat (g)" },
+//   { key: "carbs", title: "Carbs (g)" },
+//   { key: "protein", title: "Protein (g)" },
+//   { key: "iron", title: "Iron (%)" },
+// ]);
+// const desserts = ref([
+//   {
+//     name: "Frozen Yogurt",
+//     calories: 159,
+//     fat: 6.0,
+//     carbs: 24,
+//     protein: 4.0,
+//     iron: 1,
+//   },
+//   {
+//     name: "Ice cream sandwich",
+//     calories: 237,
+//     fat: 9.0,
+//     carbs: 37,
+//     protein: 4.3,
+//     iron: 1,
+//   },
+// ]);
+
 const series = ref([
   {
     name: "Обслуженные",
@@ -1187,7 +1222,9 @@ const series = ref([
     data: branchTickets.map((item) => item.stateTickets.ALARM),
   },
 ]);
-const chartOptions = {
+const categories = ref(branchTickets.map((e) => e.branchName));
+
+const chartOptions = ref({
   chart: {
     type: "bar",
     height: 350,
@@ -1253,18 +1290,17 @@ const chartOptions = {
   fill: {
     opacity: 1,
   },
-};
+});
+
+const apexChart = ref(null);
 
 const handleBarClick = (event, chartContext, config) => {
-  // console.log("Bar clicked!", event, chartContext, config);
-  // console.log(config.selectedDataPoints[0][0]);
-  // console.log(chartContext);
   const point = config.dataPointIndex;
   const branch = branchTickets[point];
-  if (branch.children) {
-    console.log(categories.value)
-    categories.value = branch.children.map((e) => e.branchName)
-    console.log(categories.value)
+  console.log(branch);
+  if (branch.children && !isChild.value) {
+    categories.value = branch.children.map((e) => e.branchName);
+
     series.value = [
       {
         name: "Обслуженные",
@@ -1287,18 +1323,98 @@ const handleBarClick = (event, chartContext, config) => {
         data: branch.children.map((item) => item.stateTickets.ALARM),
       },
     ];
-    
+    updateChart();
+    isChild.value = true;
   }
-  console.log();
 
   // Add your custom logic here for handling bar clicks
 };
-const handleXClick = (event, chartContext, config) => {
-  console.log(event, chartContext, config);
+
+const updateChart = () => {
+  apexChart.value.updateOptions({
+    xaxis: {
+      categories: categories.value,
+    },
+    series: [
+      {
+        data: series.value,
+      },
+    ],
+  });
 };
-// const selectScrollHandler = (e,charts,opts)=>{
-//     console.log(e,charts,opts)
-// }
+const backChart = () => {
+  categories.value = branchTickets.map((e) => e.branchName);
+  series.value = [
+    {
+      name: "Обслуженные",
+      data: branchTickets.map((item) => item.stateTickets.COMPLETED),
+    },
+    {
+      name: "Обслуживающиеся",
+      data: branchTickets.map((item) => item.stateTickets.INSERVICE),
+    },
+    {
+      name: "Ожидающие",
+      data: branchTickets.map((item) => item.stateTickets.NEW),
+    },
+    {
+      name: "Не подошедшие",
+      data: branchTickets.map((item) => item.stateTickets.MISSED),
+    },
+    {
+      name: "Alarm",
+      data: branchTickets.map((item) => item.stateTickets.ALARM),
+    },
+  ];
+  isChild.value = false;
+  updateChart();
+};
+
+onMounted(() => {
+  // console.log(apexChart.value)
+});
+</script>
+
+<script>
+export default {
+  components: {},
+  data() {
+    return {
+      search: "",
+      headers: [
+        {
+          align: "start",
+          key: "name",
+          sortable: false,
+          title: "Dessert (100g serving)",
+        },
+        { key: "calories", title: "Calories" },
+        { key: "fat", title: "Fat (g)" },
+        { key: "carbs", title: "Carbs (g)" },
+        { key: "protein", title: "Protein (g)" },
+        { key: "iron", title: "Iron (%)" },
+      ],
+      desserts: [
+        {
+          name: "Frozen Yogurt",
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
+          protein: 4.0,
+          iron: 1,
+        },
+        {
+          name: "Ice cream sandwich",
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3,
+          iron: 1,
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <template>
@@ -1306,30 +1422,48 @@ const handleXClick = (event, chartContext, config) => {
     <div class="amount-title p-4">
       <h3>Количественные показатели</h3>
     </div>
-    <div id="chart">
+
+    <div class="chartBlock">
+      <v-btn @click="backChart()" v-if="isChild" class="back"
+        ><i class="fas fa-arrow-left fa-2xl"></i
+      ></v-btn>
       <apexchart
+        ref="apexChart"
         type="bar"
         height="500"
         :options="chartOptions"
         :series="series"
         @dataPointSelection="handleBarClick"
-        @xAxisLabelClick="handleXClick"
       ></apexchart>
     </div>
-    <div class="tickets"></div>
+    <div class="tickets">
+      <v-card title="Nutrition" flat>
+        <template v-slot:text>
+          <v-text-field
+            v-model="search"
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            hide-details
+            single-line
+          ></v-text-field>
+        </template>
+
+        <v-data-table
+          :headers="headers"
+          :items="desserts"
+          :search="search"
+        ></v-data-table>
+      </v-card>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-#chart {
+.chartBlock {
   width: 100%;
-}
-::ng-deep.apexcharts-xaxis-label {
-  opacity: 1;
-  pointer-events: all;
-}
-
-::ng-deep.apexcharts-xaxis-label:hover {
-  cursor: pointer;
+  .back {
+    border-radius: 1rem;
+  }
 }
 </style>
