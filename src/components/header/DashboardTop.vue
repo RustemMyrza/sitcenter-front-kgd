@@ -1128,7 +1128,7 @@ const serverInfo = {
     icon:"fas fa-server",
     text:"Количество неработающих УГД",
     number:554,
-    link:"/time-dash"
+    link:"/server"
 }
 const rateInfo = {
     color:"#10877A",

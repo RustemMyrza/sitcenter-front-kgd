@@ -1,1228 +1,31 @@
 <script setup>
 import { onMounted, ref } from "vue";
-
-const branchTickets = [
-  {
-    branchName: "Карагандинская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 132,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Район Алихан Бокейхана",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 15,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Балхаш",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 5,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Сарань",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 15,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Шахтинск",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 23,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Темир-Тау",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 22,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Абайский район Караганда",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 21,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Район Қазыбек би",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 31,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Павлодарская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 91,
-      DELAYED: 0,
-      ALARM: 1,
-    },
-    children: [
-      {
-        branchName: "Управление администрирования НДС в рамках ЕАЭС",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г. Аксу",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 7,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г. Экибастуз",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 56,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г. Павлодар",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 28,
-          DELAYED: 0,
-          ALARM: 1,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Акмолинская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 36,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Бурабайский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 2,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Кокшетау",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 23,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Косши",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 2,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г. Степногорску",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 9,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Целиноградский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "г. Шымкент",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 21,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Енбекшинский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 3,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Абайский район Шымкент",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 7,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Аль-Фарабийский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 2,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Каратауский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 6,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Район Туран",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 3,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Атырауская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 7,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Курмангазинский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Индерский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Махамбетский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Жылойский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г. Атырау",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 7,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Костанайская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 7,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Костанайский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 2,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Костанай",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 3,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Лисаковск",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Рудный",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 2,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "г.Алматы",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 136,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Ауэзовский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 20,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Бостандыкский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 23,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Жетысуский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 10,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Алмалинский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 33,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Турксибский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 19,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Медеуский  район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 13,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Алатауский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 13,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Наурызбайский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 5,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Алмалы ЦТО",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Алматы ЦТО",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Жетысу ЦТО",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Туркестанская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 1,
-      MISSED: 0,
-      COMPLETED: 7,
-      DELAYED: 0,
-      ALARM: 1,
-    },
-    children: [
-      {
-        branchName: "Ордабасинский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Казгуртский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 1,
-          MISSED: 0,
-          COMPLETED: 2,
-          DELAYED: 0,
-          ALARM: 1,
-        },
-      },
-      {
-        branchName: "Толебийский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 1,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Жетысайский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Сайрамский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 3,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Сарыагашский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Тюлькубасский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 1,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Туркестан",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Сауранский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Абайская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 8,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "г. Семей",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 8,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Жетысуйская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 15,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "г.Талдыкорган",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 15,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Алматинская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 124,
-      DELAYED: 0,
-      ALARM: 1,
-    },
-    children: [
-      {
-        branchName: "г. Капчагай",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Жамбылский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 12,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Илийский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 17,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Карасайский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 33,
-          DELAYED: 0,
-          ALARM: 1,
-        },
-      },
-      {
-        branchName: "Талгарский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 25,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Енбекшиказахский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 37,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Улытауская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 12,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "г.Жезказган",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 12,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Актюбинская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 6,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Мугалжарский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г. Актобе",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 6,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Восточно-Казахстанская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 19,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "г.Усть-Каменогорск",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 19,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Жамбылская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 27,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Кордайский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 5,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Шуский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Тараз",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 22,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Западно-Казахстанская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 7,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Бурлинский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г. Уральск",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 7,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "г.Астана",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 163,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "ЦТО Астана",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Алматинский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 59,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Байконурский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 26,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Есильский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Район Нұра",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 19,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Сарыаркинский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 59,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "ТП Ауежай - Астана",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Кызылординская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 0,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "г. Кызылорда",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Шиелийский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Мангистауская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 25,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "г. Жанаозен",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 0,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Мунайлинский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 20,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г. Актау",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 4,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "Бейнеуский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 1,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-  {
-    branchName: "Северо-Казахстанская область",
-    stateTickets: {
-      INSERVICE: 0,
-      NEW: 0,
-      MISSED: 0,
-      COMPLETED: 11,
-      DELAYED: 0,
-      ALARM: 0,
-    },
-    children: [
-      {
-        branchName: "Кызылжарский район",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 2,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-      {
-        branchName: "г.Петропавловск",
-        stateTickets: {
-          INSERVICE: 0,
-          NEW: 0,
-          MISSED: 0,
-          COMPLETED: 9,
-          DELAYED: 0,
-          ALARM: 0,
-        },
-      },
-    ],
-  },
-];
+import axios from "axios";
 
 const isChild = ref(false);
-// const search = ref("");
-// const headers = ref([
-//   {
-//     align: "start",
-//     key: "name",
-//     sortable: false,
-//     title: "Dessert (100g serving)",
-//   },
-//   { key: "calories", title: "Calories" },
-//   { key: "fat", title: "Fat (g)" },
-//   { key: "carbs", title: "Carbs (g)" },
-//   { key: "protein", title: "Protein (g)" },
-//   { key: "iron", title: "Iron (%)" },
-// ]);
-// const desserts = ref([
-//   {
-//     name: "Frozen Yogurt",
-//     calories: 159,
-//     fat: 6.0,
-//     carbs: 24,
-//     protein: 4.0,
-//     iron: 1,
-//   },
-//   {
-//     name: "Ice cream sandwich",
-//     calories: 237,
-//     fat: 9.0,
-//     carbs: 37,
-//     protein: 4.3,
-//     iron: 1,
-//   },
-// ]);
 
-const series = ref([
+const search = ref("");
+const headers = [
   {
-    name: "Обслуженные",
-    data: branchTickets.map((item) => item.stateTickets.COMPLETED),
+    align: "start",
+    key: "eventid",
+    sortable: false,
+    title: "event-id",
   },
-  {
-    name: "Обслуживающиеся",
-    data: branchTickets.map((item) => item.stateTickets.INSERVICE),
-  },
-  {
-    name: "Ожидающие",
-    data: branchTickets.map((item) => item.stateTickets.NEW),
-  },
-  {
-    name: "Не подошедшие",
-    data: branchTickets.map((item) => item.stateTickets.MISSED),
-  },
-  {
-    name: "Alarm",
-    data: branchTickets.map((item) => item.stateTickets.ALARM),
-  },
-]);
-const categories = ref(branchTickets.map((e) => e.branchName));
+  { key: "ticketno", title: "Номер билета" },
+  { key: "servicename", title: "Название услуги" },
+  { key: "idbranch", title: "Отделение" },
+  { key: "operator", title: "Оператор" },
+  { key: "starttime", title: "Время регистрации" },
+  { key: "waittime", title: "Время ожидания" },
+  { key: "startservtime", title: "Время обслуживания" },
+];
+const desserts = ref([]);
+const parentList = ref([]);
+
+const branchTickets = ref([]);
+const series = ref([]);
+const categories = ref([]);
 
 const chartOptions = ref({
   chart: {
@@ -1294,9 +97,9 @@ const chartOptions = ref({
 
 const apexChart = ref(null);
 
-const handleBarClick = (event, chartContext, config) => {
+const handleBarClick = async (event, chartContext, config) => {
   const point = config.dataPointIndex;
-  const branch = branchTickets[point];
+  const branch = branchTickets.value[point];
   console.log(branch);
   if (branch.children && !isChild.value) {
     categories.value = branch.children.map((e) => e.branchName);
@@ -1325,6 +128,21 @@ const handleBarClick = (event, chartContext, config) => {
     ];
     updateChart();
     isChild.value = true;
+    try {
+      const list = await axios.get(
+        `http://localhost:3000/api/v1/tickets/list/${branch.branchId}`,
+        {
+          headers: {
+            bearer: localStorage.getItem("authToken"),
+          },
+        }
+      );
+      desserts.value = list.data.data.tickets;
+
+      console.log(list);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // Add your custom logic here for handling bar clicks
@@ -1343,79 +161,82 @@ const updateChart = () => {
   });
 };
 const backChart = () => {
-  categories.value = branchTickets.map((e) => e.branchName);
-  series.value = [
-    {
-      name: "Обслуженные",
-      data: branchTickets.map((item) => item.stateTickets.COMPLETED),
-    },
-    {
-      name: "Обслуживающиеся",
-      data: branchTickets.map((item) => item.stateTickets.INSERVICE),
-    },
-    {
-      name: "Ожидающие",
-      data: branchTickets.map((item) => item.stateTickets.NEW),
-    },
-    {
-      name: "Не подошедшие",
-      data: branchTickets.map((item) => item.stateTickets.MISSED),
-    },
-    {
-      name: "Alarm",
-      data: branchTickets.map((item) => item.stateTickets.ALARM),
-    },
-  ];
-  isChild.value = false;
-  updateChart();
+  try {
+    categories.value = branchTickets.value.map((e) => e.branchName);
+    series.value = [
+      {
+        name: "Обслуженные",
+        data: branchTickets.value.map((item) => item.stateTickets.COMPLETED),
+      },
+      {
+        name: "Обслуживающиеся",
+        data: branchTickets.value.map((item) => item.stateTickets.INSERVICE),
+      },
+      {
+        name: "Ожидающие",
+        data: branchTickets.value.map((item) => item.stateTickets.NEW),
+      },
+      {
+        name: "Не подошедшие",
+        data: branchTickets.value.map((item) => item.stateTickets.MISSED),
+      },
+      {
+        name: "Alarm",
+        data: branchTickets.value.map((item) => item.stateTickets.ALARM),
+      },
+    ];
+    isChild.value = false;
+    updateChart();
+    desserts.value = parentList.value;
+  } catch (err) {
+    alert(err);
+  }
+};
+
+const getBranchTickets = async () => {
+  try {
+    const result = await axios.get(
+      `http://localhost:3000/api/v1/tickets/branch-tickets`,
+      {
+        headers: {
+          bearer: localStorage.getItem("authToken"),
+        },
+      }
+    );
+    branchTickets.value = result.data.data;
+    // console.log(branchTickets.value);
+    backChart();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getTicketList = async () => {
+  try {
+    const result = await axios.get(
+      `http://localhost:3000/api/v1/tickets/list`,
+      {
+        headers: {
+          bearer: localStorage.getItem("authToken"),
+        },
+      }
+    );
+    // console.log(result.data.data.tickets);
+    parentList.value = result.data.data.tickets;
+    desserts.value = result.data.data.tickets;
+  } catch (err) {
+    console.log(err);
+  }
+  // console.log(desserts);
 };
 
 onMounted(() => {
+  getBranchTickets();
+  getTicketList();
   // console.log(apexChart.value)
 });
 </script>
 
-<script>
-export default {
-  components: {},
-  data() {
-    return {
-      search: "",
-      headers: [
-        {
-          align: "start",
-          key: "name",
-          sortable: false,
-          title: "Dessert (100g serving)",
-        },
-        { key: "calories", title: "Calories" },
-        { key: "fat", title: "Fat (g)" },
-        { key: "carbs", title: "Carbs (g)" },
-        { key: "protein", title: "Protein (g)" },
-        { key: "iron", title: "Iron (%)" },
-      ],
-      desserts: [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: 1,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: 1,
-        },
-      ],
-    };
-  },
-};
-</script>
 
 <template>
   <div class="amount-container">
@@ -1437,7 +258,7 @@ export default {
       ></apexchart>
     </div>
     <div class="tickets">
-      <v-card title="Nutrition" flat>
+      <v-card title="Билеты" flat>
         <template v-slot:text>
           <v-text-field
             v-model="search"

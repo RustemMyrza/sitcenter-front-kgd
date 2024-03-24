@@ -1,0 +1,3 @@
+<template>
+    Camera view
+</template>

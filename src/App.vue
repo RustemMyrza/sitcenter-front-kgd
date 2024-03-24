@@ -3,26 +3,34 @@ import SidebarComponent from "@/components/sidebar/SidebarComponent.vue";
 import { sidebarWidth } from "@/components/sidebar/state";
 import HeaderComponent from "./components/header/HeaderComponent.vue";
 import DashboardTop from "./components/header/DashboardTop.vue";
+import { useRoute } from 'vue-router';
+
 export default {
-  components: { SidebarComponent, HeaderComponent,DashboardTop },
+  components: { SidebarComponent, HeaderComponent, DashboardTop },
   setup() {
-    return { sidebarWidth };
+    const route = useRoute();
+
+    return { sidebarWidth, route };
+  },
+  methods: {
+    isLoginPage() {
+      return this.route.path === "/login";
+    },
   },
 };
 </script>
+
 <template>
-  
-  <div class="side-bar">
+  <div v-if="isLoginPage" class="side-bar">
     <SidebarComponent />
   </div>
   <div class="main">
-    <div :style="{ 'margin-left': sidebarWidth }">
-      <div class="head">
-        <header-component  />
+    <div :style="{ 'margin-left':isLoginPage && sidebarWidth }">
+      <div v-if="isLoginPage" class="head">
+        <header-component />
         <div class="dashboard">
-          <dashboard-top/>
+          <dashboard-top />
         </div>
-        
       </div>
       <router-view />
     </div>
@@ -51,7 +59,7 @@ export default {
   color: #42b983;
 }
 
-.dashboard{
+.dashboard {
   margin: 0.5rem auto;
 }
 </style>

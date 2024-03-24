@@ -1,0 +1,3 @@
+<template>
+    My profile
+</template>

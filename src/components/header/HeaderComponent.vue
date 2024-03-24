@@ -2,6 +2,13 @@
 import { toggleSidebar } from '../sidebar/state';
 <script setup>
 import { toggleSidebar,collapsed } from "@/components/sidebar/state";
+import { useRoute } from "vue-router";
+
+const logout = ()=>{
+  const router = useRoute();
+  localStorage.removeItem("authToken");
+  router.push("/login");
+}
 </script>
 
 <template>
@@ -23,18 +30,17 @@ import { toggleSidebar,collapsed } from "@/components/sidebar/state";
       <div class="userInfo ">
         <div class="dropdown ">
           <button 
-            class="btn "
+            class="btn  dropdown-toggle"
             type="button"
             id="dropdownMenuButton1"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="../../assets/logo.png" alt="" width="50%" />
+            <img src="../../assets/logo.png" alt="" />
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="#">Мой профиль</a></li>
+             <li><a @click="logout()" class="dropdown-item" href="#">Выход</a></li>
           </ul>
         </div>
       </div>
@@ -55,6 +61,20 @@ import { toggleSidebar,collapsed } from "@/components/sidebar/state";
     cursor: pointer;
   }
   .headerInfo {
+    .userInfo{
+      .dropdown{
+        button{
+          
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          img{
+            margin: 0 0.5rem;
+            width: 40%;
+          }
+        }
+      }
+    }
     font: 50px;
     div {
       position: relative;
@@ -68,6 +88,7 @@ import { toggleSidebar,collapsed } from "@/components/sidebar/state";
         font-weight: 700;
         color: red;
       }
+      
       .envelope-amount {
         position: absolute;
         top: -50%;

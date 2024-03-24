@@ -1,93 +1,137 @@
 <script>
+import axios from "axios";
 const regionsById = [
   {
     id: "sev-kaz",
     name: "Северо-Казахстанская область",
+    branch_id: 4801,
   },
   {
     id: "akm",
     name: "Акмолинская область",
+    branch_id: 301,
   },
   {
     id: "kost",
     name: "Костанайская область",
+    branch_id: 3901,
   },
   {
     id: "pavl",
     name: "Павлодарская область",
+    branch_id: 4501,
   },
   {
     id: "akt",
     name: "Актюбинская область",
+    branch_id: 601,
   },
   {
     id: "zap-kaz",
     name: "Западно-Казахстанская область",
+    branch_id: 2701,
   },
   {
     id: "atr",
     name: "Атырауская область",
+    branch_id: 1501,
   },
   {
     id: "man",
     name: "Мангистауская область",
+    branch_id: 4301,
   },
   {
     id: "kyz",
     name: "Кызылординская область",
+    branch_id: 3301,
   },
   {
     id: "uly",
     name: "Улытауская область",
+    branch_id: 7201,
   },
   {
     id: "turk",
     name: "Туркестанская область",
+    branch_id: 5801,
   },
   {
     id: "alm",
     name: "Алматинская область",
+    branch_id: 901,
   },
   {
     id: "kar",
     name: "Карагандинская область",
+    branch_id: 3001,
   },
   {
     id: "zham",
     name: "Жамбыльская область",
+    branch_id: 2101,
   },
   {
     id: "zhet",
     name: "Жетысуская область",
+    branch_id: 7001,
   },
 
   {
     id: "vost-kaz",
     name: "Восточно-Казахстанская область",
+    branch_id: 1801,
   },
   {
     id: "abai",
     name: "Абайская область",
+    branch_id: 7101,
   },
 ];
 export default {
   components: {},
   data() {
     return {
-      serverInfo: "Все области",
-      ticketInfo: "118 билетов",
+      serverInfo: "",
+      ticketInfo: "",
       operatorInfo: "12 операторов в сети",
-      averageRate: "4,1",
+      averageRate: "",
 
       selectedRegion: "",
+      selectRegionId:null,
       currentRegion: null,
 
-      
+      branches: null,
     };
   },
   methods: {
-    selectRegion(region) {
-      this.selectedRegion = regionsById.find((e) => region === e.id).name;
+    async getRegionInfo() {
+      this.branches = axios
+        .get(`http://localhost:3000/api/v1/tickets`, {
+          headers: {
+            bearer: localStorage.getItem("authToken"),
+          },
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    async selectRegion(region) {
+      this.selectedRegion = regionsById.find((e) => region === e.id);
+      
+      const result = await axios.get(`http://localhost:3000/api/v1/tickets/map/${this.selectedRegion.branch_id}`, {
+          headers: {
+            bearer: localStorage.getItem("authToken"),
+          },
+        });
+        this.serverInfo = result.data.data.onlineServers;
+        this.ticketInfo = result.data.data.tickets;
+        this.averageRate = result.data.data.averageRate;
+        console.log(result.data.data);
+
 
       if (this.currentRegion) {
         const previousRegion = document.getElementById(this.currentRegion);
@@ -108,10 +152,10 @@ export default {
 
       mapPart.style.fill = "#4FCB1D";
     },
-   
-
   },
- 
+  mounted() {
+    this.getRegionInfo();
+  },
 };
 </script>
 <template>
@@ -120,12 +164,12 @@ export default {
   </div>
   <div class="main-body">
     <div
-    v-if="showHoverDiv"
-    :style="{ left: mouseX + 'px', top: mouseY + 'px' }"
-    class="hover-div"
-  >
-    Hovered content
-  </div>
+      v-if="showHoverDiv"
+      :style="{ left: mouseX + 'px', top: mouseY + 'px' }"
+      class="hover-div"
+    >
+      Hovered content
+    </div>
 
     <div class="map">
       <svg
@@ -789,7 +833,7 @@ export default {
     </div>
     <div class="mapInfo mt-4">
       <h1>
-        Выбранный регион: {{ selectedRegion ? selectedRegion : "Все регионы" }}
+        Выбранный регион: {{ selectedRegion ? selectedRegion.name : "Все регионы" }}
       </h1>
       <div class="info-title">
         <h3>Основная информация</h3>
@@ -799,7 +843,7 @@ export default {
           <h4>Средняя оценка: {{ averageRate }}</h4>
         </div>
         <div class="region-info">
-          <h5>Выбранный регион: {{ serverInfo }}</h5>
+          <h5>Доступных серверов: {{ serverInfo }}</h5>
         </div>
         <div class="tickets-info">
           <h5>Билеты: {{ ticketInfo }}</h5>
@@ -829,7 +873,7 @@ svg {
 }
 
 svg path {
-  fill: #4689af;
+  fill: #6cb9e6;
   /* Set the fill color */
   stroke: white;
   /* Set the stroke color */
@@ -842,6 +886,4 @@ svg path:hover {
 
   stroke-width: 3;
 }
-
-
 </style>

@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import {  onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed } from "vue";
 const branches = ref([]);
 
 const filterKeyword = ref("all");
@@ -10,33 +10,27 @@ const unFold = (id) => {
   item.fold = !item.fold;
 };
 
-
-const getBranches = async() => {
+const getBranches = async () => {
   const token = localStorage.getItem("authToken");
-  const result = await axios
-    .get("http://localhost:3000/api/v1/branches", {
-      headers: {
-        bearer: token,
-      },
-    })
-    branches.value = result.data.rows;
+  const result = await axios.get("http://localhost:3000/api/v1/branches", {
+    headers: {
+      bearer: token,
+    },
+  });
+  branches.value = result.data.rows;
 
-      // Calculate onlineSize for each branch
-      branches.value.map((element) => {
-        let online = 0;
-        element.children.forEach((el) => {
-          if (el.ONN === 1) {
-            online += 1;
-          }
-        });
-        element.onlineSize = online;
-        element.fold = false;
-      });
-    
+  // Calculate onlineSize for each branch
+  branches.value.map((element) => {
+    let online = 0;
+    element.children.forEach((el) => {
+      if (el.ONN === 1) {
+        online += 1;
+      }
+    });
+    element.onlineSize = online;
+    element.fold = false;
+  });
 };
-
-
-
 
 const filteredBranches = computed(() => {
   const keyword = filterKeyword.value.toLowerCase().trim();
@@ -52,18 +46,15 @@ const filteredBranches = computed(() => {
   return branches.value;
 });
 
-
-
-
 onMounted(() => {
   getBranches();
 });
 </script>
 <template>
   <div class="server-container">
-    <div class="title"><h3>Серверы</h3></div>
+    <div class="title"><h3>Переключение режимов меню</h3></div>
     <div class="server-container">
-      <div class="controls flex text-white">
+      <!-- <div class="controls flex text-white">
         <div class="control">
           <button
             type="button"
@@ -79,7 +70,7 @@ onMounted(() => {
             @click="filterKeyword = 'onn'"
             class="btn btn-success"
           >
-            Доступные
+            Меню-1
           </button>
         </div>
         <div class="control">
@@ -88,25 +79,25 @@ onMounted(() => {
             @click="filterKeyword = 'off'"
             class="btn btn-danger"
           >
-            Недоступные
+            Меню-2
           </button>
         </div>
-      </div>
+      </div> -->
       <div class="drop">
         <div class="title-drop">
           <div>Название</div>
-          <div class="text-center">Статус</div>
-          <div>Количество доступных/всего</div>
+          <div class="text-center">Меню</div>
+          
         </div>
         <div
           v-for="branch in filteredBranches"
           :key="branch.id"
-          @click="unFold(branch.id)"
+          
           class="drop-item"
         >
-          <div class="notfold">
+          <div class="notfold" @click="unFold(branch.id)">
             <div class="item-name">
-              <i  class="fa-solid fa-plus mx-4"></i>
+              <i class="fa-solid fa-plus mx-4"></i>
               <!-- <i v-if="branch.fold" class="fas fa-minus mx-4"></i> -->
               {{ branch.F_NAME }}
             </div>
@@ -122,13 +113,19 @@ onMounted(() => {
               :key="child.id"
             >
               <div class="unfold-name">{{ child.F_NAME }}</div>
-              <div v-if="child.ONN === 1" class="unfold-status text-green-600">
-                {{ "Онлайн" }}
+              <!-- <div v-if="child.ONN === 1" class="unfold-status text-green-600">
+                {{ "Меню-1" }}
               </div>
               <div v-else class="unfold-status text-red-600">
-                {{ "Нет соединения" }}
+                {{ "Меню-2" }}
+              </div> -->
+              <div class="unfold-amount">
+                <select class="form-select" aria-label="Default select example">
+                    <option value="1" :selected="child.ONN ===1">Меню-1</option>
+                    <option value="2"  :selected="child.ONN ===0">Меню-2</option>
+                    
+                  </select>
               </div>
-              <div class="unfold-amount"></div>
             </div>
           </div>
         </div>
