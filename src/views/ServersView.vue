@@ -150,11 +150,11 @@ onMounted(() => {
 }
 .drop {
   margin: 1rem auto;
-
   .title-drop {
     display: flex;
     justify-content: space-between;
-    margin: 0.5rem;
+    margin: .5rem;
+    padding: 1rem;
     width: 100%;
     text-align: center;
     div {

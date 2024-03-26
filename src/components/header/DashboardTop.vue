@@ -3,10 +3,10 @@
 // import { ref } from "vue";
 // @ is an alias to /src
 
-
 import BlockElement from "@/components/blocks/dashboard/top/BlockElement.vue";
 
-
+import axios from "axios";
+import { onMounted, ref } from "vue";
 
 // const ServerModalBlock = ref({
 //   component: ServerModal,
@@ -961,7 +961,7 @@ import BlockElement from "@/components/blocks/dashboard/top/BlockElement.vue";
 //     title: "asdaw",
 //   },
 //   markBlockChart: {
-   
+
 //     series: [44, 55, 41, 17, 15],
 //     options: {
 //       chart: {
@@ -995,7 +995,7 @@ import BlockElement from "@/components/blocks/dashboard/top/BlockElement.vue";
 //     // modalWidth:"1000px"
 //   },
 //   avgWaitChart: {
-    
+
 //     series: [
 //       {
 //         name: "PRODUCT A",
@@ -1064,7 +1064,7 @@ import BlockElement from "@/components/blocks/dashboard/top/BlockElement.vue";
 //     // modalWidth:"1000px"
 //   },
 //   avgWaitChart: {
-    
+
 //     series: [
 //       {
 //         name: "PRODUCT A",
@@ -1121,73 +1121,79 @@ import BlockElement from "@/components/blocks/dashboard/top/BlockElement.vue";
 //     },
 //   },
 // });
+const offline = ref(0);
 
-
-const serverInfo = {
-    color:"green",
-    icon:"fas fa-server",
-    text:"Количество неработающих УГД",
-    number:554,
-    link:"/server"
-}
-const rateInfo = {
-    color:"#10877A",
-    icon:"fas fa-vote-yea",
-    text:"Средняя оценка",
-    number:99,
-    link:"/tickets"
-}
+const serverInfo = ref({
+    color: "green",
+    icon: "fas fa-server",
+    text: "Количество неработающих УГД",
+    
+    link: "/server",
+  });
+const rateInfo = ref({
+  color: "#10877A",
+  icon: "fas fa-vote-yea",
+  text: "Средняя оценка",
+  number: 31,
+  link: "/tickets",
+});
 const badRate = {
-    color:"red",
-    icon:"fas fa-exclamation-circle",
-    text:"Количество плохих оценок",
-    number:55,
-    link:"/tickets?tickets=bad"
-}
+  color: "red",
+  icon: "fas fa-exclamation-circle",
+  text: "Количество плохих оценок",
+  number: 55,
+  link: "/tickets?tickets=bad",
+};
 const maxWaitTime = {
-    color:"#F38E1B",
-    icon:"fas fa-clock",
-    text:"Максимальное время ожидания",
-    number:41,
-    link:"/time-dash"
-}
+  color: "#F38E1B",
+  icon: "fas fa-clock",
+  text: "Максимальное время ожидания",
+  number: 41,
+  link: "/time-dash",
+};
 const maxServTime = {
-    color:"#6C1895",
-    icon:"fas fa-people-arrows",
-    text:"Максимальное время обслуживания",
-    number:12,
-    link:"/time-dash"
-}
+  color: "#6C1895",
+  icon: "fas fa-people-arrows",
+  text: "Максимальное время обслуживания",
+  number: 12,
+  link: "/time-dash",
+};
+
+const fetchData = async () => {
+  const result = await axios.get(`http://localhost:3000/api/v1/tickets/map`, {
+    headers: {
+      bearer: localStorage.getItem("authToken"),
+    },
+  });
+  // console.log(result);
+  const total = result.data.data.total;
+  const online = result.data.data.onlineServers;
+  offline.value = total - online;
+  serverInfo.value.number = offline.value;
+  rateInfo.value.number = result.data.data.averageRate;
+ 
+};
+
+onMounted(() => {
+  fetchData();
+});
 </script>
 <template>
-    <div class="mainBlocks flex justify-around">
-        <div class="serverInfo block w-64">
-          <BlockElement
-            :info="serverInfo"
-          />
-        </div>
-        <div class="markInfo block w-64">
-          <BlockElement
-            :info="rateInfo"
-          />
-        </div>
-        <div class="markInfo block w-64">
-          <BlockElement
-            :info="badRate"
-          />
-        </div>
-        <div class="markInfo block w-64">
-          <BlockElement
-            :info="maxWaitTime"
-          />
-        </div>
-        <div class="markInfo block w-64">
-          <BlockElement
-            :info="maxServTime"
-          />
-        </div>
-        
-        
-        
-      </div>
+  <div class="mainBlocks flex justify-around">
+    <div class="serverInfo block w-64">
+      <BlockElement :info="serverInfo" />
+    </div>
+    <div class="markInfo block w-64">
+      <BlockElement :info="rateInfo" />
+    </div>
+    <div class="markInfo block w-64">
+      <BlockElement :info="badRate" />
+    </div>
+    <div class="markInfo block w-64">
+      <BlockElement :info="maxWaitTime" />
+    </div>
+    <div class="markInfo block w-64">
+      <BlockElement :info="maxServTime" />
+    </div>
+  </div>
 </template>

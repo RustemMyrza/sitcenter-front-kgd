@@ -3,7 +3,7 @@ import MonitoringMain from '@/components/blocks/monitoring/MonitoringMain.vue';
 </script>
 
 <template>
-    <div class="p-4 ">
+    <div >
         <MonitoringMain/>
     </div>
 </template>

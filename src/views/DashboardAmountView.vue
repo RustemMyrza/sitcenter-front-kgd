@@ -1,6 +1,9 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import axios from "axios";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const isChild = ref(false);
 
@@ -17,7 +20,7 @@ const headers = [
   { key: "idbranch", title: "Отделение" },
   { key: "operator", title: "Оператор" },
   { key: "starttime", title: "Время регистрации" },
-  { key: "waittime", title: "Время ожидания" },
+  // { key: "waittime", title: "Время ожидания" },
   { key: "startservtime", title: "Время обслуживания" },
 ];
 const desserts = ref([]);
@@ -97,52 +100,62 @@ const chartOptions = ref({
 
 const apexChart = ref(null);
 
+const updateChartByBranchId = async (branch) => {
+  categories.value = branch.children.map((e) => e.branchName);
+
+  series.value = [
+    {
+      name: "Обслуженные",
+      data: branch.children.map((item) => item.stateTickets.COMPLETED),
+    },
+    {
+      name: "Обслуживающиеся",
+      data: branch.children.map((item) => item.stateTickets.INSERVICE),
+    },
+    {
+      name: "Ожидающие",
+      data: branch.children.map((item) => item.stateTickets.NEW),
+    },
+    {
+      name: "Не подошедшие",
+      data: branch.children.map((item) => item.stateTickets.MISSED),
+    },
+    {
+      name: "Alarm",
+      data: branch.children.map((item) => item.stateTickets.ALARM),
+    },
+  ];
+  updateChart();
+};
+
+const updateTicketByBranchId = async (branch) => {
+  try {
+    const list = await axios.get(
+      `http://localhost:3000/api/v1/tickets/list/${branch.branchId}`,
+      {
+        headers: {
+          bearer: localStorage.getItem("authToken"),
+        },
+      }
+    );
+    desserts.value = list.data.data.tickets;
+
+    console.log(list);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+
 const handleBarClick = async (event, chartContext, config) => {
   const point = config.dataPointIndex;
   const branch = branchTickets.value[point];
-  console.log(branch);
+  // console.log(branch);
   if (branch.children && !isChild.value) {
-    categories.value = branch.children.map((e) => e.branchName);
-
-    series.value = [
-      {
-        name: "Обслуженные",
-        data: branch.children.map((item) => item.stateTickets.COMPLETED),
-      },
-      {
-        name: "Обслуживающиеся",
-        data: branch.children.map((item) => item.stateTickets.INSERVICE),
-      },
-      {
-        name: "Ожидающие",
-        data: branch.children.map((item) => item.stateTickets.NEW),
-      },
-      {
-        name: "Не подошедшие",
-        data: branch.children.map((item) => item.stateTickets.MISSED),
-      },
-      {
-        name: "Alarm",
-        data: branch.children.map((item) => item.stateTickets.ALARM),
-      },
-    ];
-    updateChart();
+    updateChartByBranchId(branch);
     isChild.value = true;
-    try {
-      const list = await axios.get(
-        `http://localhost:3000/api/v1/tickets/list/${branch.branchId}`,
-        {
-          headers: {
-            bearer: localStorage.getItem("authToken"),
-          },
-        }
-      );
-      desserts.value = list.data.data.tickets;
-
-      console.log(list);
-    } catch (err) {
-      console.log(err);
-    }
+    updateTicketByBranchId(branch);
   }
 
   // Add your custom logic here for handling bar clicks
@@ -205,6 +218,13 @@ const getBranchTickets = async () => {
     );
     branchTickets.value = result.data.data;
     // console.log(branchTickets.value);
+    if(route.query.branch_id){
+        const propBranch = branchTickets.value.find(e=>e.branchId == route.query.branch_id);
+        console.log(propBranch);
+        updateChartByBranchId(propBranch);
+        updateTicketByBranchId(propBranch);
+    }
+    else
     backChart();
   } catch (err) {
     console.log(err);
@@ -233,6 +253,11 @@ const getTicketList = async () => {
 onMounted(() => {
   getBranchTickets();
   getTicketList();
+  // console.log(route.query.branch_id);
+  // if(route.query.branch_id){
+  //   updateByProps(route.query.branch_id);
+  // }
+  
   // console.log(apexChart.value)
 });
 </script>
@@ -240,10 +265,6 @@ onMounted(() => {
 
 <template>
   <div class="amount-container">
-    <div class="amount-title p-4">
-      <h3>Количественные показатели</h3>
-    </div>
-
     <div class="chartBlock">
       <v-btn @click="backChart()" v-if="isChild" class="back"
         ><i class="fas fa-arrow-left fa-2xl"></i

@@ -125,8 +125,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="employee-container">
-    <div class="title"><h3>Сотрудники</h3></div>
-    <div class="mainBlock">
+     <div class="mainBlock">
       <div class="inputBlock">
         <select class="form-select" v-model="childBranches">
           <option selected disabled value="0">Выберите филиал</option>

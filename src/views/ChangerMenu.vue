@@ -1,9 +1,8 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref } from "vue";
 const branches = ref([]);
 
-const filterKeyword = ref("all");
 
 const unFold = (id) => {
   const item = branches.value.find((e) => e.id === id);
@@ -22,19 +21,7 @@ const getBranches = async () => {
   
 };
 
-const filteredBranches = computed(() => {
-  const keyword = filterKeyword.value.toLowerCase().trim();
-  if (keyword === "onn") {
-    return branches.value.filter((branch) =>
-      branch.children.some((child) => child.ONN === 1)
-    );
-  } else if (keyword === "off") {
-    return branches.value.filter((branch) =>
-      branch.children.every((child) => child.ONN === 0)
-    );
-  }
-  return branches.value;
-});
+
 
 onMounted(() => {
   getBranches();
@@ -73,13 +60,13 @@ onMounted(() => {
         </div>
       </div> -->
       <div class="drop">
-        <div class="title-drop">
+        <div class="title-drop ">
           <div>Название</div>
           <div class="text-center">Меню</div>
           
         </div>
         <div
-          v-for="branch in filteredBranches"
+          v-for="branch in branches"
           :key="branch.id"
           
           class="drop-item"
@@ -134,7 +121,7 @@ onMounted(() => {
   .title-drop {
     display: flex;
     justify-content: space-between;
-    margin: 0.5rem;
+    margin: 1rem;
     width: 100%;
     text-align: center;
     div {

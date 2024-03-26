@@ -49,6 +49,7 @@ const routes = [
     path: "/amount-dash",
     name: "amountDash",
     component: DashboardAmountView,
+    props: true,
     // meta: { requiresAuth: true }
   },
   {
