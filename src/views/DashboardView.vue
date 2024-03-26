@@ -2,9 +2,7 @@
 // import axios from "axios";
 import { onMounted, ref } from "vue";
 
-// const peakHour = ref([]);
-
-const pickHourObject = ref({
+const pickHours = {
   options: {
     chart: {
       height: 350,
@@ -17,8 +15,16 @@ const pickHourObject = ref({
       curve: "smooth",
     },
     xaxis: {
-      type: "category",
-      categories: [], // Initialize categories as an empty array
+      type: "datetime",
+      categories: [
+        "2018-09-19T00:00:00.000Z",
+        "2018-09-19T01:30:00.000Z",
+        "2018-09-19T02:30:00.000Z",
+        "2018-09-19T03:30:00.000Z",
+        "2018-09-19T04:30:00.000Z",
+        "2018-09-19T05:30:00.000Z",
+        "2018-09-19T06:30:00.000Z",
+      ],
     },
     tooltip: {
       x: {
@@ -26,14 +32,110 @@ const pickHourObject = ref({
       },
     },
   },
-
   series: [
     {
-      name: "Количество билетов",
-      data: [],
+      name: "series1",
+      data: [31, 40, 28, 51, 42, 109, 100],
     },
   ],
-});
+};
+const avg = {
+  options: {
+    chart: {
+      height: 350,
+      type: "area",
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "smooth",
+    },
+    xaxis: {
+      type: "datetime",
+      categories: [
+        "2018-09-19T00:00:00.000Z",
+        "2018-09-19T01:30:00.000Z",
+        "2018-09-19T02:30:00.000Z",
+        "2018-09-19T03:30:00.000Z",
+        "2018-09-19T04:30:00.000Z",
+        "2018-09-19T05:30:00.000Z",
+        "2018-09-19T06:30:00.000Z",
+      ],
+    },
+    tooltip: {
+      x: {
+        format: "dd/MM/yy HH:mm",
+      },
+    },
+  },
+  series: [
+    {
+      name: "series1",
+      data: [31, 40, 28, 51, 42, 109, 100],
+    },
+    {
+      name: "series2",
+      data: [11, 32, 45, 32, 34, 52, 41],
+    },
+  ],
+};
+const rateChart = {
+  options: {
+    chart: {
+      height: 350,
+      type: "radialBar",
+    },
+    plotOptions: {
+      radialBar: {
+        dataLabels: {
+          name: {
+            fontSize: "22px",
+          },
+          value: {
+            fontSize: "16px",
+          },
+          total: {
+            show: true,
+            label: "Total",
+            // formatter: function (w) {
+            //   // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+            //   return 249;
+            // },
+          },
+          legend:{
+            show:true
+          }
+        },
+      },
+    },
+    labels: ["Apples", "Oranges", "Bananas", "Berries"],
+  },
+  series: [44, 55, 67, 83],
+};
+const serviceChart = {
+  options: {
+    chart: {
+      width: 380,
+      type: "pie",
+    },
+    labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            position: "bottom",
+          },
+        },
+      },
+    ],
+  },
+  series: [44, 55, 13, 43, 22],
+};
 
 // const fetchData = async () => {
 //   try {
@@ -80,8 +182,8 @@ onMounted(() => {
         <div class="pickHours">
           <apexchart
             :height="300"
-            :options="pickHourObject.options"
-            :series="pickHourObject.series"
+            :options="pickHours.options"
+            :series="pickHours.series"
           ></apexchart>
         </div>
         <div class="avg">

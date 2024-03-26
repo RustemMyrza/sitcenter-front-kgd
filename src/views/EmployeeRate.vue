@@ -1,5 +1,14 @@
 <script setup>
-const employeeChart = {
+import axios from "axios";
+import { onMounted, ref } from "vue";
+const branches = ref(null);
+
+const childBranches = ref(0);
+const selectedBranch = ref(0);
+
+const chart = ref(null);
+
+const employeeChart = ref({
   options: {
     chart: {
       type: "bar",
@@ -12,7 +21,21 @@ const employeeChart = {
       },
     },
     dataLabels: {
-      enabled: false,
+      enabled: true,
+      offsetX: -60,
+      formatter: function (value) {
+            if (value % 10 === 1 && value % 100 !== 11) {
+              return value + " час";
+            } else if (
+              value % 10 >= 2 &&
+              value % 10 <= 4 &&
+              (value % 100 < 10 || value % 100 >= 20)
+            ) {
+              return value + " часа";
+            } else {
+              return value + " часов";
+            }
+          }
     },
     xaxis: {
       categories: [
@@ -28,40 +51,123 @@ const employeeChart = {
         "Germany",
       ],
     },
+    yaxis: {
+      labels: {
+        maxWidth: 500,
+      },
+    },
   },
   series: [
     {
       data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380],
     },
   ],
+});
+
+const getBranches = async () => {
+  const result = await axios.get(`http://localhost:3000/api/v1/branches`, {
+    headers: {
+      bearer: localStorage.getItem("authToken"),
+    },
+  });
+  console.log(result);
+  branches.value = result.data.rows;
 };
+
+const getEmployee = async () => {
+  const result = await axios.get(
+    `http://localhost:3000/api/v1/employees/${selectedBranch.value}`,
+    {
+      headers: {
+        bearer: localStorage.getItem("authToken"),
+      },
+    }
+  );
+  console.log(result.data.data);
+
+
+  const employeeData = result.data.data.map(function (employee) {
+        return {
+          name: employee.F_NAME,
+          status: employee.timeDifference ? "Онлайн" : "Оффлайн",
+          // photo: "https://static.vecteezy.com/system/resources/thumbnails/024/905/590/small/smiling-indian-girl-in-traditional-clothing-outdoors-generated-by-ai-free-photo.jpg",
+          value: employee.timeDifference,
+        };
+      });
+  const seriesData = employeeData.map(function (employee) {
+        return {
+          x: employee.name + " - " + employee.status,
+          y: employee.value,
+          // photo: employee.photo,
+        };
+      });
+
+
+  chart.value.updateOptions({
+    xaxis: {
+      categories: seriesData.map(function (employee) {
+            return employee.x;
+          }),
+    },
+    series: [
+      {
+        name: "Показатели",
+        data: seriesData,
+        
+      },
+    ],
+  });
+};
+
+onMounted(() => {
+  getBranches();
+});
 </script>
 <template>
   <div class="employee-container">
-    <div class="title"><h1>Сотрудники</h1></div>
+    <div class="title"><h3>Сотрудники</h3></div>
     <div class="mainBlock">
-      <div class="inputs m-4 w-1/2 m-auto">
-        <select class="form-select" aria-label="Default select example">
-          <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+      <div class="inputBlock">
+        <select class="form-select" v-model="childBranches">
+          <option selected disabled value="0">Выберите филиал</option>
+          <option v-for="br in branches" :key="br.id" :value="br">
+            {{ br.F_NAME }}
+          </option>
         </select>
-        <select class="form-select" aria-label="Default select example">
-          <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+
+        <select
+          :disabled="!childBranches"
+          class="form-select"
+          v-model="selectedBranch"
+          @change="getEmployee"
+        >
+          <option selected disabled value="0">Выберите отделение</option>
+          <option
+            v-for="child in childBranches.children"
+            :key="child.F_ID"
+            :value="child.F_ID"
+          >
+            {{ child.F_NAME }}
+          </option>
         </select>
       </div>
-      <div class="employee-chart">
+      <div v-if="selectedBranch" class="employee-chart">
         <apexchart
-        height="500"
-        :options="employeeChart.options"
-        :series="employeeChart.series"
-    
-      ></apexchart>
+          ref="chart"
+          height="500"
+          :options="employeeChart.options"
+          :series="employeeChart.series"
+        ></apexchart>
       </div>
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.inputBlock {
+  padding: 0.5rem 2rem;
+  select {
+    margin: 1rem auto;
+  }
+}
+</style>

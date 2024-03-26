@@ -31,7 +31,7 @@ export default {
      <SidebarLink to="/amount-dash" icon="fas fa-chart-pie">Количественные показатели</SidebarLink>
      <!-- <SidebarLink to="/time-dash" icon="fas fa-chart-bar">Временные показатели</SidebarLink> -->
      <SidebarLink to="/time-dash" icon="fas fa-chart-bar">Временные показатели</SidebarLink>
-     <SidebarLink to="/monitoring" icon="far fa-eye">Мониторинг</SidebarLink>
+     <SidebarLink to="/monitoring" icon="fas fa-eye">Мониторинг</SidebarLink>
      <SidebarLink to="/employee-rate" icon="fas fa-poll-h">Рейтинг сотрудников</SidebarLink>
      <SidebarLink to="/tickets" icon="fas fa-ticket-alt">Билеты</SidebarLink>
       <span class="divider"></span>

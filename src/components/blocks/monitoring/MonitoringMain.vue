@@ -1,130 +1,40 @@
 <script setup>
-import { ref } from "vue";
-
-//monitoring images
-
-
-//monitoring images
-
+import { onMounted, ref } from "vue";
 import WindowComponent from "./WindowComponent.vue";
 import WaitingComponent from "./WaitingComponent.vue";
+import axios from "axios";
+const branches = ref(null);
+const childBranches = ref(0);
+const selectedBranch = ref(0);
 
-const infoObject = ref({
-  windows: [
-    {
-      winno: "1",
-      operatorId: 0,
-      active: false,
-      worktitle: "3002 Прием+Выдача+Налог (Земля, Имущество, Транспорт) + ЛсОВ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "2",
-      operatorId: 0,
-      active: false,
-      worktitle: "2002 Прием + Выдача + ЛсЮЛ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "3",
-      operatorId: 0,
-      active: false,
-      worktitle: "2001 Прием + Выдача + Банкротство + ЛсЮЛ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "4",
-      operatorId: 0,
-      active: false,
-      worktitle: "2002 Прием + Выдача + ЛсЮЛ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "5",
-      operatorId: 0,
-      active: false,
-      worktitle: "2002 Прием + Выдача + ЛсЮЛ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "6",
-      operatorId: 0,
-      active: false,
-      worktitle: "2002 Прием + Выдача + ЛсЮЛ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "7",
-      operatorId: 0,
-      active: false,
-      worktitle: "2002 Прием + Выдача + ЛсЮЛ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "8",
-      operatorId: 0,
-      active: false,
-      worktitle: "1004 Налог земля, имущество, транспорт + ЛсОВ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "9",
-      operatorId: 0,
-      active: false,
-      worktitle: "1004 Налог земля, имущество, транспорт + ЛсОВ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "10",
-      operatorId: 0,
-      active: false,
-      worktitle: "1004 Налог земля, имущество, транспорт + ЛсОВ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "11",
-      operatorId: 0,
-      active: false,
-      worktitle: "1004 Налог земля, имущество, транспорт + ЛсОВ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "12",
-      operatorId: 0,
-      active: false,
-      worktitle: "1004 Налог земля, имущество, транспорт + ЛсОВ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "13",
-      operatorId: 0,
-      active: false,
-      worktitle: "1004 Налог земля, имущество, транспорт + ЛсОВ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-    {
-      winno: "14",
-      operatorId: 0,
-      active: false,
-      worktitle: "1004 Налог земля, имущество, транспорт + ЛсОВ",
-      INSERVICE: [],
-      DELAYED: [],
-    },
-  ],
-});
+
+const windows = ref([]);
+
+const getBranches = async()=>{
+  const result = await axios.get(`http://localhost:3000/api/v1/branches`,{
+    headers:{
+      bearer:localStorage.getItem("authToken")
+    }
+  });
+  console.log(result);
+  branches.value = result.data.rows;
+}
+
+const getWindows = async()=>{
+    console.log(selectedBranch.value);
+    const result = await axios.get(`http://localhost:3000/api/v1/windows/${selectedBranch.value}`,{
+    headers:{
+      bearer:localStorage.getItem("authToken")
+    }
+  });
+  console.log(result.data.windows);
+  windows.value=result.data.windows;
+}
+
+onMounted(()=>{
+  getBranches()
+})
+
 
 </script>
 
@@ -134,17 +44,17 @@ const infoObject = ref({
       <h1>Мониторинг</h1>
     </div>
     <div class="inputBlock">
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Open this select menu</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+      <select class="form-select" v-model="childBranches" >
+        <option selected disabled value="0">Выберите филиал</option>
+        <option v-for="br in branches" :key="br.id" :value="br">{{br.F_NAME}}</option>
       </select>
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Open this select menu</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+      
+      <select :disabled="!childBranches"  class="form-select" v-model="selectedBranch" @change="getWindows()">
+        <option selected disabled value="0">Выберите отделение</option>
+        <option v-for="child in childBranches.children" :key="child.F_ID" :value="child.F_ID">
+          {{ child.F_NAME }}
+        </option>
+      
       </select>
     </div>
     <div class="live">
@@ -166,23 +76,17 @@ const infoObject = ref({
                 </div>
             </div>
         </div>
-        <div v-if="infoObject" class="windows">
+        <div v-if="branches" class="windows">
           <div class="waits">
                <WaitingComponent/>
                 
           </div>
           <div class="tables">
-            <WindowComponent operator-name="Alan Brian" :isActive="true" in-service="true" />
-            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
-            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
-            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
-            <WindowComponent operator-name="Alan Brian" :is-active="false" in-service="true" />
-            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
-            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
-            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
-            <WindowComponent operator-name="Alan Brian" :is-active="true" in-service="true" />
-            
-            
+            <WindowComponent v-for="window in windows" :key="window.id" :table-number="window.winno"
+            :operator-name="window.name" :is-active="(window.operatorId === 0) ? false : true"
+            :in-service="window.INSERVICE.length !== 0"
+            :client-info="(window.INSERVICE.length !== 0)? window.INSERVICE[0].servicename: null" />
+           
           </div>
         </div>
 
@@ -197,7 +101,7 @@ const infoObject = ref({
   height: 70vh;
 
   .inputBlock {
-    padding: 1rem 2rem;
+    padding: .5rem 2rem;
     select {
       margin: 1rem auto;
     }

@@ -36,7 +36,13 @@ const getBranches = async() => {
 };
 
 
-
+const filterOnline = ()=>{
+    const a = branches.value.filter(e=>{
+      return e.children.map((el)=>el.ONN === 1);
+      
+    });
+    console.log(a);
+}
 
 const filteredBranches = computed(() => {
   const keyword = filterKeyword.value.toLowerCase().trim();
@@ -61,7 +67,6 @@ onMounted(() => {
 </script>
 <template>
   <div class="server-container">
-    <div class="title"><h3>Серверы</h3></div>
     <div class="server-container">
       <div class="controls flex text-white">
         <div class="control">
@@ -76,7 +81,7 @@ onMounted(() => {
         <div class="control">
           <button
             type="button"
-            @click="filterKeyword = 'onn'"
+            @click="filterOnline()"
             class="btn btn-success"
           >
             Доступные
@@ -123,10 +128,10 @@ onMounted(() => {
             >
               <div class="unfold-name">{{ child.F_NAME }}</div>
               <div v-if="child.ONN === 1" class="unfold-status text-green-600">
-                {{ "Онлайн" }}
+               <i> {{ "Доступно" }}</i>
               </div>
               <div v-else class="unfold-status text-red-600">
-                {{ "Нет соединения" }}
+               <i> {{ "Нет соединения" }}</i>
               </div>
               <div class="unfold-amount"></div>
             </div>
@@ -159,7 +164,12 @@ onMounted(() => {
   .drop-item {
     cursor: pointer;
     width: 100%;
-    margin: 1rem 0.5rem;
+    margin: .5rem 0.5rem;
+    padding: .6rem;
+    background-color: rgba(244, 244, 244, 0.675);
+    border-radius: .5rem;
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.5);
+  
     .notfold {
       display: flex;
       justify-content: space-between;
@@ -179,7 +189,10 @@ onMounted(() => {
       width: 100%;
       .unfold-item {
         display: flex;
-
+        background-color: rgba(255, 255, 255, 0.787);
+        margin: .5rem;
+        padding: .3rem;
+        border-radius: .5rem;
         justify-content: space-between;
         div {
           width: 100%;

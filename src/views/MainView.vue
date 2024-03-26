@@ -98,7 +98,7 @@ export default {
       averageRate: "",
 
       selectedRegion: "",
-      selectRegionId:null,
+      selectRegionId: null,
       currentRegion: null,
 
       branches: null,
@@ -106,32 +106,34 @@ export default {
   },
   methods: {
     async getRegionInfo() {
-      this.branches = axios
-        .get(`http://localhost:3000/api/v1/tickets`, {
+      const result = await axios.get(
+        `http://localhost:3000/api/v1/tickets/map`,
+        {
           headers: {
             bearer: localStorage.getItem("authToken"),
           },
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        }
+      );
+
+      this.serverInfo = result.data.data.onlineServers;
+      this.ticketInfo = result.data.data.tickets;
+      this.averageRate = result.data.data.averageRate;
     },
     async selectRegion(region) {
       this.selectedRegion = regionsById.find((e) => region === e.id);
-      
-      const result = await axios.get(`http://localhost:3000/api/v1/tickets/map/${this.selectedRegion.branch_id}`, {
+
+      const result = await axios.get(
+        `http://localhost:3000/api/v1/tickets/map/${this.selectedRegion.branch_id}`,
+        {
           headers: {
             bearer: localStorage.getItem("authToken"),
           },
-        });
-        this.serverInfo = result.data.data.onlineServers;
-        this.ticketInfo = result.data.data.tickets;
-        this.averageRate = result.data.data.averageRate;
-        console.log(result.data.data);
-
+        }
+      );
+      this.serverInfo = result.data.data.onlineServers;
+      this.ticketInfo = result.data.data.tickets;
+      this.averageRate = result.data.data.averageRate;
+      console.log(result.data.data);
 
       if (this.currentRegion) {
         const previousRegion = document.getElementById(this.currentRegion);
@@ -159,18 +161,8 @@ export default {
 };
 </script>
 <template>
-  <div class="title p-4 text-lg">
-    <h3>Главная страница</h3>
-  </div>
+  <main>
   <div class="main-body">
-    <div
-      v-if="showHoverDiv"
-      :style="{ left: mouseX + 'px', top: mouseY + 'px' }"
-      class="hover-div"
-    >
-      Hovered content
-    </div>
-
     <div class="map">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -831,14 +823,12 @@ export default {
         </text>
       </svg>
     </div>
-    <div class="mapInfo mt-4">
-      <h1>
-        Выбранный регион: {{ selectedRegion ? selectedRegion.name : "Все регионы" }}
-      </h1>
-      <div class="info-title">
-        <h3>Основная информация</h3>
-      </div>
+    <div class="mapInfo ">
       <div class="info-body">
+        <h3>
+          Выбранный регион:
+          {{ selectedRegion ? selectedRegion.name : "Все регионы" }}
+        </h3>
         <div class="rate-info">
           <h4>Средняя оценка: {{ averageRate }}</h4>
         </div>
@@ -854,22 +844,48 @@ export default {
       </div>
     </div>
   </div>
+</main>
 </template>
 
 <style lang="scss" scoped>
+main{
+  display: grid;
+  align-content: center;
+}
 .main-body {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+  width: 100%;
+  height: 100%;
   .map {
     display: flex;
     justify-content: center;
     align-content: center;
+    width: 70%;
+    height: 100%;
+    
   }
   .mapInfo {
-    background-color: antiquewhite;
+    border: 5px solid rgb(25, 25, 110);
+    background-color: rgb(4, 61, 105);
+    width: 30%;
+    height: 100%;
+    display: grid;
+    align-content: center;
+    margin:0 .5rem;
+    border-radius: 2rem;
+    .info-body {
+      color: rgb(248, 180, 54);
+      margin: 1rem;
+      height: 100%;
+    }
   }
 }
 
 svg {
-  width: 65%;
+  width: 100%;
+  height: 100%;
 }
 
 svg path {
@@ -882,7 +898,7 @@ svg path {
 }
 
 svg path:hover {
-  fill: orange;
+  fill: rgb(167, 180, 228);
 
   stroke-width: 3;
 }

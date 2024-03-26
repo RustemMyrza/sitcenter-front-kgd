@@ -19,17 +19,7 @@ const getBranches = async () => {
   });
   branches.value = result.data.rows;
 
-  // Calculate onlineSize for each branch
-  branches.value.map((element) => {
-    let online = 0;
-    element.children.forEach((el) => {
-      if (el.ONN === 1) {
-        online += 1;
-      }
-    });
-    element.onlineSize = online;
-    element.fold = false;
-  });
+  
 };
 
 const filteredBranches = computed(() => {
@@ -52,7 +42,6 @@ onMounted(() => {
 </script>
 <template>
   <div class="server-container">
-    <div class="title"><h3>Переключение режимов меню</h3></div>
     <div class="server-container">
       <!-- <div class="controls flex text-white">
         <div class="control">
@@ -103,8 +92,7 @@ onMounted(() => {
             </div>
             <div class="item-status"></div>
             <div class="item-amount">
-              {{ branch.onlineSize }}/{{ branch.children.length }}
-            </div>
+             </div>
           </div>
           <div v-if="branch.fold" class="unfold">
             <div
@@ -156,7 +144,11 @@ onMounted(() => {
   .drop-item {
     cursor: pointer;
     width: 100%;
-    margin: 1rem 0.5rem;
+    margin: .5rem 0.5rem;
+    padding: .6rem;
+    background-color: rgba(244, 244, 244, 0.675);
+    border-radius: .5rem;
+    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.5);
     .notfold {
       display: flex;
       justify-content: space-between;
@@ -178,6 +170,10 @@ onMounted(() => {
         display: flex;
 
         justify-content: space-between;
+        background-color: rgba(255, 255, 255, 0.787);
+        margin: .5rem;
+        padding: .3rem;
+        border-radius: .5rem;
         div {
           width: 100%;
         }

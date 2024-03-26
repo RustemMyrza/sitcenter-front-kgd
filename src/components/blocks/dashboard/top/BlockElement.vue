@@ -26,11 +26,11 @@ const showModal = ref(false);
         <div class="icon">
           <i :class="props.info.icon"></i>
         </div>
-        <div class="button text-white font-sans">
+        <button class="btn button text-white font-sans">
           <router-link :to="props.info.link" variant="outlined">
             <i class="fas fa-external-link-alt fa-2xl"></i>
           </router-link>
-        </div>
+        </button>
       </div>
 
       

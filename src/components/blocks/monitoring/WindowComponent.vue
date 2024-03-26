@@ -9,7 +9,11 @@ import client from "@/assets/client.png";
 // const isActive = ref(true);
 
 const props = defineProps({
-  operatorInfo: {
+ 
+    tableNumber:{
+      type:String,
+      required:true
+    },
     operatorName: {
       type: String,
       required: true,
@@ -26,28 +30,30 @@ const props = defineProps({
       type: Object,
       required: false,
     },
-  },
+  
 });
+
+//:class="props.isActive === true ? 'alert' : 'inactive'"
 </script>
 
 <template>
   <div class="table">
     <div class="operator">
       <div class="operatorInfo">{{ props.operatorName }}</div>
-      <img :src="worker ? worker : 2" alt="" />
+      <img :src="props.isActive  ? worker : 2" alt="" />
     </div>
     <div class="tableImg">
       <div
         class="tableImgInfo"
-        :class="props.isActive === true ? 'alert' : 'inactive'"
+        
       >
-        5
+        {{ props.tableNumber }}
       </div>
-      <img :src="table_transparent ? table : 2" alt="" />
+      <img :src="props.isActive ? table : table_transparent" alt="" />
     </div>
     <div class="client">
-      <div class="clientInfo">Налог на имущество</div>
-      <img :src="client ? client : 2" alt="" />
+      <div class="clientInfo">{{props.clientInfo}}</div>
+      <img :src="inService ? client : 2" alt="" />
     </div>
   </div>
 </template>

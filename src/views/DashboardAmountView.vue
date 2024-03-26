@@ -8,9 +8,9 @@ const search = ref("");
 const headers = [
   {
     align: "start",
-    key: "eventid",
+    key: "iin",
     sortable: false,
-    title: "event-id",
+    title: "ИИН",
   },
   { key: "ticketno", title: "Номер билета" },
   { key: "servicename", title: "Название услуги" },
