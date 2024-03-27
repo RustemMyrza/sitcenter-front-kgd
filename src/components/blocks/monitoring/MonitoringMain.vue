@@ -27,7 +27,7 @@ const getBranches = async () => {
       bearer: localStorage.getItem("authToken"),
     },
   });
-  console.log(result);
+  // console.log(result);
   branches.value = result.data.rows;
 };
 
@@ -46,6 +46,11 @@ const getWindows = async () => {
     info.value.wait = result.data.NEW.length;
     windows.value = result.data.windows;
     waitClient.value = result.data.NEW;
+    result.data.windows.map(e=>{
+      if(e.operatorId!==0){
+        info.value.online++;
+      }
+    });
   } catch (err) {
     console.log(err);
   }
