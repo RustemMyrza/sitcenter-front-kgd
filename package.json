@@ -38,6 +38,7 @@
     "@vue/vue3-jest": "^27.0.0-alpha.1",
     "autoprefixer": "^10.4.18",
     "babel-jest": "^27.0.6",
+    "dotenv": "^16.4.5",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "jest": "^27.0.5",

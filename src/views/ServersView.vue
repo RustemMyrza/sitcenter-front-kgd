@@ -3,6 +3,9 @@ import axios from "axios";
 import {  onMounted, ref, computed } from "vue";
 const branches = ref([]);
 
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
 const filterKeyword = ref("all");
 
 const unFold = (id) => {
@@ -14,7 +17,7 @@ const unFold = (id) => {
 const getBranches = async() => {
   const token = localStorage.getItem("authToken");
   const result = await axios
-    .get("http://localhost:3000/api/v1/branches", {
+    .get(`http://${host}:${port}/api/v1/branches`, {
       headers: {
         bearer: token,
       },

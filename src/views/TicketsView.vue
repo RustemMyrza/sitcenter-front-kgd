@@ -3,7 +3,12 @@ import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
 const search = ref("");
+
+
 const headers = [
   {
     align: "start",
@@ -26,13 +31,13 @@ const getTicketList = async () => {
   let result;
   try {
     if (route.query.branch_id) {
-      result = await axios.get(`http://localhost:3000/api/v1/tickets/list/${route.query.branch_id}`, {
+      result = await axios.get(`http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}`, {
         headers: {
           bearer: localStorage.getItem("authToken"),
         },
       });
     } else {
-      result = await axios.get(`http://localhost:3000/api/v1/tickets/list`, {
+      result = await axios.get(`http://${host}:${port}/api/v1/tickets/list`, {
         headers: {
           bearer: localStorage.getItem("authToken"),
         },

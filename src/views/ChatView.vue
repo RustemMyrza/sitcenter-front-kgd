@@ -79,7 +79,7 @@ const pie = ref({
             :series="pie.series"
           ></apexchart>
         </div>
-        <div class="last">
+        <!-- <div class="last">
             <div class="container">
                 <div class="content">Content 1</div>
                 <div class="content">Content 2</div>
@@ -89,7 +89,7 @@ const pie = ref({
                 <div class="content">Content 6</div>
                 <div class="content">Content 7</div>
               </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </main>

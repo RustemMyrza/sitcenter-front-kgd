@@ -5,6 +5,11 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
+const totalTickets =ref(0);
+
 const isChild = ref(false);
 
 const search = ref("");
@@ -131,7 +136,7 @@ const updateChartByBranchId = async (branch) => {
 const updateTicketByBranchId = async (branch) => {
   try {
     const list = await axios.get(
-      `http://localhost:3000/api/v1/tickets/list/${branch.branchId}`,
+      `http://${host}:${port}/api/v1/tickets/list/${branch.branchId}`,
       {
         headers: {
           bearer: localStorage.getItem("authToken"),
@@ -201,6 +206,10 @@ const backChart = () => {
     isChild.value = false;
     updateChart();
     desserts.value = parentList.value;
+    if(route.query.branch_id){
+      const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+      history.replaceState({}, document.title, newUrl);
+    }
   } catch (err) {
     alert(err);
   }
@@ -209,20 +218,23 @@ const backChart = () => {
 const getBranchTickets = async () => {
   try {
     const result = await axios.get(
-      `http://localhost:3000/api/v1/tickets/branch-tickets`,
+      `http://${host}:${port}/api/v1/tickets/branch-tickets`,
       {
         headers: {
           bearer: localStorage.getItem("authToken"),
         },
       }
     );
+      console.log(result.data);
     branchTickets.value = result.data.data;
-    // console.log(branchTickets.value);
+    totalTickets.value = result.data.count;
+  
     if(route.query.branch_id){
         const propBranch = branchTickets.value.find(e=>e.branchId == route.query.branch_id);
         console.log(propBranch);
         updateChartByBranchId(propBranch);
         updateTicketByBranchId(propBranch);
+        isChild.value = true;
     }
     else
     backChart();
@@ -234,7 +246,7 @@ const getBranchTickets = async () => {
 const getTicketList = async () => {
   try {
     const result = await axios.get(
-      `http://localhost:3000/api/v1/tickets/list`,
+      `http://${host}:${port}/api/v1/tickets/list`,
       {
         headers: {
           bearer: localStorage.getItem("authToken"),
@@ -265,6 +277,8 @@ onMounted(() => {
 
 <template>
   <div class="amount-container">
+
+    <h3>{{totalTickets}}</h3>
     <div class="chartBlock">
       <v-btn @click="backChart()" v-if="isChild" class="back"
         ><i class="fas fa-arrow-left fa-2xl"></i

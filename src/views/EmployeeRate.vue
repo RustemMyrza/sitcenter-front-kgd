@@ -6,6 +6,9 @@ const branches = ref(null);
 const childBranches = ref(0);
 const selectedBranch = ref(0);
 
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
 const chart = ref(null);
 
 const employeeChart = ref({
@@ -65,7 +68,7 @@ const employeeChart = ref({
 });
 
 const getBranches = async () => {
-  const result = await axios.get(`http://localhost:3000/api/v1/branches`, {
+  const result = await axios.get(`http://${host}:${port}/api/v1/branches`, {
     headers: {
       bearer: localStorage.getItem("authToken"),
     },
@@ -76,7 +79,7 @@ const getBranches = async () => {
 
 const getEmployee = async () => {
   const result = await axios.get(
-    `http://localhost:3000/api/v1/employees/${selectedBranch.value}`,
+    `http://${host}:${port}/api/v1/employees/${selectedBranch.value}`,
     {
       headers: {
         bearer: localStorage.getItem("authToken"),

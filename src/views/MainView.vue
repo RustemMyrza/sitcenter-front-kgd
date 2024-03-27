@@ -1,5 +1,9 @@
 <script>
 import axios from "axios";
+
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
 const regionsById = [
   {
     id: "sev-kaz",
@@ -111,7 +115,7 @@ export default {
     async getRegionInfo() {
       try {
         const result = await axios.get(
-          `http://localhost:3000/api/v1/tickets/map`,
+          `http://${host}:${port}/api/v1/tickets/map`,
           {
             headers: {
               bearer: localStorage.getItem("authToken"),
@@ -147,7 +151,7 @@ export default {
       this.selectedRegion = regionsById.find((e) => region === e.id);
 
       const result = await axios.get(
-        `http://localhost:3000/api/v1/tickets/map/${this.selectedRegion.branch_id}`,
+        `http://${host}:${port}/api/v1/tickets/map/${this.selectedRegion.branch_id}`,
         {
           headers: {
             bearer: localStorage.getItem("authToken"),

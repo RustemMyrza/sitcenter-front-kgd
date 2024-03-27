@@ -1123,8 +1123,11 @@ import { onMounted, ref } from "vue";
 // });
 const offline = ref(0);
 
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
 const serverInfo = ref({
-    color: "green",
+    color: "red",
     icon: "fas fa-server",
     text: "Количество неработающих УГД",
     
@@ -1160,7 +1163,7 @@ const maxServTime = {
 };
 
 const fetchData = async () => {
-  const result = await axios.get(`http://localhost:3000/api/v1/tickets/map`, {
+  const result = await axios.get(`http://${host}:${port}/api/v1/tickets/map`, {
     headers: {
       bearer: localStorage.getItem("authToken"),
     },

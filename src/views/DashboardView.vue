@@ -7,6 +7,9 @@ const avgChart = ref(null);
 const rateChart = ref(null);
 const serviceChart = ref(null);
 
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
 const pickHours = ref({
   options: {
     chart: {
@@ -172,7 +175,7 @@ const service = ref({
 
 const fetchDognutData = async () => {
   try {
-    const result = await axios.get(`http://localhost:3000/api/v1/tickets`, {
+    const result = await axios.get(`http://${host}:${port}/api/v1/tickets`, {
       headers: {
         bearer: localStorage.getItem("authToken"),
       },
@@ -336,7 +339,7 @@ const fetchDognutData = async () => {
 
 const fetchData = async () => {
   try {
-    const result = await axios.get(`http://localhost:3000/api/v1/analytics`, {
+    const result = await axios.get(`http://${host}:${port}/api/v1/analytics`, {
       headers: {
         bearer: localStorage.getItem("authToken"),
       },

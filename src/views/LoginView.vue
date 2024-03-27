@@ -1,6 +1,8 @@
 <script >
 import axios from "axios";
 import { useRouter } from "vue-router";
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
 export default {
   data() {
     return {
@@ -23,7 +25,7 @@ export default {
     async login() {
       try {
         const result = await axios.post(
-          `http://localhost:3000/api/v1/auth/login`,
+          `http://${host}:${port}/api/v1/auth/login`,
           {
             username: this.username,
             password: this.password,

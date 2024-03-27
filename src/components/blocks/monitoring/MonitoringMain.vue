@@ -3,6 +3,10 @@ import { onMounted, ref } from "vue";
 import WindowComponent from "./WindowComponent.vue";
 import WaitingComponent from "./WaitingComponent.vue";
 import axios from "axios";
+
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
 const branches = ref(null);
 const childBranches = ref(0);
 const selectedBranch = ref(0);
@@ -17,7 +21,8 @@ const info = ref({
 });
 
 const getBranches = async () => {
-  const result = await axios.get(`http://localhost:3000/api/v1/branches`, {
+  console.log(host,port);
+  const result = await axios.get(`http://${host}:${port}/api/v1/branches`, {
     headers: {
       bearer: localStorage.getItem("authToken"),
     },
@@ -29,7 +34,7 @@ const getBranches = async () => {
 const getWindows = async () => {
   try {
     const result = await axios.get(
-      `http://localhost:3000/api/v1/windows/${selectedBranch.value}`,
+      `http://${host}:${port}/api/v1/windows/${selectedBranch.value}`,
       {
         headers: {
           bearer: localStorage.getItem("authToken"),

@@ -3,7 +3,8 @@ import axios from "axios";
 import { onMounted, ref} from "vue";
 const branches = ref([]);
 
-
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
 
 const unFold = (id) => {
   const item = branches.value.find((e) => e.id === id);
@@ -12,7 +13,7 @@ const unFold = (id) => {
 
 const getBranches = async () => {
   const token = localStorage.getItem("authToken");
-  const result = await axios.get("http://localhost:3000/api/v1/branches", {
+  const result = await axios.get(`http://${host}:${port}/api/v1/branches`, {
     headers: {
       bearer: token,
     },
