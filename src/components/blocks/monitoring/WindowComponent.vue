@@ -39,7 +39,7 @@ const props = defineProps({
 <template>
   <div class="table">
     <div class="operator">
-      <div class="operatorInfo">{{ props.operatorName }}</div>
+      <div class="operatorInfo text-sm">{{ props.operatorName }}</div>
       <img :src="props.isActive  ? worker : 2" alt="" />
     </div>
     <div class="tableImg">
@@ -52,7 +52,7 @@ const props = defineProps({
       <img :src="props.isActive ? table : table_transparent" alt="" />
     </div>
     <div class="client">
-      <div class="clientInfo">{{props.clientInfo}}</div>
+      <div class="clientInfo text-sm">{{props.clientInfo}}</div>
       <img :src="inService ? client : 2" alt="" />
     </div>
   </div>
@@ -70,10 +70,11 @@ const props = defineProps({
     left: 20%;
     width: 40%;
     .operatorInfo {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
 
       position: absolute;
-      top: -40%;
+      top: -50%;
+      z-index: 999;
     }
   }
   .tableImg {
@@ -110,7 +111,7 @@ const props = defineProps({
     z-index: 999;
     .clientInfo {
       position: absolute;
-      font-size: 0.8rem;
+      font-size: 0.5rem;
       left: -80%;
       top: 80%;
     }
