@@ -32,40 +32,91 @@ const pie = ref({
         <div class="chat">
           <div class="inner">
             <div class="messages">
-              <div class="message">
-                <div class="userImg">
-                  <img src="../assets/logo.png" width="50px" alt="" />
+              <div class="message flex shadow-md rounded-xl mx-auto my-3">
+                <div class="userImg  m-1  h-full">
+                  <img src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
+                  <div class="login m-2">kgd</div>
                 </div>
-                <div class="msg">Hello world</div>
-              </div>
-              <div class="message">
-                <div class="userImg">
-                  <img src="../assets/logo.png" width="50px" alt="" />
+                <div class="msg p-2 m-1 w-full  h-full">
+                  <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi ipsam eius qui provident rerum? Laudantium, iusto ab! Distinctio molestiae, maxime rerum cupiditate iste accusantium soluta, ea reprehenderit, cum temporibus reiciendis.
+                  </div>
+                  <div class="msg-date float-right text-sm">10.10.12 12:44:11</div>
                 </div>
-                <div class="msg">Hello world</div>
               </div>
-              <div class="message">
-                <div class="userImg">
-                  <img src="../assets/logo.png" width="50px" alt="" />
+              <div class="message flex shadow-md rounded-xl mx-auto my-3">
+                <div class="userImg  m-1  h-full">
+                  <img src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
+                  <div class="login m-2">kgd</div>
                 </div>
-                <div class="msg">Hello world</div>
-              </div>
-              <div class="message">
-                <div class="userImg">
-                  <img src="../assets/logo.png" width="50px" alt="" />
+                <div class="msg p-2 m-1 w-full  h-full">
+                  <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi ipsam eius qui provident rerum? Laudantium, iusto ab! Distinctio molestiae, maxime rerum cupiditate iste accusantium soluta, ea reprehenderit, cum temporibus reiciendis.
+                  </div>
+                  <div class="msg-date float-right text-sm">10.10.12 12:44:11</div>
                 </div>
-                <div class="msg">Hello world</div>
               </div>
+              <div class="message flex shadow-md rounded-xl mx-auto my-3">
+                <div class="userImg  m-1  h-full">
+                  <img src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
+                  <div class="login m-2">kgd</div>
+                </div>
+                <div class="msg p-2 m-1 w-full  h-full">
+                  <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi ipsam eius qui provident rerum? Laudantium, iusto ab! Distinctio molestiae, maxime rerum cupiditate iste accusantium soluta, ea reprehenderit, cum temporibus reiciendis.
+                  </div>
+                  <div class="msg-date float-right text-sm">10.10.12 12:44:11</div>
+                </div>
+              </div>
+              <div class="message flex shadow-md rounded-xl mx-auto my-3">
+                <div class="userImg  m-1  h-full">
+                  <img src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
+                  <div class="login m-2">kgd</div>
+                </div>
+                <div class="msg p-2 m-1 w-full  h-full">
+                  <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi ipsam eius qui provident rerum? Laudantium, iusto ab! Distinctio molestiae, maxime rerum cupiditate iste accusantium soluta, ea reprehenderit, cum temporibus reiciendis.
+                  </div>
+                  <div class="msg-date float-right text-sm">10.10.12 12:44:11</div>
+                </div>
+              </div>
+              <div class="message flex shadow-md rounded-xl mx-auto my-3">
+                <div class="userImg  m-1  h-full">
+                  <img src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
+                  <div class="login m-2">kgd</div>
+                </div>
+                <div class="msg p-2 m-1 w-full  h-full">
+                  <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi ipsam eius qui provident rerum? Laudantium, iusto ab! Distinctio molestiae, maxime rerum cupiditate iste accusantium soluta, ea reprehenderit, cum temporibus reiciendis.
+                  </div>
+                  <div class="msg-date float-right text-sm">10.10.12 12:44:11</div>
+                </div>
+              </div>
+              <div class="message flex shadow-md rounded-xl mx-auto my-3">
+                <div class="userImg  m-1  h-full">
+                  <img src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
+                  <div class="login m-2">kgd</div>
+                </div>
+                <div class="msg p-2 m-1 w-full  h-full">
+                  <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi ipsam eius qui provident rerum? Laudantium, iusto ab! Distinctio molestiae, maxime rerum cupiditate iste accusantium soluta, ea reprehenderit, cum temporibus reiciendis.
+                  </div>
+                  <div class="msg-date float-right text-sm">10.10.12 12:44:11</div>
+                </div>
+              </div>
+              <div class="message flex shadow-md rounded-xl mx-auto my-3">
+                <div class="userImg  m-1  h-full">
+                  <img src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
+                  <div class="login m-2">kgd</div>
+                </div>
+                <div class="msg p-2 m-1 w-full  h-full">
+                  <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quasi ipsam eius qui provident rerum? Laudantium, iusto ab! Distinctio molestiae, maxime rerum cupiditate iste accusantium soluta, ea reprehenderit, cum temporibus reiciendis.
+                  </div>
+                  <div class="msg-date float-right text-sm">10.10.12 12:44:11</div>
+                </div>
+              </div>
+            
             </div>
             <div class="send-mess">
-              <div class="input-group mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Username"
-                  aria-label="Username"
-                  aria-describedby="basic-addon1"
-                />
+              <div class="input-group ">
+                <div class="form-floating">
+                  <textarea class="form-control " placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                  <label for="floatingTextarea">Сообщение...</label>
+                </div>
               </div>
             </div>
           </div>
@@ -79,40 +130,60 @@ const pie = ref({
             :series="pie.series"
           ></apexchart>
         </div>
-        <!-- <div class="last">
-            <div class="container">
-                <div class="content">Content 1</div>
-                <div class="content">Content 2</div>
-                <div class="content">Content 3</div>
-                <div class="content">Content 4</div>
-                <div class="content">Content 5</div>
-                <div class="content">Content 6</div>
-                <div class="content">Content 7</div>
-              </div>
-        </div> -->
+        <div class="last-container p-3">
+            <div class="title m-2"><h5>Последние заходившие</h5></div>
+          <div class="flex overflow-x-auto space-x-8 w-full ">
+            <section class="flex-shrink-0 rounded-full border-2 ">
+              <span><img src="../assets/avatart.jpg" class=" h-24 w-24 rounded-full border-2 " alt=""
+              /></span>
+              <span>kgd</span>
+            </section>
+            <section class="flex-shrink-0 rounded-full border-2 ">
+              <span><img src="../assets/avatart.jpg" class=" h-24 w-24 rounded-full border-2 " alt=""
+              /></span>
+              <span>kgd</span>
+            </section>
+            <section class="flex-shrink-0 rounded-full border-2 ">
+              <span><img src="../assets/avatart.jpg" class=" h-24 w-24 rounded-full border-2 " alt=""
+              /></span>
+              <span>kgd</span>
+            </section>
+            <section class="flex-shrink-0 rounded-full border-2 ">
+              <span><img src="../assets/avatart.jpg" class=" h-24 w-24 rounded-full border-2 " alt=""
+              /></span>
+              <span>kgd</span>
+            </section>
+            <section class="flex-shrink-0 rounded-full border-2 ">
+              <span><img src="../assets/avatart.jpg" class=" h-24 w-24 rounded-full border-2 " alt=""
+              /></span>
+              <span>kgd</span>
+            </section>
+            <section class="flex-shrink-0 rounded-full border-2 ">
+              <span><img src="../assets/avatart.jpg" class=" h-24 w-24 rounded-full border-2 " alt=""
+              /></span>
+              <span>kgd</span>
+            </section>
+            <section class="flex-shrink-0 rounded-full border-2 ">
+              <span><img src="../assets/avatart.jpg" class=" h-24 w-24 rounded-full border-2 " alt=""
+              /></span>
+              <span>kgd</span>
+            </section>
+            <section class="flex-shrink-0 rounded-full border-2 ">
+              <span><img src="../assets/avatart.jpg" class=" h-24 w-24 rounded-full border-2 " alt=""
+              /></span>
+              <span>kgd</span>
+            </section>
+           
+            
+          </div>
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <style lang="scss" scoped>
-.container {
-    width: 300px;
-    height: 600px;
-    overflow-y: scroll;
-  
-    transform: rotate(-90deg);
-  }
-  
-  .content {
-    width: 140px;
-    height: 140px;
-    margin: 10px;
-  
-    background-color: #a8a8df;
-    
-    transform: rotate(90deg);
-  }
+
 main {
   display: flex;
   justify-content: center;
@@ -120,7 +191,7 @@ main {
 }
 .chat-container {
   width: 100%;
-  height: 80vh;
+  height: 75vh;
   display: flex;
   .chat-left {
     width: 50%;
@@ -144,21 +215,20 @@ main {
           height: 90%;
           width: 100%;
           padding: 0.5rem;
-          .message {
-            display: flex;
-            justify-content: space-around;
-            border: 1px solid black;
-            border-radius: 0.5rem;
-            .msg {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-          }
+          overflow-y: scroll;
+          
         }
         .send-mess {
           height: 10%;
           width: 100%;
+          .input-group{
+            .form-floating{
+              textarea{
+                border-radius: 0 0 1rem 1rem ;
+              }
+            }
+            
+          }
         }
       }
     }
@@ -168,19 +238,13 @@ main {
     height: 100%;
     .pieChart {
       width: 100%;
-      height: 80%;
+      height: 70%;
     }
-    .last {
-      width: 20%;
-      height: 50%;
-      background-color: azure;
-      overflow-x: auto;
-      white-space: nowrap;
-      transform: rotate(-90deg);
-      .users {
-        display:inline-block
-      }
+    .last-container{
+      width: 100%;
+      height: 30%;
     }
+    
   }
 }
 </style>

@@ -1,5 +1,12 @@
 <template>
-    dasd
+  <div class="flex overflow-x-auto space-x-8 w-1/2 ">
+    <section class="flex-shrink-0 rounded-full border-2 ">
+      <span><img src="../assets/avatart.jpg" class=" h-14 w-14 rounded-full border-2 " alt=""
+      /></span>
+      <span>kgd</span>
+    </section>
+    
+  </div>
 </template>
 
 <!-- <template>
