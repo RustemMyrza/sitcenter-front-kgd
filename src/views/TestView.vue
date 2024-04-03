@@ -1,57 +1,51 @@
 <template>
-  <div>
-    <table ref="dataTable" class="display" style="width:100%"></table>
-    <button @click="previousPage">Previous Page</button>
-    <button @click="nextPage">Next Page</button>
+  <div class="container">
+    <div class="zoom-container" :style="{ transform: `scale(${zoom})` }">
+      <!-- Content that you want to zoom -->
+      <div class="content-to-zoom">
+        <!-- Content to be zoomed -->
+        <img src="../assets/avatar.png" alt="Your Image">
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import $ from 'jquery';
-import 'datatables.net';
-import 'datatables.net-bs4';
-
-const dataTable = ref(null);
-let currentPage = 1;
-const itemsPerPage = 10;
-
-onMounted(async () => {
-  await fetchData();
-});
-
-async function fetchData() {
-  const response = await fetch(`/your-api-endpoint?page=${currentPage}&per_page=${itemsPerPage}`);
-  const data = await response.json();
-  
-  $(dataTable.value).DataTable({
-    data: data.items, // Assuming your API response contains a property named 'items' that holds the array of data
-    columns: [
-      { data: 'id', title: 'ID' },
-      { data: 'name', title: 'Name' }
-      // Add more columns as needed
-    ]
-  });
-}
-
-function previousPage() {
-  if (currentPage > 1) {
-    currentPage--;
-    reloadDataTable();
-  }
-}
-
-function nextPage() {
-  currentPage++;
-  reloadDataTable();
-}
-
-function reloadDataTable() {
-  $(dataTable.value).DataTable().destroy(); // Destroy the current DataTable instance
-  fetchData(); // Fetch data for the new page
-}
+<script>
+export default {
+  data() {
+    return {
+      zoom: 1, // Initial zoom level
+    };
+  },
+  methods: {
+    // Function to increase the zoom level
+    zoomIn() {
+      this.zoom += 0.1;
+    },
+    // Function to decrease the zoom level
+    zoomOut() {
+      if (this.zoom > 0.2) { // Limit zoom-out to prevent negative scaling
+        this.zoom -= 0.1;
+      }
+    },
+  },
+};
 </script>
 
-<style>
-/* Your CSS styles */
+<style scoped>
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zoom-container {
+  overflow: hidden;
+}
+
+.content-to-zoom {
+  transition: transform 0.5s ease;
+}
 </style>

@@ -66,6 +66,7 @@ const sendMessage = async () => {
         bearer: localStorage.getItem("authToken"),
       },
     });
+    
 
     console.log(result)
   } catch (err) {

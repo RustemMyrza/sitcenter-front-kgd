@@ -2,12 +2,13 @@
 import { toggleSidebar } from '../sidebar/state';
 <script setup>
 import { toggleSidebar,collapsed } from "@/components/sidebar/state";
-import { useRoute } from "vue-router";
-
+import {  useRouter } from "vue-router";
+const route = useRouter();
 const logout = ()=>{
-  const router = useRoute();
+  
   localStorage.removeItem("authToken");
-  router.push("/login");
+  route.push("/login");
+  // console.log(route)
 }
 </script>
 
@@ -17,7 +18,7 @@ const logout = ()=>{
       <i class="fas fa-angle-double-left" />
     </div>
     <div class="headerInfo flex items-center">
-      <div class="icons flex">
+      <!-- <div class="icons flex">
         <div class="bell">
           <div class="bell-amount">123</div>
           <i class="far fa-bell fa-lg"></i>
@@ -26,7 +27,7 @@ const logout = ()=>{
           <div class="envelope-amount">123</div>
           <i class="far fa-envelope fa-lg"></i>
         </div>
-      </div>
+      </div> -->
       <div class="userInfo ">
         <div class="dropdown ">
           <button 

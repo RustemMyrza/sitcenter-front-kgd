@@ -25,7 +25,7 @@ export default {
     async login() {
       try {
         const result = await axios.post(
-          `http://${host}:${port}/api/v1/auth/login`,
+          `http://${host}:${port}/api/v1/auth/nomadLogin`,
           {
             username: this.username,
             password: this.password,

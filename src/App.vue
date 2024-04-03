@@ -12,28 +12,35 @@ export default {
 
     return { sidebarWidth, route };
   },
+  data() {
+    return {
+      currentRoute: '',
+    }
+  },
   methods: {
     isLoginPage() {
-      return this.route.path === "/login";
+      return this.$route.path === "/login";
     },
   },
+
 };
 </script>
 
+
 <template>
-  <div v-if="isLoginPage" class="side-bar">
+  <div v-if="!isLoginPage()" class="side-bar">
     <SidebarComponent />
   </div>
   <div class="main">
-    <div :style="{ 'margin-left':isLoginPage && sidebarWidth }">
-      <div v-if="isLoginPage" class="head">
+    <div :style="{ 'margin-left': !isLoginPage() && sidebarWidth }">
+      <div v-if="!isLoginPage()" class="head">
         <header-component />
         <div class="dashboard">
           <dashboard-top />
         </div>
       </div>
-      <router-view />
     </div>
+    <router-view :style="{ 'margin-left': !isLoginPage() && sidebarWidth }" />
   </div>
 </template>
 
