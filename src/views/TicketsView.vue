@@ -45,6 +45,8 @@ const getTicketList = async () => {
     }
 
     desserts.value = result.data.data.tickets;
+
+    search.value =313;
   } catch (err) {
     console.log(err);
   }
@@ -74,8 +76,14 @@ onMounted(() => {
           :headers="headers"
           :items="desserts"
           :search="search"
+          :hide-default-footer="true"
         ></v-data-table>
       </v-card>
     </div>
   </div>
 </template>
+<style lang="scss" scoped>
+.v-data-table-footer{
+  display: none!important;
+}
+</style>

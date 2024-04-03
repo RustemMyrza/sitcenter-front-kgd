@@ -1,4 +1,4 @@
-<script>
+<script lang="js">
 import SidebarComponent from "@/components/sidebar/SidebarComponent.vue";
 import { sidebarWidth } from "@/components/sidebar/state";
 import HeaderComponent from "./components/header/HeaderComponent.vue";
