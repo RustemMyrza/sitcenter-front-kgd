@@ -40,7 +40,7 @@ const logout = ()=>{
             <img src="../../assets/logo.png" alt="" />
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#">Мой профиль</a></li>
+            <li><router-link to="/profile" class="dropdown-item" href="#">Мой профиль</router-link></li>
              <li><a @click="logout()" class="dropdown-item" href="#">Выход</a></li>
           </ul>
         </div>

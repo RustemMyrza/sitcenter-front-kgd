@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import axios from "axios";
+import axios from "axios";
 
 import MainView from "@/views/MainView";
 import DashboardAmountView from "../views/DashboardAmountView.vue";
@@ -38,19 +38,20 @@ const routes = [
     path: "/profile",
     name: "profile page",
     component: MyProfileView,
+    meta: { requiresAuth: true }
   },
   {
     path: "/",
     name: "main",
     component: MainView,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: "/amount-dash",
     name: "amountDash",
     component: DashboardAmountView,
     props: true,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: "/time-dash",
@@ -115,37 +116,38 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach(async (to, from, next) => {
-//   // Check if the route requires authentication
-//   if (to.meta.requiresAuth) {
-//     // Check if the user is authenticated (you need to implement your own logic here)
-//     const isAuthenticated = await checkAuthentication(); // Function to check authentication status
-//     if (isAuthenticated) {
-//       // If authenticated, proceed to the route
-//       next();
-//     } else {
-//       // If not authenticated, redirect to the login page
-//       next('/login');
-//     }
-//   } else {
-//     // If the route doesn't require authentication, proceed to the route
-//     next();
-//   }
-// });
+router.beforeEach(async (to, from, next) => {
+  // Check if the route requires authentication
+  if (to.meta.requiresAuth) {
+    // Check if the user is authenticated (you need to implement your own logic here)
+    const isAuthenticated = await checkAuthentication(); // Function to check authentication status
+    if (isAuthenticated) {
+      // If authenticated, proceed to the route
+      next();
+    } else {
+      // If not authenticated, redirect to the login page
+      next('/login');
+    }
+  } else {
+    // If the route doesn't require authentication, proceed to the route
+    next();
+  }
+});
 
-// async function checkAuthentication() {
+async function checkAuthentication() {
 
-//   try {
-//     const isValid = await axios.post("/auth", {
-//       headers: {
-//         bearer: localStorage.getItem("authToken")
-//       }
-//     })
-//     isValid
-//   } catch (err) {
-//     console.log(err);
-//   }
+  try {
+    const isValid = await axios.get("http://localhost:3000/api/v1/branches", {
+      headers: {
+        bearer: localStorage.getItem("authToken")
+      }
+    })
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
   
-// }
+}
 
 export default router;

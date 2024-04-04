@@ -98,7 +98,7 @@ onMounted(() => {
               </div> -->
               <div class="unfold-amount">
                 <select class="form-select" aria-label="Default select example">
-                    <option value="1" :selected="child.ONN ===1">Меню-1</option>
+                    <option value="1" :selected="child.ONN ===1">Автоматическое</option>
                     <option value="2"  :selected="child.ONN ===0">Меню-2</option>
                     
                   </select>
