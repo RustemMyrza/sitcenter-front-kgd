@@ -2,14 +2,20 @@
 import { toggleSidebar } from '../sidebar/state';
 <script setup>
 import { toggleSidebar,collapsed } from "@/components/sidebar/state";
+import { onMounted, ref } from "vue";
 import {  useRouter } from "vue-router";
 const route = useRouter();
+
+const username = ref(null);
 const logout = ()=>{
   
   localStorage.removeItem("authToken");
   route.push("/login");
   // console.log(route)
 }
+onMounted(()=>{
+  username.value = localStorage.getItem("login");
+})
 </script>
 
 <template>
@@ -30,6 +36,7 @@ const logout = ()=>{
       </div> -->
       <div class="userInfo ">
         <div class="dropdown ">
+         
           <button 
             class="btn  dropdown-toggle"
             type="button"
@@ -37,7 +44,9 @@ const logout = ()=>{
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="../../assets/logo.png" alt="" />
+          
+            <img src="../../assets/logo.png" alt=""  />
+            {{ username }}
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li><router-link to="/profile" class="dropdown-item" href="#">Мой профиль</router-link></li>
@@ -71,7 +80,7 @@ const logout = ()=>{
           align-items: center;
           img{
             margin: 0 0.5rem;
-            width: 40%;
+            width: 30%;
           }
         }
       }

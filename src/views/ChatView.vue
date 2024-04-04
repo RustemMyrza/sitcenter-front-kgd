@@ -66,9 +66,16 @@ const sendMessage = async () => {
         bearer: localStorage.getItem("authToken"),
       },
     });
+   
+    const newMessages = {
+      user_login:localStorage.getItem("login"),
+      message_txt:msg.value,
+      created_at:new Date().toLocaleString("RU-ru")
+    }
+    messages.value.push(newMessages)
     
-
-    console.log(result)
+    msg.value = "";
+    // console.log(result)
   } catch (err) {
     console.log(err);
   }
@@ -108,12 +115,16 @@ onMounted(() => {
             <div class="send-mess">
               <div class="input-group">
                 <div class="form-floating">
+                 
                   <textarea v-model="msg" class="form-control" placeholder="Leave a comment here"
                     id="floatingTextarea"></textarea>
                   <label for="floatingTextarea">Сообщение...</label>
                     <!-- {{ msg }} -->
+                   
                 </div>
                 <button @click="sendMessage" class="btn btn-primary">Отправить</button>
+                  
+                
               </div>
             </div>
           </div>

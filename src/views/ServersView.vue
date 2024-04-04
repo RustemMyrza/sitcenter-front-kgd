@@ -39,27 +39,53 @@ const getBranches = async() => {
 };
 
 
-const filterOnline = ()=>{
-    const a = branches.value.filter(e=>{
-      return e.children.map((el)=>el.ONN === 1);
-      
-    });
-    console.log(a);
+const filterOnline = async()=>{
+  const token = localStorage.getItem("authToken");
+  const result = await axios
+    .get(`http://${host}:${port}/api/v1/branches?type=online`, {
+      headers: {
+        bearer: token,
+      },
+    })
+    console.log(result.data)
+    branches.value = result.data.rows;
+
+      // Calculate onlineSize for each branch
+      branches.value.map((element) => {
+        let online = 0;
+        element.children.forEach((el) => {
+          if (el.ONN === 1) {
+            online += 1;
+          }
+        });
+        element.onlineSize = online;
+        element.fold = true;
+      });
+}
+const filterOffline = async()=>{
+  const token = localStorage.getItem("authToken");
+  const result = await axios
+    .get(`http://${host}:${port}/api/v1/branches?type=offline`, {
+      headers: {
+        bearer: token,
+      },
+    })
+    branches.value = result.data.rows;
+
+      // Calculate onlineSize for each branch
+      branches.value.map((element) => {
+        let online = 0;
+        element.children.forEach((el) => {
+          if (el.ONN === 1) {
+            online += 1;
+          }
+        });
+        element.onlineSize = online;
+        element.fold = true;
+      });
 }
 
-const filteredBranches = computed(() => {
-  const keyword = filterKeyword.value.toLowerCase().trim();
-  if (keyword === "onn") {
-    return branches.value.filter((branch) =>
-      branch.children.some((child) => child.ONN === 1)
-    );
-  } else if (keyword === "off") {
-    return branches.value.filter((branch) =>
-      branch.children.every((child) => child.ONN === 0)
-    );
-  }
-  return branches.value;
-});
+
 
 
 
@@ -93,7 +119,7 @@ onMounted(() => {
         <div class="control">
           <button
             type="button"
-            @click="filterKeyword = 'off'"
+            @click="filterOffline()"
             class="btn btn-danger"
           >
             Недоступные
@@ -107,7 +133,7 @@ onMounted(() => {
           <div>Количество доступных/всего</div>
         </div>
         <div
-          v-for="branch in filteredBranches"
+          v-for="branch in branches"
           :key="branch.id"
           @click="unFold(branch.id)"
           class="drop-item"

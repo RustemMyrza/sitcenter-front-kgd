@@ -1,19 +1,16 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref, watch,  } from "vue";
+import { onMounted, ref, watch,computed } from "vue";
 import { useRoute } from "vue-router";
 
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
 const search = ref("");
-
 const pagination = ref({
   pageCount: 1,
   pageNumber: 1,
 });
-// const pageNumber = ref(1);
-
 const headers = [
   {
     align: "center",
@@ -25,62 +22,106 @@ const headers = [
   { align: "center", key: "servicename", title: "Название услуги" },
   { align: "center", key: "idbranch", title: "Отделение" },
   { align: "center", key: "operator", title: "Оператор" },
+  { align: "center", key: "state", title: "Статус" },
   { align: "center", key: "starttime", title: "Время регистрации" },
   // { key: "waittime", title: "Время ожидания" },
   { align: "center", key: "startservtime", title: "Время обслуживания" },
   { align: "center", key: "rating", title: "Оценка" },
-  { align: "center", key: "alarm", title: "Alarm" },
+  { align: "center", key: "waitover", title: "Превышение времени ожидания" },
+  { align: "center", key: "servover", title: "Превышение времени обслуживания" },
 ];
 const desserts = ref([]);
 const route = useRoute();
 
 const getTicketList = async () => {
-  let url;
   try {
+    let url;
     if (route.query.branch_id) {
-      url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?page=${pagination.value.pageCount}&limit=25`;
-    } else url = `http://${host}:${port}/api/v1/tickets/list?page=${pagination.value.pageCount}&limit=25`;
+      url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?page=${pagination.value.pageNumber}&limit=100`;
+    } else {
+      url = `http://${host}:${port}/api/v1/tickets/list?page=${pagination.value.pageNumber}&limit=100`;
+    }
 
     const result = await axios.get(url, {
       headers: {
         bearer: localStorage.getItem("authToken"),
       },
     });
-    // console.log(result.data.pages);
 
     pagination.value.pageCount = result.data.pages;
     desserts.value = result.data.data.tickets;
-    // console.log(pagination.value.pageCount)
-    // search.value =313;
   } catch (err) {
     console.log(err);
   }
-
 };
-watch(pagination.value, (newValue, oldValue) => {
-  // This function will be called whenever the value changes
-  console.log('New value:', newValue);
-  console.log('Old value:', oldValue);
+
+const filterTickets = async(value)=>{
+  try {
+    let url;
+    if (route.query.branch_id) {
+      if(value === "bad-rate")
+      url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?filter=bad&page=${pagination.value.pageNumber}&limit=100`;
+      else if(value === 'wait')
+      url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?filter=wait&page=${pagination.value.pageNumber}&limit=100`;
+      else if(value==='serv')
+      url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?filter=serv&page=${pagination.value.pageNumber}&limit=100`;
+      
+    } else {
+      if(value === "bad-rate")
+      url = `http://${host}:${port}/api/v1/tickets/list?filter=bad&page=${pagination.value.pageNumber}&limit=100`;
+      else if(value === 'wait')
+      url = `http://${host}:${port}/api/v1/tickets/list?filter=wait&page=${pagination.value.pageNumber}&limit=100`;
+      else if(value==='serv')
+      url = `http://${host}:${port}/api/v1/tickets/list?filter=serv&page=${pagination.value.pageNumber}&limit=100`;
+     
+    }
+
+    const result = await axios.get(url, {
+      headers: {
+        bearer: localStorage.getItem("authToken"),
+      },
+    });
+
+    pagination.value.pageCount = result.data.pages;
+    pagination.value.pageNumber = 1;
+    desserts.value = result.data.data.tickets;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+watch(() => pagination.value.pageNumber, (newValue, oldValue) => {
+  getTicketList();
 });
-// watchEffect(()=>{
-//     console.log(pagination.value)
-// });
+const formattedDesserts = computed(() => {
+  return desserts.value.map(ticket => {
+    return {
+      ...ticket,
+      starttime: new Date(ticket.starttime).toLocaleString("ru-RU"),
+      startservtime: new Date(ticket.startservtime).toLocaleString("ru-RU"),
+      rating: ticket.rating === "5" ? "Отлично" : ticket.rating === "4" ? "Хорошо" :ticket.rating === "4" ? "Плохо":"Нет оценки", 
+      waitover:ticket.waitover === "true"?"Да":"Нет",
+      servover:ticket.servover === "true"?"Да":"Нет"
+    }
+  });
+});
 
 onMounted(() => {
   getTicketList();
 });
 </script>
 
+
 <template>
   <div class="ticket-container">
     <div class="ticketMain">
       <div class="filter block">
-        <button class="btn btn-primary">Все билеты</button>
-        <button class="btn btn-warning">Плохие оценки</button>
-        <button class="btn btn-warning">
+        <button class="btn btn-primary" @click="getTicketList()">Все билеты</button>
+        <button class="btn btn-warning" @click="filterTickets('bad-rate')">Плохие оценки</button>
+        <button class="btn btn-warning" @click="filterTickets('serv')">
           Перевышение времени обслуживания
         </button>
-        <button class="btn btn-warning">Перевышение времени ожидания</button>
+        <button class="btn btn-warning" @click="filterTickets('wait')" >Перевышение времени ожидания</button>
       </div>
       <div class="pagi ">
         <div class="text-center">
@@ -99,7 +140,7 @@ onMounted(() => {
 
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="formattedDesserts"
           :search="search"
           :hide-default-footer="true"
         ></v-data-table>

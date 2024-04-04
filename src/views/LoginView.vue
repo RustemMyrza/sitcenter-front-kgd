@@ -20,8 +20,9 @@ export default {
     };
   },
   methods: {
-    goToMainPage(token) {
+    goToMainPage(token,login) {
       localStorage.setItem("authToken", token);
+      localStorage.setItem("login",login)
       this.router.push("/");
     },
     async login() {
@@ -33,8 +34,9 @@ export default {
             password: this.password,
           }
         );
+        console.log(response.data)
         // If login is successful
-        this.goToMainPage(response.data.token);
+        this.goToMainPage(response.data.token,response.data.login);
       } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
