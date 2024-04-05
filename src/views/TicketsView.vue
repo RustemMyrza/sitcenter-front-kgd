@@ -49,7 +49,7 @@ const getTicketList = async () => {
         bearer: localStorage.getItem("authToken"),
       },
     });
-
+    console.log(result.data)
     pagination.value.pageCount = result.data.pages;
     desserts.value = result.data.data.tickets;
   } catch (err) {
@@ -107,8 +107,12 @@ const formattedDesserts = computed(() => {
       state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" : "Бронь", 
       idbranch: ticket.idbranch
     }
+  }).sort((a, b) => {
+    return a.starttime - b.starttime;
   });
 });
+
+
 
 onMounted(() => {
   getTicketList();

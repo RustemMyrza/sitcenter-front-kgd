@@ -1,5 +1,6 @@
 <script setup>
 import axios from "axios";
+
 import {  onMounted, ref } from "vue";
 const branches = ref([]);
 
@@ -92,6 +93,7 @@ const filterOffline = async()=>{
 
 onMounted(() => {
   getBranches();
+ 
 });
 </script>
 <template>
