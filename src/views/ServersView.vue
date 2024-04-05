@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import {  onMounted, ref, computed } from "vue";
+import {  onMounted, ref } from "vue";
 const branches = ref([]);
 
 const host = process.env.VUE_APP_SERVER_HOST;

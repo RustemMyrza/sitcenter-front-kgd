@@ -6,6 +6,8 @@ import { useRoute } from "vue-router";
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
+
+
 const search = ref("");
 const pagination = ref({
   pageCount: 1,
@@ -90,7 +92,7 @@ const filterTickets = async(value)=>{
   }
 }
 
-watch(() => pagination.value.pageNumber, (newValue, oldValue) => {
+watch(() => pagination.value.pageNumber, () => {
   getTicketList();
 });
 const formattedDesserts = computed(() => {
@@ -101,7 +103,9 @@ const formattedDesserts = computed(() => {
       startservtime: new Date(ticket.startservtime).toLocaleString("ru-RU"),
       rating: ticket.rating === "5" ? "Отлично" : ticket.rating === "4" ? "Хорошо" :ticket.rating === "4" ? "Плохо":"Нет оценки", 
       waitover:ticket.waitover === "true"?"Да":"Нет",
-      servover:ticket.servover === "true"?"Да":"Нет"
+      servover:ticket.servover === "true"?"Да":"Нет",
+      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" : "Бронь", 
+      idbranch: ticket.idbranch
     }
   });
 });

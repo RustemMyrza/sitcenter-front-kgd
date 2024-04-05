@@ -137,7 +137,7 @@ router.beforeEach(async (to, from, next) => {
 async function checkAuthentication() {
 
   try {
-    const isValid = await axios.get("http://localhost:3000/api/v1/branches", {
+      await axios.get("http://localhost:3000/api/v1/branches", {
       headers: {
         bearer: localStorage.getItem("authToken")
       }

@@ -59,7 +59,7 @@ const getUsers = async () => {
 
 const sendMessage = async () => {
   try {
-    const result = await axios.post(`http://localhost:3000/api/v1/messages`, {
+     await axios.post(`http://localhost:3000/api/v1/messages`, {
       txt: msg.value,
     }, {
       headers: {
