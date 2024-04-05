@@ -117,6 +117,8 @@ export default {
   methods: {
     async getRegionInfo() {
       try {
+        this.serverInfo.online = 0;
+        this.serverInfo.total = 0;
         const result = await axios.get(
           `http://${host}:${port}/api/v1/tickets/map`,
           {
@@ -134,6 +136,12 @@ export default {
         // const off = result.data.data.offlineBranches;
 
         this.serverList.map((e) => {
+          e.children.map((child) => {
+            if (child.ONN === 1) {
+              this.serverInfo.online++;
+            }
+            this.serverInfo.total++;
+          });
           const region = regionsById.find(
             (element) => element.branch_id == e.F_ID
           );
@@ -172,6 +180,8 @@ export default {
       }
     },
     async selectRegion(region) {
+      this.serverInfo.online =0;
+      this.serverInfo.total =0;
       try {
         const select = regionsById.find((e) => region === e.id);
         this.selectedRegion = select.name;
@@ -184,11 +194,21 @@ export default {
             },
           }
         );
-        this.serverInfo.online = result.data.data.onlineServers;
-        this.serverInfo.total = result.data.data.total;
+
+        const server = result.data.data.server_list;
+        // const off = result.data.data.offlineBranches;
+        // console.log(result.data.data);
+        
+          server.children.map((child) => {
+            if (child.ONN === 1) {
+              this.serverInfo.online++;
+            }
+            this.serverInfo.total++;
+          });
+       
         this.ticketInfo = result.data.data.tickets;
         this.averageRate = result.data.data.averageRate;
-        console.log(result.data.data);
+        
 
         if (this.currentRegion) {
           const previousRegion = document.getElementById(this.currentRegion);
@@ -206,7 +226,11 @@ export default {
           }
 
           previousRegion.style.fill = this.currentColor;
+
+          
+          
         }
+       
 
         this.currentRegion = region;
 
@@ -215,6 +239,8 @@ export default {
         mapPart.style.width = "300px";
         // console.log(mapPart.transform)
         mapPart.style.fill = "#4FCB1D";
+        
+        
       } catch (err) {
         console.log(err);
       }
@@ -232,6 +258,9 @@ export default {
         query: { branch_id: this.selectedRegion.branch_id },
       });
     },
+  },
+  computed:{
+    
   },
   mounted() {
     this.getRegionInfo();
