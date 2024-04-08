@@ -103,7 +103,7 @@ onMounted(() => {
         <div class="control">
           <button
             type="button"
-            @click="filterKeyword = 'all'"
+            @click="getBranches()"
             class="btn btn-secondary"
           >
             Все

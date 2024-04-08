@@ -1,12 +1,9 @@
+<!-- MyComponent.vue -->
 <template>
-  <div class="container">
-    <div class="zoom-container" :style="{ transform: `scale(${zoom})` }">
-      <!-- Content that you want to zoom -->
-      <div class="content-to-zoom">
-        <!-- Content to be zoomed -->
-        <img src="../assets/avatar.png" alt="Your Image">
-      </div>
-    </div>
+  <div>
+    <div>{{ message }}</div>
+    <button @click="updateMessage">Update Message</button>
+    <button @click="destroyAndRerender">Destroy and Rerender</button>
   </div>
 </template>
 
@@ -14,38 +11,19 @@
 export default {
   data() {
     return {
-      zoom: 1, // Initial zoom level
+      message: 'Initial message'
     };
   },
   methods: {
-    // Function to increase the zoom level
-    zoomIn() {
-      this.zoom += 0.1;
+    updateMessage() {
+      this.message = 'New message';
     },
-    // Function to decrease the zoom level
-    zoomOut() {
-      if (this.zoom > 0.2) { // Limit zoom-out to prevent negative scaling
-        this.zoom -= 0.1;
-      }
-    },
-  },
+    destroyAndRerender() {
+      // Destroy component and rerender
+      this.$destroy();
+      this.$options.template = '<div>New component content</div>';
+      this.$mount();
+    }
+  }
 };
 </script>
-
-<style scoped>
-.container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.zoom-container {
-  overflow: hidden;
-}
-
-.content-to-zoom {
-  transition: transform 0.5s ease;
-}
-</style>

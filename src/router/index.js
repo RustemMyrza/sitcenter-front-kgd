@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import axios from "axios";
+// import axios from "axios";
 
 import MainView from "@/views/MainView";
 import DashboardAmountView from "../views/DashboardAmountView.vue";
@@ -18,21 +18,18 @@ import MyProfileView from "@/views/MyProfileView.vue";
 
 import TestView from "@/views/TestView.vue";
 
-
+import store from "@/store";
 
 const routes = [
-
   {
     path: "/test",
     name: "test page",
     component: TestView,
-
   },
   {
     path: "/login",
     name: "login page",
     component: LoginView,
-
   },
   {
     path: "/profile",
@@ -107,8 +104,6 @@ const routes = [
     component: CameraView,
     meta: { requiresAuth: true }
   },
-
-
 ];
 
 const router = createRouter({
@@ -116,38 +111,23 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  // Check if the route requires authentication
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = store.state.isAuthenticated;
+
   if (to.meta.requiresAuth) {
-    // Check if the user is authenticated (you need to implement your own logic here)
-    const isAuthenticated = await checkAuthentication(); // Function to check authentication status
     if (isAuthenticated) {
-      // If authenticated, proceed to the route
       next();
     } else {
-      // If not authenticated, redirect to the login page
       next('/login');
     }
   } else {
-    // If the route doesn't require authentication, proceed to the route
-    next();
+    if (to.name === 'login page' && isAuthenticated) {
+      next({ name: 'main' }); // Redirect to main page if already logged in
+    } else {
+      next();
+    }
   }
 });
 
-async function checkAuthentication() {
-
-  try {
-      await axios.get("http://localhost:3000/api/v1/branches", {
-      headers: {
-        bearer: localStorage.getItem("authToken")
-      }
-    })
-    return true;
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
-  
-}
 
 export default router;

@@ -16,10 +16,10 @@ const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
 const serverInfo = ref({
-    color: "red",
+    color: "#130950",
     icon: "fas fa-server",
     text: "Количество неработающих УГД",
-    
+    number:11,
     link: "/server",
   });
 const rateInfo = ref({
@@ -30,7 +30,7 @@ const rateInfo = ref({
   link: "/tickets",
 });
 const badRate = ref({
-  color: "red",
+  color: "#d2aa66",
   icon: "fas fa-exclamation-circle",
   text: "Количество плохих оценок",
   number: 55,
@@ -59,16 +59,23 @@ const fetchData = async () => {
   });
   // console.log(result.data.data.server_list);
   let offline = 0;
+  let total = 0;
   const servers = result.data.data.server_list;
   servers.map(server =>{
     server.children.map(child=>{
       if(child.ONN === 0){
         offline++;
       }
+      total++;
     })
   })
 
   serverInfo.value.number = offline;
+  const ratio = (offline / total).toFixed(2);
+  console.log(ratio)
+  if(ratio >= 0.3){
+    serverInfo.value.color = "red";
+  }
   rateInfo.value.number = result.data.data.averageRate;
  
 };
@@ -85,6 +92,7 @@ onMounted(() => {
   });
   // console.log(result.data.data)
   badRate.value.number = result.data.data.alarm.data[2].count;
+  badRate.value.color = badRate.value.number > 10 ? "red" : "#d2aa66";
   maxWaitTime.value.number = result.data.data.alarm.data[1].count;
   maxServTime.value.number = result.data.data.alarm.data[0].count;
     

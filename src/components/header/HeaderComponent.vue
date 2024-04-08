@@ -1,22 +1,46 @@
 
-import { toggleSidebar } from '../sidebar/state';
 <script setup>
-import { toggleSidebar,collapsed } from "@/components/sidebar/state";
+import { toggleSidebar, collapsed } from "@/components/sidebar/state";
+import nonPhoto from "@/assets/avatart.jpg";
+
+import axios from "axios";
 import { onMounted, ref } from "vue";
-import {  useRouter } from "vue-router";
+import { useRouter } from "vue-router";
+import { useStore } from 'vuex';
+
 const route = useRouter();
+const store = useStore(); // Use the store
 
 const username = ref(null);
-const logout = ()=>{
-  
-  localStorage.removeItem("authToken");
+const image = ref('');
+
+const OnLogOut = () => {
+  store.dispatch('logout'); // Dispatch the logout action
   route.push("/login");
-  // console.log(route)
 }
-onMounted(()=>{
-  username.value = localStorage.getItem("login");
-})
+
+const getImage = async()=>{
+  const result = await axios.get(`http://localhost:3000/api/v1/users/get-info`,{
+    headers:{
+      bearer:localStorage.getItem("authToken")
+    }
+  });
+  console.log(result.data.user[0].image);
+  if(result.data.user[0].image){
+    image.value = 'http://localhost:3000/images/'+ result.data.user[0].image;
+    localStorage.setItem("image",image.value);
+  }
+  else 
+    image.value = nonPhoto;
+  
+}
+
+onMounted(() => {
+  username.value = store.getters.username;
+  getImage();
+});
 </script>
+
 
 <template>
   <div class="header-container flex justify-between items-center">
@@ -45,12 +69,12 @@ onMounted(()=>{
             aria-expanded="false"
           >
           
-            <img src="../../assets/logo.png" alt=""  />
+            <img :src="image" alt="" class="rounded-full" />
             {{ username }}
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li><router-link to="/profile" class="dropdown-item" href="#">Мой профиль</router-link></li>
-             <li><a @click="logout()" class="dropdown-item" href="#">Выход</a></li>
+             <li><a @click="OnLogOut()" class="dropdown-item" href="#">Выход</a></li>
           </ul>
         </div>
       </div>
@@ -80,7 +104,7 @@ onMounted(()=>{
           align-items: center;
           img{
             margin: 0 0.5rem;
-            width: 30%;
+            width: 40px;
           }
         }
       }

@@ -1,61 +1,28 @@
 <script>
-import axios from "axios";
-import { useRouter } from "vue-router";
-const host = process.env.VUE_APP_SERVER_HOST;
-const port = process.env.VUE_APP_SERVER_PORT;
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
       username: "",
       password: "",
       isError: false,
-      errorMessage: ""
+      errorMessage: "",
+      text:"sc"
     };
   },
-  setup() {
-    const router = useRouter();
-
-    return {
-      router,
-    };
+  computed: {
+    ...mapGetters(['errorMessage']),
   },
   methods: {
-    goToMainPage(token,login) {
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("login",login)
-      this.router.push("/");
-    },
-    async login() {
-      try {
-        const response = await axios.post(
-          `http://${host}:${port}/api/v1/auth/login`,
-          {
-            username: this.username,
-            password: this.password,
-          }
-        );
-        console.log(response.data)
-        // If login is successful
-        this.goToMainPage(response.data.token,response.data.login);
-      } catch (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          if (error.response.status === 401) {
-            this.errorMessage = "Неверное имя пользователя или пароль";
-          } else if (error.response.status === 500) {
-            this.errorMessage = "Проблемы с сервером. Повторите поэже";
-          } else {
-            this.errorMessage = "Произошла ошибка. Повторите поэже";
-          }
-        } else if (error.request) {
-          // The request was made but no response was received
-          this.errorMessage = "Нет ответа от сервера. Повторите поэже.";
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          this.errorMessage = "Произошла ошибка. Повторите поэже.";
-        }
+    ...mapActions(['login']),
+    async onSubmit() {
+      const loginSuccess = await this.login({ username: this.username, password: this.password, type:this.text });
+      if (loginSuccess) {
+        this.$router.push("/");
+      } else {
         this.isError = true;
-        console.error(error);
+        this.errorMessage = "Неверное имя пользователя или пароль";
       }
     },
   },
@@ -68,20 +35,36 @@ export default {
       <div class="left-side">
         <div class="login-title">Авторизация</div>
         <div class="form">
-          <div class="inputs">
-            <form @submit.prevent="login()">
-              <div class="input-group flex-nowrap">
-                <span class="input-group-text" id="addon-wrapping"></span>
-                <input v-model="username" required type="text" class="form-control" placeholder="Имя пользователя"
-                  aria-label="Username" aria-describedby="addon-wrapping" />
+          <div class="inputs px-4 ">
+            <div class="loginTypes flex ">
+              <v-btn-toggle v-model="text" color="deep-purple-accent-3" rounded="0" group>
+                <v-btn value="sc" variant="outlined">
+                  Классическое
+                </v-btn>
+
+                <v-btn value="op" variant="outlined ">
+                  Оператор
+                </v-btn>
+                <v-btn value="nomad" variant="outlined ">
+                  Пользователь Номада
+                </v-btn>
+
+                
+              </v-btn-toggle>
+            </div>
+            <form @submit.prevent="onSubmit">
+              <div class="form-floating mb-3">
+                <input v-model="username" type="text" class="form-control" id="floatingInput"
+                  placeholder="name@example.com">
+                <label for="floatingInput">Имя пользователя</label>
               </div>
-              <div class="input-group flex-nowrap">
-                <span class="input-group-text" id="addon-wrapping"></span>
-                <input v-model="password" required type="password" class="form-control" placeholder="Пароль" aria-label="Username"
-                  aria-describedby="addon-wrapping" />
+              <div class="form-floating">
+                <input v-model="password" type="password" class="form-control" id="floatingPassword"
+                  placeholder="Password">
+                <label for="floatingPassword">Пароль</label>
               </div>
               <input value="Вход" type="submit" class="btn btn-primary text-white" />
-              <p v-if="isError" class="error-mess p-2 text-red-600 text-lg">{{errorMessage}}</p>
+              <p v-if="isError" class="error-mess p-2 text-red-600 text-lg">{{ errorMessage }}</p>
             </form>
           </div>
 
@@ -96,6 +79,11 @@ export default {
     </div>
   </main>
 </template>
+
+<style lang="scss" scoped>
+// Styles...
+</style>
+
 <style lang="scss" scoped>
 main {
   width: 100%;
@@ -106,8 +94,8 @@ main {
   background-color: rgb(221, 221, 221);
 
   .login-container {
-    width: 60%;
-    height: 50%;
+    width: 100%;
+    height: 100%;
     display: flex;
 
     .left-side {
@@ -115,9 +103,17 @@ main {
       height: 100%;
       background-color: white;
 
+      .form {
+        .inputs {
+          border: 5px solid blue;
+          padding: 1rem;
+          border-radius: 1rem;
+        }
+      }
+
       .login-title {
         height: 20%;
-        margin: 1rem;
+       
         font-size: 1.5rem;
         font-weight: bold;
         display: flex;
