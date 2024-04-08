@@ -16,6 +16,8 @@ import CameraView from "@/views/CameraView.vue";
 import LoginView from "@/views/LoginView.vue";
 import MyProfileView from "@/views/MyProfileView.vue";
 
+import BillBoardView from "@/views/BillBoardView.vue";
+
 import TestView from "@/views/TestView.vue";
 
 import store from "@/store";
@@ -102,6 +104,12 @@ const routes = [
     path: "/cameras",
     name: "cameras",
     component: CameraView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/bill-board",
+    name: "billboard",
+    component: BillBoardView,
     meta: { requiresAuth: true }
   },
 ];

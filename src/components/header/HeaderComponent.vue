@@ -19,6 +19,7 @@ const image = ref('');
 const OnLogOut = () => {
   store.dispatch('logout'); // Dispatch the logout action
   route.push("/login");
+  localStorage.removeItem("image")
 }
 
 const getImage = async()=>{

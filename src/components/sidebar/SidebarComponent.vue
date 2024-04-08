@@ -41,6 +41,7 @@ export default {
      <SidebarLink to="/server" icon="fas fa-server">Серверы</SidebarLink>
      <SidebarLink to="/changer" icon="fas fa-toggle-on" >Переключение режимов</SidebarLink>
      <SidebarLink to="/cameras" icon="fas fa-camera" >Видеокамеры</SidebarLink>
+     <SidebarLink to="/bill-board" icon="fas fa-clipboard-list" >Доска объявлений</SidebarLink>
    
     <!-- <span
       class="collapse-icon"

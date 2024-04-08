@@ -101,7 +101,7 @@ onMounted(() => {
         <div class="profile-container ">
 
             <div class="profile-forms w-1/2 mx-auto">
-                <h3 class="m-4">Мой профиль</h3>
+                <h3 class="m-2">Мой профиль</h3>
 
                 <div class="input-group">
                     <input @change="handleFileChange" type="file" class="form-control" id="inputGroupFile04"
@@ -138,7 +138,7 @@ onMounted(() => {
                         <input :disabled="isDisabled" v-model="userInfo.lastname" type="text" class="form-control"
                             aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
                     </div>
-                    <div class="input-group mt-10">
+                    <div class="input-group mt-5">
                         <input type="submit" value="Сохранить" class="btn btn-primary mx-auto text-white"/>
                        
                     </div>
@@ -154,7 +154,7 @@ onMounted(() => {
 .profile-container {
     width: 100%;
     height: 80vh;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
