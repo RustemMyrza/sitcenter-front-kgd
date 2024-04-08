@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 
@@ -15,18 +15,22 @@ const isChild = ref(false);
 const search = ref("");
 const headers = [
   {
-    align: "start",
+    align: "center",
     key: "iin",
     sortable: false,
     title: "ИИН",
   },
-  { key: "ticketno", title: "Номер билета" },
-  { key: "servicename", title: "Название услуги" },
-  { key: "idbranch", title: "Отделение" },
-  { key: "operator", title: "Оператор" },
-  { key: "starttime", title: "Время регистрации" },
+  { align: "center", key: "ticketno", title: "Номер билета" },
+  { align: "center", key: "servicename", title: "Название услуги" },
+  { align: "center", key: "idbranch", title: "Отделение" },
+  { align: "center", key: "operator", title: "Оператор" },
+  { align: "center", key: "state", title: "Статус" },
+  { align: "center", key: "starttime", title: "Время регистрации" },
   // { key: "waittime", title: "Время ожидания" },
-  { key: "startservtime", title: "Время обслуживания" },
+  { align: "center", key: "startservtime", title: "Время обслуживания" },
+  { align: "center", key: "rating", title: "Оценка" },
+  { align: "center", key: "waitover", title: "Превышение времени ожидания" },
+  { align: "center", key: "servover", title: "Превышение времени обслуживания" },
 ];
 const desserts = ref([]);
 const parentList = ref([]);
@@ -262,6 +266,23 @@ const getTicketList = async () => {
   // console.log(desserts);
 };
 
+const formattedDesserts = computed(() => {
+  return desserts.value.map(ticket => {
+    return {
+      ...ticket,
+      starttime: new Date(ticket.starttime).toLocaleString("ru-RU"),
+      startservtime: new Date(ticket.startservtime).toLocaleString("ru-RU"),
+      rating: ticket.rating === "5" ? "Отлично" : ticket.rating === "4" ? "Хорошо" :ticket.rating === "4" ? "Плохо":"Нет оценки", 
+      waitover:ticket.waitover === "true"?"Да":"Нет",
+      servover:ticket.servover === "true"?"Да":"Нет",
+      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" : "Бронь", 
+      idbranch: ticket.idbranch
+    }
+  }).sort((a, b) => {
+    return a.starttime - b.starttime;
+  });
+});
+
 onMounted(() => {
   getBranchTickets();
   getTicketList();
@@ -294,7 +315,7 @@ onMounted(() => {
     </div>
     <div class="tickets">
       <v-card title="Билеты" flat>
-        <template v-slot:text>
+        <!-- <template v-slot:text>
           <v-text-field
             v-model="search"
             label="Search"
@@ -303,11 +324,11 @@ onMounted(() => {
             hide-details
             single-line
           ></v-text-field>
-        </template>
+        </template> -->
 
         <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="formattedDesserts"
           :search="search"
         ></v-data-table>
       </v-card>

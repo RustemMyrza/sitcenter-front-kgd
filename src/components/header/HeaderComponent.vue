@@ -1,10 +1,12 @@
 
 <script setup>
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
 import { toggleSidebar, collapsed } from "@/components/sidebar/state";
 import nonPhoto from "@/assets/avatart.jpg";
 
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, ref,watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from 'vuex';
 
@@ -20,20 +22,24 @@ const OnLogOut = () => {
 }
 
 const getImage = async()=>{
-  const result = await axios.get(`http://localhost:3000/api/v1/users/get-info`,{
+  const result = await axios.get(`http://${host}:${port}/api/v1/users/get-info`,{
     headers:{
       bearer:localStorage.getItem("authToken")
     }
   });
   console.log(result.data.user[0].image);
   if(result.data.user[0].image){
-    image.value = 'http://localhost:3000/images/'+ result.data.user[0].image;
-    localStorage.setItem("image",image.value);
+    const imgSrc = 'http://localhost:3000/images/'+ result.data.user[0].image;
+    localStorage.setItem("image",imgSrc);
+    image.value = imgSrc;
   }
   else 
     image.value = nonPhoto;
   
 }
+watch(() => localStorage.getItem("image"), (oldValue,newValue) => {
+  image.value = newValue;
+});
 
 onMounted(() => {
   username.value = store.getters.username;

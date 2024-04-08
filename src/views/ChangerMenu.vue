@@ -1,7 +1,7 @@
 <script setup>
 import axios from "axios";
-import { computed, onMounted, ref } from "vue";
-import { useStore } from 'vuex';
+import { onMounted, ref } from "vue";
+import { useStore } from "vuex";
 
 const store = useStore();
 
@@ -25,27 +25,47 @@ const getBranches = async () => {
   });
   branches.value = result.data.rows;
   branches.value = branches.value.map((branch) => {
-    // Map over the children array and modify each child object
-    branch.children = branch.children.map((child) => {
-      // Create a new object with the existing attributes and the new attribute
-      return {
-        ...child,
-        isAvailable: false, // Modify as needed
-      };
-    });
-    if(branch.children.length >1){
+    if (branch.children.length > 1) {
       isUgd.value = false;
     }
-    
-    
+    // Map over the children array and modify each child object
+    const currentRole = localStorage.getItem("role") * 1;
+    const blockedByRole = branch.blocked_by;
+    const blocked = branch.blocked;
+    // console.log("current", typeof currentRole);
+    // console.log("blocked", blockedByRole);
+    if (blocked === 1) {
+      branch.isSwitchable =
+        currentRole === 2 && blockedByRole === 0
+          ? false
+          : currentRole === 3 && blockedByRole === 2
+            ? false
+            : true;
+    } else branch.isSwitchable = true;
+
+    branch.children.map((child) => {
+      const blockedByRole = child.blocked_by;
+      const blocked = child.blocked;
+
+      child.isAvailable = false;
+      // Create a new object with the existing attributes and the new attribute
+      if (blocked === 1) {
+        child.isSwitchable =
+          currentRole === 2 && blockedByRole === 0
+            ? false
+            : currentRole === 3 && blockedByRole === 2
+              ? false : currentRole === 3 && blockedByRole === 0 ? false
+              : true;
+      } else child.isSwitchable = true;
+    });
+
     // Return the modified branch object
     return branch;
   });
-  // console.log(branches.value)
 
+  
 
-
-  // console.log(branches.value);
+  console.log(branches.value);
   // const available = await axios.get(
   //   `http://${host}:${port}/api/v1/branch-list`,
   //   {
@@ -65,42 +85,37 @@ const getBranches = async () => {
   // });
 };
 
-const isAvailableToSwitch = async () => {
-
-}
 const setBlock = async (branchId, blockedValue) => {
   // console.log(branchId)
   let url = `http://${host}:${port}/api/v1/branch-list/block/${branchId}`;
   if (blockedValue === 1) {
     url += `?value=0`;
-  }
-  else url += `?value=1`;
+  } else url += `?value=1`;
   const token = localStorage.getItem("authToken");
   try {
     const result = await axios.post(url, null, {
       headers: {
-        bearer:token,
+        bearer: token,
       },
     });
     console.log(result);
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 const getUsername = () => {
   return store.getters.username;
-}
+};
 
 onMounted(() => {
-  console.log(getUsername())
+  console.log(getUsername());
   getBranches();
 });
 </script>
 <template>
   <div class="server-container">
     <div class="server-container">
-
       <div class="drop">
         <div class="title-drop">
           <div>Название</div>
@@ -116,9 +131,10 @@ onMounted(() => {
             </div>
             <div class="item-status"></div>
             <div class="item-amount">
-              <div v-if="!isUgd" class=" form-switch">
-                <input @change="setBlock(branch.F_ID,branch.blocked)" :disabled="branch.blocked === 0" class="form-check-input" type="checkbox" role="switch"
-                  id="flexSwitchCheckChecked" :checked="branch.blocked === 1">
+              <div v-if="!isUgd" class="form-switch">
+                <input @change="setBlock(branch.F_ID, branch.blocked)" :disabled="branch.isSwitchable === false"
+                  class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                  :checked="branch.blocked === 1" />
                 <label class="form-check-label mx-4" for="flexSwitchCheckChecked">Блокировка меню</label>
               </div>
             </div>
@@ -128,18 +144,18 @@ onMounted(() => {
               <div class="unfold-name">{{ child.F_NAME }}</div>
 
               <div class="unfold-amount">
-                <select :disabled="!child.isAvailable && child.blocked !== 1" class="form-select"
+                <select :disabled="branch.blocked ===1 || child.isSwitchable === false || !child.isAvailable" class="form-select"
                   aria-label="Default select example">
                   <option value="1" :selected="child.ONN === 1">
                     Автоматическое
                   </option>
                   <option value="2" :selected="child.ONN === 0">Меню-2</option>
                 </select>
-
               </div>
               <div class="form-switch">
-                <input @change="setBlock(child.F_ID, child.blocked)" class="form-check-input" type="checkbox" role="switch"
-                  id="flexSwitchCheckChecked" :checked="child.blocked === 1">
+                <input @change="setBlock(child.F_ID, child.blocked)" class="form-check-input" type="checkbox"
+                  role="switch" id="flexSwitchCheckChecked" :disabled="branch.blocked ===1 || child.isSwitchable === false"
+                  :checked="branch.blocked ===1 || child.isSwitchable === false" />
                 <label class="form-check-label mx-4" for="flexSwitchCheckChecked">Блокировка меню</label>
               </div>
             </div>
@@ -218,4 +234,5 @@ onMounted(() => {
       }
     }
   }
-}</style>
+}
+</style>

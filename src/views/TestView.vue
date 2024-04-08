@@ -1,28 +1,50 @@
-<!-- MyComponent.vue -->
 <template>
   <div>
-    <div>{{ message }}</div>
-    <button @click="updateMessage">Update Message</button>
-    <button @click="destroyAndRerender">Destroy and Rerender</button>
+    <input type="file" ref="fileInput" @change="handleFileChange">
+    <button @click="uploadImage">Upload Image</button>
   </div>
 </template>
 
 <script>
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
 export default {
   data() {
     return {
-      message: 'Initial message'
+      selectedFile: null,
+      id: "admin" // Set the user ID here, or fetch it dynamically
     };
   },
   methods: {
-    updateMessage() {
-      this.message = 'New message';
+    handleFileChange(event) {
+      this.selectedFile = event.target.files[0];
     },
-    destroyAndRerender() {
-      // Destroy component and rerender
-      this.$destroy();
-      this.$options.template = '<div>New component content</div>';
-      this.$mount();
+    async uploadImage() {
+      const formData = new FormData();
+      formData.append("image", this.selectedFile);
+      const queryParams = new URLSearchParams({ login: this.id }).toString();
+
+      try {
+        const response = await fetch(`http://${host}:${port}/api/v1/users/upload?${queryParams}`, {
+          method: "POST",
+          headers: {
+            bearer: localStorage.getItem("authToken")
+          },
+          body: formData
+        });
+
+
+        if (response.ok) {
+          console.log("Image uploaded successfully");
+          // Perform any additional actions upon successful upload
+        } else {
+          console.error("Failed to upload image");
+          // Handle error cases
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        // Handle network errors or other exceptions
+      }
     }
   }
 };

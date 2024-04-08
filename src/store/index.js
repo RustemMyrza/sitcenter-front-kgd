@@ -46,6 +46,8 @@ export default createStore({
 
         localStorage.setItem("authToken", response.data.token);
         localStorage.setItem("login", response.data.login);
+        localStorage.setItem("role", response.data.role);
+
         commit("setUsername", response.data.login);
         commit("setAuthentication", true);
 
@@ -73,23 +75,23 @@ export default createStore({
         return false; // Return false if login fails
       }
     },
-    async getInfo({commit}, {login}){
-      const result = await axios.get(
-        `http://localhost:3000/api/v1/users/get-info`,
-        {
-          headers: {
-            bearer: localStorage.getItem("authToken"),
-          },
-        }
-      );
+    // async getInfo({commit}, {login}){
+    //   const result = await axios.get(
+    //     `http://localhost:3000/api/v1/users/get-info`,
+    //     {
+    //       headers: {
+    //         bearer: localStorage.getItem("authToken"),
+    //       },
+    //     }
+    //   );
 
-      // if (result.data.user[0].image) {
-      //   const url = `http://${host}:${port}/images/`+ result.data.user[0].image;
-      //   console.log(url)
-      //   commit("setImage",url);
-      //   localStorage.setItem("image",url);
-      // } else commit("setImage", null);
-    },
+    //   // if (result.data.user[0].image) {
+    //   //   const url = `http://${host}:${port}/images/`+ result.data.user[0].image;
+    //   //   console.log(url)
+    //   //   commit("setImage",url);
+    //   //   localStorage.setItem("image",url);
+    //   // } else commit("setImage", null);
+    // },
     async logout({ commit }) {
       commit("setAuthentication", false);
       localStorage.removeItem("authToken");

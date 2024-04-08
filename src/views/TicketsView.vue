@@ -40,7 +40,11 @@ const getTicketList = async () => {
     let url;
     if (route.query.branch_id) {
       url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?page=${pagination.value.pageNumber}&limit=100`;
-    } else {
+    } 
+    else if (route.query.tickets === "bad") {
+      url = `http://${host}:${port}/api/v1/tickets/list?filter=bad&page=${pagination.value.pageNumber}&limit=100`;
+    } 
+    else {
       url = `http://${host}:${port}/api/v1/tickets/list?page=${pagination.value.pageNumber}&limit=100`;
     }
 
@@ -67,7 +71,8 @@ const filterTickets = async(value)=>{
       url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?filter=wait&page=${pagination.value.pageNumber}&limit=100`;
       else if(value==='serv')
       url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?filter=serv&page=${pagination.value.pageNumber}&limit=100`;
-      
+      else  url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?page=${pagination.value.pageNumber}&limit=100`;
+  
     } else {
       if(value === "bad-rate")
       url = `http://${host}:${port}/api/v1/tickets/list?filter=bad&page=${pagination.value.pageNumber}&limit=100`;
@@ -75,7 +80,8 @@ const filterTickets = async(value)=>{
       url = `http://${host}:${port}/api/v1/tickets/list?filter=wait&page=${pagination.value.pageNumber}&limit=100`;
       else if(value==='serv')
       url = `http://${host}:${port}/api/v1/tickets/list?filter=serv&page=${pagination.value.pageNumber}&limit=100`;
-     
+      else   url = `http://${host}:${port}/api/v1/tickets/list?page=${pagination.value.pageNumber}&limit=100`;
+   
     }
 
     const result = await axios.get(url, {
@@ -124,7 +130,7 @@ onMounted(() => {
   <div class="ticket-container">
     <div class="ticketMain">
       <div class="filter block">
-        <button class="btn btn-primary" @click="getTicketList()">Все билеты</button>
+        <button class="btn btn-primary" @click="filterTickets('all')">Все билеты</button>
         <button class="btn btn-warning" @click="filterTickets('bad-rate')">Плохие оценки</button>
         <button class="btn btn-warning" @click="filterTickets('serv')">
           Перевышение времени обслуживания
