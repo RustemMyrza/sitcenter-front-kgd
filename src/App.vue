@@ -32,15 +32,17 @@ export default {
     <SidebarComponent />
   </div>
   <div class="main">
-    <div :style="{ 'margin-left': !isLoginPage() && sidebarWidth }">
+    <div :style="{ 'margin-left': !isLoginPage() ? sidebarWidth : 'auto' }"   >
       <div v-if="!isLoginPage()" class="head">
         <header-component />
         <div class="dashboard">
           <dashboard-top />
         </div>
       </div>
+      <router-view/>
     </div>
-    <router-view :style="{ 'margin-left': !isLoginPage() && sidebarWidth }" />
+    
+    <!-- <router-view :style="{ 'margin-left': !isLoginPage() && sidebarWidth }" /> -->
   </div>
 </template>
 
