@@ -123,10 +123,10 @@ const changeMenu = async (id, menu) => {
   // console.log(id, menu)
   const url = `http://${host}:${port}/api/v1/branch-list/${id}`;
   try {
-    await axios.post(url, 
-    {
-      menuValue:menu
-    }, {
+    await axios.post(url,
+      {
+        menuValue: menu
+      }, {
       headers: {
         bearer: localStorage.getItem("authToken")
       }
@@ -138,9 +138,101 @@ const changeMenu = async (id, menu) => {
 
 }
 
+const options = {
+  chart: {
+    height: 350,
+    type: 'rangeBar'
+  },
+  plotOptions: {
+    bar: {
+      horizontal: true,
+      barHeight: '50%',
+      rangeBarGroupRows: true
+    }
+  },
+  colors: [
+    "#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0",
+    "#3F51B5", "#546E7A", "#D4526E", "#8D5B4C", "#F86624",
+    "#D7263D", "#1B998B", "#2E294E", "#F46036", "#E2C044"
+  ],
+  fill: {
+    type: 'solid'
+  },
+  xaxis: {
+    type: 'datetime'
+  },
+  legend: {
+    position: 'top'
+  },
+
+};
+const series = [
+
+
+
+  // John Jay
+  {
+    name: 'John Jay',
+    data: [
+      {
+        x: 'Secretary of State',
+        y: [
+          new Date(1789, 8, 25).getTime(),
+          new Date(1790, 2, 22).getTime()
+        ]
+      }
+    ]
+  },
+  // Edmund Randolph
+  {
+    name: 'Edmund Randolph',
+    data: [
+      {
+        x: 'Secretary of State',
+        y: [
+          new Date(1794, 0, 2).getTime(),
+          new Date(1795, 7, 20).getTime(),
+          
+        ],
+         
+      }
+    ]
+  },
+  
+
+  // Levi Lincoln
+  {
+    name: 'Levi Lincoln',
+    data: [
+      {
+        x: 'Secretary of State',
+        y: [
+          new Date(1801, 2, 5).getTime(),
+          new Date(1801, 4, 1).getTime()
+        ]
+      }
+    ]
+  },
+  // James Madison
+  {
+    name: 'James Madison',
+    data: [
+      {
+        x: 'Secretary of State',
+        y: [
+          new Date(1801, 4, 2).getTime(),
+          new Date(1809, 2, 3).getTime()
+        ]
+      }
+    ]
+  },
+];
+
+
 onMounted(() => {
   console.log(getUsername());
   getBranches();
+ 
 });
 </script>
 <template>
@@ -194,6 +286,9 @@ onMounted(() => {
             </div>
           </div>
         </div>
+      </div>
+      <div class="changer-chart">
+        <apexchart  :options="options" :series="series" ></apexchart>
       </div>
     </div>
   </div>
