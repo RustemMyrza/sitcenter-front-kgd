@@ -63,6 +63,7 @@ export default {
                 console.log(err);
             }
         },
+        
         async getBoardList() {
             const url = `http://${host}:${port}/api/v1/board`;
             try {
@@ -75,6 +76,22 @@ export default {
                 this.list.map(e => {
                     e.role = e.role === 0 ? "admin" : e.role === 2 ? "dgd" : "ugd"
                 })
+                // console.log(result.data.data)
+            } catch (err) {
+                console.log(err);
+            }
+        },
+        async deleteBoard(id) {
+            const url = `http://${host}:${port}/api/v1/board/${id}`;
+            try {
+                 await axios.delete(url, {
+                    headers: {
+                        bearer: localStorage.getItem("authToken")
+                    }
+                });
+                
+                this.list = this.list.filter(board => board.id !== id);
+
                 // console.log(result.data.data)
             } catch (err) {
                 console.log(err);
@@ -157,7 +174,7 @@ export default {
                 :class="board.role" :style="{ transform: `rotate(${generateRotation()}deg)` }">
 
                 <div class="board-header ">
-                    <div class="pin flex justify-center">
+                    <div @click="deleteBoard(board.id)" class="pin flex justify-center">
                         <img :src="generatePin()" alt="" width="30%">
                     </div>
 
@@ -184,6 +201,9 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.pin{
+    cursor: pointer;
+}
 .modal-body {
     div {
         margin: .5rem;

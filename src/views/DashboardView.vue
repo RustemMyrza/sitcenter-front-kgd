@@ -559,7 +559,7 @@ onMounted(() => {
         <div class="services">
           <apexchart
             ref="serviceChart"
-            :height="250"
+            :height="350"
             :options="service.options"
             :series="service.series"
           ></apexchart>

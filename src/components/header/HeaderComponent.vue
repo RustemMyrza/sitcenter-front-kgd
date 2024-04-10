@@ -30,7 +30,7 @@ const getImage = async()=>{
   });
   console.log(result.data.user[0].image);
   if(result.data.user[0].image){
-    const imgSrc = 'http://localhost:3000/images/'+ result.data.user[0].image;
+    const imgSrc = `http://${host}:${port}/images/`+ result.data.user[0].image;
     localStorage.setItem("image",imgSrc);
     image.value = imgSrc;
   }

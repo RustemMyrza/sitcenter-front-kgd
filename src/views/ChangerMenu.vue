@@ -69,30 +69,30 @@ const getBranches = async () => {
 
 
   // console.log(branches.value);
-  try {
-    const available = await axios.get(
-      `http://${host}:${port}/api/v1/branch-list`,
-      {
-        headers: {
-          bearer: token,
-        },
-      }
-    );
-    // console.log(available.data);
-    branches.value.map((branch) => {
-      branch.children.map((ch) => {
-        const av = available.data.find((e) => e.branchId === ch.F_ID);
-        if (av) {
-          ch.isAvailable = true;
-          ch.menu = av.brtype;
-          // console.log(av.brtype);
-        }
-      });
-    });
-    // console.log(branches.value)
-  } catch (err) {
-    console.log(err);
-  }
+  // try {
+  //   const available = await axios.get(
+  //     `http://${host}:${port}/api/v1/branch-list`,
+  //     {
+  //       headers: {
+  //         bearer: token,
+  //       },
+  //     }
+  //   );
+  //   // console.log(available.data);
+  //   branches.value.map((branch) => {
+  //     branch.children.map((ch) => {
+  //       const av = available.data.find((e) => e.branchId === ch.F_ID);
+  //       if (av) {
+  //         ch.isAvailable = true;
+  //         ch.menu = av.brtype;
+  //         // console.log(av.brtype);
+  //       }
+  //     });
+  //   });
+  //   // console.log(branches.value)
+  // } catch (err) {
+  //   console.log(err);
+  // }
 
 };
 

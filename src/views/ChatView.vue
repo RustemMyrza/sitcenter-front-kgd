@@ -1,13 +1,16 @@
 <script setup>
 import axios from "axios";
 import { onMounted, ref } from "vue";
+
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
 const pie = ref({
   options: {
     chart: {
       width: 300,
       type: "pie",
     },
-    labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+    labels: ["Потеряна связь", "Доступно", "Не используется", "Нет связи"],
     responsive: [
       {
         breakpoint: 480,
@@ -23,7 +26,7 @@ const pie = ref({
       },
     ],
   },
-  series: [44, 55, 13, 43, 22],
+  series: [44, 55, 13, 43],
 });
 
 const messages = ref([]);
@@ -31,7 +34,7 @@ const users = ref([]);
 const msg = ref('');
 
 const getMessages = async () => {
-  const result = await axios(`http://localhost:3000/api/v1/messages`, {
+  const result = await axios(`http://${host}:${port}/api/v1/messages`, {
     headers: {
       bearer: localStorage.getItem("authToken"),
     },
@@ -47,7 +50,7 @@ const getMessages = async () => {
 };
 
 const getUsers = async () => {
-  const result = await axios.get(`http://localhost:3000/api/v1/users/last`, {
+  const result = await axios.get(`http://${host}:${port}/api/v1/users/last`, {
     headers: {
       bearer: localStorage.getItem("authToken"),
     },
@@ -59,7 +62,7 @@ const getUsers = async () => {
 
 const sendMessage = async () => {
   try {
-     await axios.post(`http://localhost:3000/api/v1/messages`, {
+     await axios.post(`http://${host}:${port}/api/v1/messages`, {
       txt: msg.value,
     }, {
       headers: {
@@ -131,7 +134,9 @@ onMounted(() => {
         </div>
       </div>
       <div class="right-chat">
-        <div class="pieChart">
+      
+        <div class="pieChart ">
+          <!-- <h5 class="m-4">Серверы</h5> -->
           <apexchart :height="400" :options="pie.options" :series="pie.series"></apexchart>
         </div>
         <div class="last-container p-3">
