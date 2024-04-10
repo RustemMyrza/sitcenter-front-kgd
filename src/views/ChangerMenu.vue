@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onBeforeMount,  ref } from "vue";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -12,6 +12,8 @@ const isUgd = ref(true);
 
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
+
+// const apexChart = ref(null);
 
 const unFold = (id) => {
   const item = branches.value.find((e) => e.id === id);
@@ -69,30 +71,30 @@ const getBranches = async () => {
 
 
   // console.log(branches.value);
-  // try {
-  //   const available = await axios.get(
-  //     `http://${host}:${port}/api/v1/branch-list`,
-  //     {
-  //       headers: {
-  //         bearer: token,
-  //       },
-  //     }
-  //   );
-  //   // console.log(available.data);
-  //   branches.value.map((branch) => {
-  //     branch.children.map((ch) => {
-  //       const av = available.data.find((e) => e.branchId === ch.F_ID);
-  //       if (av) {
-  //         ch.isAvailable = true;
-  //         ch.menu = av.brtype;
-  //         // console.log(av.brtype);
-  //       }
-  //     });
-  //   });
-  //   // console.log(branches.value)
-  // } catch (err) {
-  //   console.log(err);
-  // }
+  try {
+    const available = await axios.get(
+      `http://${host}:${port}/api/v1/branch-list`,
+      {
+        headers: {
+          bearer: token,
+        },
+      }
+    );
+    // console.log(available.data);
+    branches.value.map((branch) => {
+      branch.children.map((ch) => {
+        const av = available.data.find((e) => e.branchId === ch.F_ID);
+        if (av) {
+          ch.isAvailable = true;
+          ch.menu = av.brtype;
+          // console.log(av.brtype);
+        }
+      });
+    });
+    // console.log(branches.value)
+  } catch (err) {
+    console.log(err);
+  }
 
 };
 
@@ -101,15 +103,32 @@ const setBlock = async (branchId, blockedValue) => {
   let url = `http://${host}:${port}/api/v1/branch-list/block/${branchId}`;
   if (blockedValue === 1) {
     url += `?value=0`;
-  } else url += `?value=1`;
+  } else {
+
+    url += `?value=1`;
+    
+  }
+   branches.value.map(branch=>{
+    if(branch.F_ID === branchId){
+      
+      branch.children.map(ch=>{
+        ch.isAvailable = !ch.isAvailable;
+        ch.isSwitchable = !ch.isSwitchable;
+        ch.blocked = ch.blocked === 0 ? 1 :0;
+      })
+    }
+   });
+  //  console.log(branches.value)
+   
+  // console.log(parent)
   const token = localStorage.getItem("authToken");
   try {
-    const result = await axios.post(url, null, {
+     await axios.post(url, null, {
       headers: {
         bearer: token,
       },
     });
-    console.log(result);
+    // console.log(result);
   } catch (err) {
     console.log(err);
   }
@@ -138,102 +157,182 @@ const changeMenu = async (id, menu) => {
 
 }
 
-const options = {
-  chart: {
-    height: 350,
-    type: 'rangeBar'
-  },
-  plotOptions: {
-    bar: {
-      horizontal: true,
-      barHeight: '50%',
-      rangeBarGroupRows: true
-    }
-  },
-  colors: [
-    "#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0",
-    "#3F51B5", "#546E7A", "#D4526E", "#8D5B4C", "#F86624",
-    "#D7263D", "#1B998B", "#2E294E", "#F46036", "#E2C044"
-  ],
-  fill: {
-    type: 'solid'
-  },
-  xaxis: {
-    type: 'datetime'
-  },
-  legend: {
-    position: 'top'
-  },
-
-};
-const series = [
-
-
-
-  // John Jay
-  {
-    name: 'John Jay',
-    data: [
-      {
-        x: 'Secretary of State',
-        y: [
-          new Date(1789, 8, 25).getTime(),
-          new Date(1790, 2, 22).getTime()
-        ]
-      }
-    ]
-  },
-  // Edmund Randolph
-  {
-    name: 'Edmund Randolph',
-    data: [
-      {
-        x: 'Secretary of State',
-        y: [
-          new Date(1794, 0, 2).getTime(),
-          new Date(1795, 7, 20).getTime(),
-          
-        ],
-         
-      }
-    ]
-  },
+// const getChartMenuType = async()=>{
+//   const url =  `http://${host}:${port}/api/v1/branch-list/br/type`;
+//   const result = await axios.get(url, {
+//     headers: {
+//       bearer: localStorage.getItem("authToken")
+//     },
+//   });
+//   console.log(result);
   
+// }
 
-  // Levi Lincoln
-  {
-    name: 'Levi Lincoln',
-    data: [
-      {
-        x: 'Secretary of State',
-        y: [
-          new Date(1801, 2, 5).getTime(),
-          new Date(1801, 4, 1).getTime()
-        ]
-      }
-    ]
-  },
-  // James Madison
-  {
-    name: 'James Madison',
-    data: [
-      {
-        x: 'Secretary of State',
-        y: [
-          new Date(1801, 4, 2).getTime(),
-          new Date(1809, 2, 3).getTime()
-        ]
-      }
-    ]
-  },
-];
+// const options = ref({
+//   chart: {
+//     height: 450,
+//     type: 'rangeBar'
+//   },
+//   plotOptions: {
+//     bar: {
+//       horizontal: true,
+//       barHeight: '80%'
+//     }
+//   },
+//   xaxis: {
+//     type: 'datetime'
+//   },
+//   stroke: {
+//     width: 1
+//   },
+//   fill: {
+//     type: 'solid',
+//     opacity: 0.6
+//   },
+//   legend: {
+//     position: 'top',
+//     horizontalAlign: 'left'
+//   }
+
+// });
+// const series = ref([
+//   {
+//     name: 'Bob',
+//     data: [
+//       {
+//         x: 'Design',
+//         y: [
+//           new Date('2019-03-05').getTime(),
+//           new Date('2019-03-08').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Code',
+//         y: [
+//           new Date('2019-03-02').getTime(),
+//           new Date('2019-03-05').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Code',
+//         y: [
+//           new Date('2019-03-05').getTime(),
+//           new Date('2019-03-07').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Test',
+//         y: [
+//           new Date('2019-03-03').getTime(),
+//           new Date('2019-03-09').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Test',
+//         y: [
+//           new Date('2019-03-08').getTime(),
+//           new Date('2019-03-11').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Validation',
+//         y: [
+//           new Date('2019-03-11').getTime(),
+//           new Date('2019-03-16').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Design',
+//         y: [
+//           new Date('2019-03-01').getTime(),
+//           new Date('2019-03-03').getTime()
+//         ],
+//       }
+//     ]
+//   },
+//   {
+//     name: 'Joe',
+//     data: [
+//       {
+//         x: 'Design',
+//         y: [
+//           new Date('2019-03-02').getTime(),
+//           new Date('2019-03-05').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Test',
+//         y: [
+//           new Date('2019-03-06').getTime(),
+//           new Date('2019-03-16').getTime()
+//         ],
+//         goals: [
+//           {
+//             name: 'Break',
+//             value: new Date('2019-03-10').getTime(),
+//             strokeColor: '#CD2F2A'
+//           }
+//         ]
+//       },
+//       {
+//         x: 'Code',
+//         y: [
+//           new Date('2019-03-03').getTime(),
+//           new Date('2019-03-07').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Deployment',
+//         y: [
+//           new Date('2019-03-20').getTime(),
+//           new Date('2019-03-22').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Design',
+//         y: [
+//           new Date('2019-03-10').getTime(),
+//           new Date('2019-03-16').getTime()
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     name: 'Dan',
+//     data: [
+//       {
+//         x: 'Code',
+//         y: [
+//           new Date('2019-03-10').getTime(),
+//           new Date('2019-03-17').getTime()
+//         ]
+//       },
+//       {
+//         x: 'Validation',
+//         y: [
+//           new Date('2019-03-05').getTime(),
+//           new Date('2019-03-09').getTime()
+//         ],
+//         goals: [
+//           {
+//             name: 'Break',
+//             value: new Date('2019-03-07').getTime(),
+//             strokeColor: '#CD2F2A'
+//           }
+//         ]
+//       },
+//     ]
+//   }
+// ]);
 
 
-onMounted(() => {
+
+onBeforeMount(()=>{
   console.log(getUsername());
   getBranches();
- 
-});
+  // getChartMenuType();
+})
+
 </script>
 <template>
   <div class="server-container">
@@ -245,14 +344,14 @@ onMounted(() => {
           <div class="text-center">Действие блок</div>
         </div>
         <div v-for="branch in branches" :key="branch.id" class="drop-item">
-          <div class="notfold" @click="unFold(branch.id)">
-            <div class="item-name">
-              <i class="fa-solid fa-plus mx-4"></i>
-              <!-- <i v-if="branch.fold" class="fas fa-minus mx-4"></i> -->
+          <div class="notfold" >
+            <div @click="unFold(branch.id)" class="item-name w-full">
+              <i   class="fas fa-plus mx-4"></i>
+             
               {{ branch.F_NAME }}
             </div>
-            <div class="item-status"></div>
-            <div class="item-amount">
+            
+            <div class="item-amount w-fit">
               <div v-if="!isUgd" class="form-switch">
                 <input @change="setBlock(branch.F_ID, branch.blocked)" :disabled="branch.isSwitchable === false"
                   class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
@@ -264,8 +363,7 @@ onMounted(() => {
           <div v-if="branch.fold" class="unfold">
             <div class="unfold-item" v-for="child in branch.children" :key="child.id">
               <div class="unfold-name">{{ child.F_NAME }}</div>
-              <!-- <div class="unfold-name">{{ child.menu === "first" ? "Автоматическое":"Меню-2" }}</div> -->
-
+              
               <div class="unfold-amount">
                 <select v-model="child.menu" @change="changeMenu(child.F_ID, child.menu)"
                   :disabled="branch.blocked === 1 || !child.isSwitchable || !child.isAvailable" class="form-select"
@@ -288,11 +386,13 @@ onMounted(() => {
         </div>
       </div>
       <div class="changer-chart">
-        <apexchart  :options="options" :series="series" ></apexchart>
+        <!-- <apexchart ref="apexChart" :height="400" :options="options" :series="series"></apexchart> -->
       </div>
     </div>
   </div>
 </template>
+
+
 <style lang="scss" scoped>
 .server-container {
   padding: 1rem;
@@ -330,9 +430,7 @@ onMounted(() => {
       display: flex;
       justify-content: space-between;
 
-      div {
-        width: 100%;
-      }
+     
 
       .item-name {
         display: flex;

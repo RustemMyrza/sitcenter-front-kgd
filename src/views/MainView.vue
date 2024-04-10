@@ -127,7 +127,7 @@ export default {
             },
           }
         );
-        console.log(result);
+        // console.log(result);
         // this.serverInfo.online = result.data.data.onlineServers;
         // this.serverInfo.total = result.data.data.total;
         this.ticketInfo = result.data.data.tickets;
@@ -185,7 +185,7 @@ export default {
       try {
         const select = regionsById.find((e) => region === e.id);
         this.selectedRegion = select.name;
-
+        this.selectRegionId = select.branch_id;
         const result = await axios.get(
           `http://${host}:${port}/api/v1/tickets/map/${select.branch_id}`,
           {
@@ -217,6 +217,7 @@ export default {
             previousRegion.style.fill = this.currentColor;
             this.currentRegion = null;
             this.selectedRegion = "Все билеты";
+            this.selectRegionId = null;
             if (this.serverList.length === 1) {
               if (this.serverList.length === 1) {
                 this.selectedRegion = this.serverList[0].F_NAME;
@@ -247,15 +248,16 @@ export default {
     },
 
     goAmount() {
+      
       this.$router.push({
-        path: "/amount-dash",
-        query: { branch_id: this.selectedRegion.branch_id },
+        path: `/amount-dash`,
+        query: { branch_id: this.selectRegionId },
       });
     },
     goTickets() {
       this.$router.push({
         path: "/tickets",
-        query: { branch_id: this.selectedRegion.branch_id },
+        query: { branch_id: this.selectRegionId },
       });
     },
   },
