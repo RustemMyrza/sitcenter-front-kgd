@@ -345,13 +345,13 @@ onBeforeMount(()=>{
         </div>
         <div v-for="branch in branches" :key="branch.id" class="drop-item">
           <div class="notfold" >
-            <div @click="unFold(branch.id)" class="item-name w-full">
+            <div @click="unFold(branch.id)" class="item-name w-4/6">
               <i   class="fas fa-plus mx-4"></i>
              
               {{ branch.F_NAME }}
             </div>
             
-            <div class="item-amount w-fit">
+            <div class="item-amount w-2/6">
               <div v-if="!isUgd" class="form-switch">
                 <input @change="setBlock(branch.F_ID, branch.blocked)" :disabled="branch.isSwitchable === false"
                   class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"

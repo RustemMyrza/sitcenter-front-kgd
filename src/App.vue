@@ -31,8 +31,8 @@ export default {
   <div v-if="!isLoginPage()" class="side-bar">
     <SidebarComponent />
   </div>
-  <div class="main">
-    <div :style="{ 'margin-left': !isLoginPage() ? sidebarWidth : 'auto' }"   >
+  <div class="main" :style="{ 'margin-left': !isLoginPage() ? sidebarWidth : 'auto' }">
+    
       <div v-if="!isLoginPage()" class="head">
         <header-component />
         <div class="dashboard">
@@ -40,13 +40,14 @@ export default {
         </div>
       </div>
       <router-view/>
-    </div>
+    
     
     <!-- <router-view :style="{ 'margin-left': !isLoginPage() && sidebarWidth }" /> -->
   </div>
 </template>
 
-<style>
+<style lang="scss">
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -70,5 +71,17 @@ export default {
 
 .dashboard {
   margin: 0.5rem auto;
+}
+
+@media print{
+  .side-bar{
+    display: none;
+  }
+  .head{
+    display: none;
+  }
+  .main {
+    margin-left: auto !important;
+  }
 }
 </style>

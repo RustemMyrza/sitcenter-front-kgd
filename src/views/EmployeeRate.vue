@@ -1,13 +1,31 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+
 const branches = ref(null);
 
 const childBranches = ref(0);
 const selectedBranch = ref(0);
 
-const host = process.env.VUE_APP_SERVER_HOST;
-const port = process.env.VUE_APP_SERVER_PORT;
+
+
+const headers = [
+  {
+    align: 'center',
+    key: 'F_BRANCH_ID',
+    sortable: false,
+    title: 'ID отделения',
+  },
+  { key: 'F_DESCR', title: 'Описание', align: 'center', },
+  { key: 'F_ID', title: 'ID оператора', align: 'center', },
+  { key: 'F_NAME', title: 'Ф.И.О', align: 'center', },
+  { key: 'name', title: 'Ф.И.О', align: 'center', },
+  { key: 'timeDifference', title: 'Время', align: 'center', },
+  { key: 'startTime', title: 'Время начала работы', align: 'center', },
+];
+const desserts = ref([]);
 
 const chart = ref(null);
 
@@ -26,18 +44,20 @@ const employeeChart = ref({
     dataLabels: {
       enabled: true,
       offsetX: -60,
+     
       formatter: function (value) {
-            if (value % 10 === 1 && value % 100 !== 11) {
-              return value + " час";
-            } else if (
-              value % 10 >= 2 &&
-              value % 10 <= 4 &&
-              (value % 100 < 10 || value % 100 >= 20)
-            ) {
-              return value + " часа";
-            } else {
-              return value + " часов";
-            }
+            return formatTime(value);
+            // if (value % 10 === 1 && value % 100 !== 11) {
+            //   return value + " час";
+            // } else if (
+            //   value % 10 >= 2 &&
+            //   value % 10 <= 4 &&
+            //   (value % 100 < 10 || value % 100 >= 20)
+            // ) {
+            //   return value + " часа";
+            // } else {
+            //   return value + " часов";
+            // }
           }
     },
     xaxis: {
@@ -87,6 +107,8 @@ const getEmployee = async () => {
     }
   );
   console.log(result.data.data);
+  desserts.value = result.data.data;
+  console.log("Desserts",desserts.value)
 
 
   const employeeData = result.data.data.map(function (employee) {
@@ -94,7 +116,7 @@ const getEmployee = async () => {
           name: employee.F_NAME,
           status: employee.timeDifference ? "Онлайн" : "Оффлайн",
           // photo: "https://static.vecteezy.com/system/resources/thumbnails/024/905/590/small/smiling-indian-girl-in-traditional-clothing-outdoors-generated-by-ai-free-photo.jpg",
-          value: employee.timeDifference,
+          value:  employee.timeDifference,
         };
       });
   const seriesData = employeeData.map(function (employee) {
@@ -121,6 +143,27 @@ const getEmployee = async () => {
     ],
   });
 };
+
+
+const formatTime = (milliseconds) => {
+  const hours = Math.floor(milliseconds / 3600000);
+  const minutes = Math.floor((milliseconds % 3600000) / 60000);
+  const seconds = Math.floor((milliseconds % 60000) / 1000);
+  return `${hours}ч. ${minutes}м. ${seconds}сек.`;
+  
+};
+const formattedDesserts = computed(() => {
+  return desserts.value.map(ticket => {
+    const start =ticket.startTime*1;
+    return {
+      ...ticket,
+      timeDifference: formatTime(ticket.timeDifference),
+      startTime:ticket.timeDifference !== 0 ? new Date(start).toLocaleString("ru-RU") : "Оффлайн"
+    }
+  }).sort((a, b) => {
+    return a.starttime - b.starttime;
+  });
+});
 
 onMounted(() => {
   getBranches();
@@ -160,6 +203,17 @@ onMounted(() => {
           :options="employeeChart.options"
           :series="employeeChart.series"
         ></apexchart>
+      </div>
+
+      <div class="empl-data">
+        <v-card title="Окна" flat>
+          <template v-slot:text>
+            <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details
+              single-line></v-text-field>
+          </template>
+  
+          <v-data-table :headers="headers" :items="formattedDesserts" :search="search"></v-data-table>
+        </v-card>
       </div>
     </div>
   </div>

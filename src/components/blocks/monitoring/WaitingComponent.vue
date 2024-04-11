@@ -25,13 +25,14 @@ console.log(props.alarm);
 </template>
 <style lang="scss" scoped>
 .wait{
-    width: 10%;
+    width: 15%;
     margin: 1rem 1rem;
     .green{
         background-color: green;
         width: 20px;
         height: 20px;
         border-radius: 50%;
+        animation: pulse-animation 2s infinite;
     }
     
     .red{
@@ -39,6 +40,17 @@ console.log(props.alarm);
         width: 20px;
         height: 20px;
         border-radius: 50%;
+        animation: pulse-animation 2s infinite;
     }
 }
+
+@keyframes pulseAnimation {
+    0% {
+      transform: scale(1);
+    }
+  
+    100% {
+      transform: scale(1.2);
+    }
+  }
 </style>
