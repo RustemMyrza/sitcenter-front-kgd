@@ -1,5 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import axios from "axios";
+import axios from "axios";
+
+const host = process.env.VUE_APP_SERVER_HOST;
+const port = process.env.VUE_APP_SERVER_PORT;
+// import { mapActions} from 'vuex';
 
 import MainView from "@/views/MainView";
 import DashboardAmountView from "../views/DashboardAmountView.vue";
@@ -32,6 +36,7 @@ const routes = [
     path: "/login",
     name: "login page",
     component: LoginView,
+   
   },
   {
     path: "/profile",
@@ -119,23 +124,51 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.state.isAuthenticated;
 
-  if (to.meta.requiresAuth) {
+router.beforeEach(async (to, from, next) => {
+  const check =  checkToken();
+  const isAuthenticated = store.state.isAuthenticated && check;
+  
+  // Check if the route requires authentication
+  if (to.path === '/login' && isAuthenticated) {
+    // Redirect to the main page if already authenticated
+    next({ name: 'main' });
+  }
+  else if (to.meta.requiresAuth) {
+    // Check if the user is authenticated
     if (isAuthenticated) {
+      // If authenticated, proceed to the route
       next();
     } else {
+      // If not authenticated, redirect to the login page
       next('/login');
     }
   } else {
-    if (to.name === 'login page' && isAuthenticated) {
-      next({ name: 'main' }); // Redirect to main page if already logged in
-    } else {
-      next();
-    }
+    // If the route does not require authentication, proceed to the route
+    next();
   }
+  
+  // Call the checkToken action to ensure token validity
+  
 });
+
+const checkToken =  async ()=> {
+  const url = `http://${host}:${port}/api/v1/auth`;
+  try {
+    await axios.get(url,{
+      headers:{
+        bearer:localStorage.getItem("authToken")
+      }
+    });
+    return true;
+    
+  } catch (err) {
+    
+    localStorage.removeItem("authToken");
+    console.log(err);
+    return false;
+  }
+};
 
 
 export default router;

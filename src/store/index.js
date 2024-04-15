@@ -10,9 +10,9 @@ export default createStore({
     isAuthenticated: !!localStorage.getItem("authToken"),
     errorMessage: "",
     username: localStorage.getItem("login") || null,
-    userInfo: '',
-    parentBranchId:'',
-    childBranchId:'',
+    userInfo: "",
+    parentBranchId: "",
+    childBranchId: "",
   },
   mutations: {
     setAuthentication(state, isAuthenticated) {
@@ -24,13 +24,12 @@ export default createStore({
     setUsername(state, username) {
       state.username = username;
     },
-    setParentBranchId(state,parentBranchId){
+    setParentBranchId(state, parentBranchId) {
       state.parentBranchId = parentBranchId;
     },
-    setChildBranchId(state,childBranchId){
+    setChildBranchId(state, childBranchId) {
       state.childBranchId = childBranchId;
-    }
-    
+    },
   },
   actions: {
     async login({ commit }, { username, password, type }) {
@@ -48,18 +47,12 @@ export default createStore({
           username,
           password,
         });
-
-     
-
-
         localStorage.setItem("authToken", response.data.token);
         localStorage.setItem("login", response.data.login);
         localStorage.setItem("role", response.data.role);
 
         commit("setUsername", response.data.login);
         commit("setAuthentication", true);
-
-
 
         return true; // Return true if login is successful
       } catch (error) {
@@ -109,14 +102,33 @@ export default createStore({
     clearErrorMessage({ commit }) {
       commit("setErrorMessage", "");
     },
-    
+    async checkToken({ commit }) {
+      const url = `http://${host}:${port}/api/v1/auth`;
+      try {
+        await axios.get(url,{
+          headers:{
+            bearer:localStorage.getItem("authToken")
+          }
+        });
+        commit("setAuthentication", true);
+      } catch (err) {
+        commit("setAuthentication", false);
+        localStorage.removeItem("authToken");
+        console.log(err);
+      }
+    },
   },
   getters: {
     errorMessage: (state) => state.errorMessage,
     username: (state) => state.username,
-    userImage: (state)=> state.userImage,
-    parentBranchId:(state)=>state.parentBranchId,
-    childBranchId:(state)=>state.childBranchId,
+    userImage: (state) => state.userImage,
+    parentBranchId: (state) => state.parentBranchId,
+    childBranchId: (state) => state.childBranchId,
+    isAuth: (state, getters, rootState, rootGetters) => () => {
+      rootState.isAuthenticated = rootGetters.isAuthenticated; // Ensure that the isAuthenticated state is up-to-date
+      state.dispatch('checkToken'); // Dispatch checkToken action every time isAuth is accessed
+      return !!state.username && !!localStorage.getItem("authToken");
+    },
   },
   modules: {},
 });
