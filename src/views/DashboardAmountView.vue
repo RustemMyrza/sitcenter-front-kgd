@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 
@@ -8,7 +8,7 @@ const route = useRoute();
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
-const totalTickets =ref(0);
+const totalTickets = ref(0);
 
 const isChild = ref(false);
 
@@ -73,7 +73,8 @@ const chartOptions = ref({
         legend: {
           position: "top",
           offsetX: -10,
-          offsetY: 0,
+          horizontalAlign: 'center', // Align legend items horizontally at the center
+          offsetY: -10,
         },
       },
     },
@@ -210,7 +211,7 @@ const backChart = () => {
     isChild.value = false;
     updateChart();
     desserts.value = parentList.value;
-    if(route.query.branch_id){
+    if (route.query.branch_id) {
       const newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
       history.replaceState({}, document.title, newUrl);
     }
@@ -229,19 +230,20 @@ const getBranchTickets = async () => {
         },
       }
     );
-      console.log(result.data);
+    console.log(result.data);
     branchTickets.value = result.data.data;
     totalTickets.value = result.data.count;
-  
-    if(route.query.branch_id){
-        const propBranch = branchTickets.value.find(e=>e.branchId == route.query.branch_id);
-        console.log(propBranch);
-        updateChartByBranchId(propBranch);
-        updateTicketByBranchId(propBranch);
-        isChild.value = true;
+
+    if (route.query.branch_id) {
+      console.log("route",route.query.branch_id);
+      const propBranch = branchTickets.value.find(e => e.branchId === route.query.branch_id*1);
+      console.log(propBranch);
+      updateChartByBranchId(propBranch);
+      updateTicketByBranchId(propBranch);
+      isChild.value = true;
     }
     else
-    backChart();
+      backChart();
   } catch (err) {
     console.log(err);
   }
@@ -272,15 +274,19 @@ const formattedDesserts = computed(() => {
       ...ticket,
       starttime: new Date(ticket.starttime).toLocaleString("ru-RU"),
       startservtime: new Date(ticket.startservtime).toLocaleString("ru-RU"),
-      rating: ticket.rating === "5" ? "Отлично" : ticket.rating === "4" ? "Хорошо" :ticket.rating === "4" ? "Плохо":"Нет оценки", 
-      waitover:ticket.waitover === "true"?"Да":"Нет",
-      servover:ticket.servover === "true"?"Да":"Нет",
-      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" : "Бронь", 
+      rating: ticket.rating === "5" ? "Отлично" : ticket.rating === "4" ? "Хорошо" : ticket.rating === "4" ? "Плохо" : "Нет оценки",
+      waitover: ticket.waitover === "true" ? "Да" : "Нет",
+      servover: ticket.servover === "true" ? "Да" : "Нет",
+      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" : "Бронь",
       idbranch: ticket.idbranch
     }
   }).sort((a, b) => {
     return a.starttime - b.starttime;
   });
+});
+
+watch(() => route.query, () => {
+  getBranchTickets();
 });
 
 onMounted(() => {
@@ -290,7 +296,7 @@ onMounted(() => {
   // if(route.query.branch_id){
   //   updateByProps(route.query.branch_id);
   // }
-  
+
   // console.log(apexChart.value)
 });
 </script>
@@ -299,19 +305,11 @@ onMounted(() => {
 <template>
   <div class="amount-container">
 
-    <h3>{{totalTickets}}</h3>
+    <h3>{{ totalTickets }}</h3>
     <div class="chartBlock">
-      <v-btn @click="backChart()" v-if="isChild" class="back"
-        ><i class="fas fa-arrow-left fa-2xl"></i
-      ></v-btn>
-      <apexchart
-        ref="apexChart"
-        type="bar"
-        height="500"
-        :options="chartOptions"
-        :series="series"
-        @dataPointSelection="handleBarClick"
-      ></apexchart>
+      <v-btn @click="backChart()" v-if="isChild" class="back"><i class="fas fa-arrow-left fa-2xl"></i></v-btn>
+      <apexchart ref="apexChart" type="bar" height="500" :options="chartOptions" :series="series"
+        @dataPointSelection="handleBarClick"></apexchart>
     </div>
     <div class="tickets">
       <v-card title="Билеты" flat>
@@ -326,11 +324,7 @@ onMounted(() => {
           ></v-text-field>
         </template> -->
 
-        <v-data-table
-          :headers="headers"
-          :items="formattedDesserts"
-          :search="search"
-        ></v-data-table>
+        <v-data-table :headers="headers" :items="formattedDesserts" :search="search"></v-data-table>
       </v-card>
     </div>
   </div>
@@ -339,8 +333,19 @@ onMounted(() => {
 <style lang="scss" scoped>
 .chartBlock {
   width: 100%;
+
   .back {
     border-radius: 1rem;
   }
 }
+
+/*
+.apexcharts-legend {
+  position: absolute!important;
+  top: 100px!important; /* Adjust this value to move the legend higher 
+  left: 50%!important;
+  transform: translateX(-50%)!important;
+}
+*/
+
 </style>

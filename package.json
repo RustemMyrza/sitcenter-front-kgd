@@ -26,6 +26,8 @@
     "datatables.net-select": "^2.0.0",
     "datatables.net-select-bs5": "^2.0.0",
     "datatables.net-vue3": "^3.0.1",
+    "html2pdf": "^0.0.11",
+    "html2pdf.js": "^0.10.1",
     "register-service-worker": "^1.7.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

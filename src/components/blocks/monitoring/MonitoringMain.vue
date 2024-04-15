@@ -1,15 +1,26 @@
 <script setup>
-import { onMounted, ref,computed } from "vue";
+import { onMounted, ref,computed, watch } from "vue";
+// import { useStore } from "vuex";
+import axios from "axios";
+import { useRoute } from "vue-router";
+
 import WindowComponent from "./WindowComponent.vue";
 import WaitingComponent from "./WaitingComponent.vue";
-import axios from "axios";
+
+
+
+
+// const store = useStore();
 
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
+const route = useRoute();
 
 const branches = ref(null);
 const childBranches = ref(0);
 const selectedBranch = ref(0);
+
+// const route = useRoute();
 
 const search = ref("");
 const headers = [
@@ -83,6 +94,13 @@ const formattedDesserts = computed(() => {
   }).sort((a, b) => {
     return a.starttime - b.starttime;
   });
+});
+
+watch(() => route.query, (oldValue,newValue) => {
+    console.log(oldValue,newValue);
+    childBranches.value = branches.value.find(e=>e.F_ID*1 === newValue.parent_branch*1);
+    selectedBranch.value = newValue.branch_id;
+    getWindows();
 });
 
 onMounted(() => {

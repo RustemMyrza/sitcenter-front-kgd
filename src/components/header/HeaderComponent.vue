@@ -6,45 +6,87 @@ import { toggleSidebar, collapsed } from "@/components/sidebar/state";
 import nonPhoto from "@/assets/avatart.jpg";
 
 import axios from "axios";
-import { onMounted, ref,watch } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from 'vuex';
+// import { generatePdf } from '@/utils/pdfUtils.js';
 
-const route = useRouter();
+const router = useRouter();
+const route = useRoute();
 const store = useStore(); // Use the store
 
 const username = ref(null);
 const image = ref('');
+const branches = ref(null);
+const childBranches = ref(0);
+const selectedBranch = ref(null);
 
 const OnLogOut = () => {
   store.dispatch('logout'); // Dispatch the logout action
-  route.push("/login");
+  router.push("/login");
   localStorage.removeItem("image")
 }
 
-const getImage = async()=>{
-  const result = await axios.get(`http://${host}:${port}/api/v1/users/get-info`,{
-    headers:{
-      bearer:localStorage.getItem("authToken")
+const getImage = async () => {
+  const result = await axios.get(`http://${host}:${port}/api/v1/users/get-info`, {
+    headers: {
+      bearer: localStorage.getItem("authToken")
     }
   });
   console.log(result.data.user[0].image);
-  if(result.data.user[0].image){
-    const imgSrc = `http://${host}:${port}/images/`+ result.data.user[0].image;
-    localStorage.setItem("image",imgSrc);
+  if (result.data.user[0].image) {
+    const imgSrc = `http://${host}:${port}/images/` + result.data.user[0].image;
+    localStorage.setItem("image", imgSrc);
     image.value = imgSrc;
   }
-  else 
+  else
     image.value = nonPhoto;
-  
+
 }
-watch(() => localStorage.getItem("image"), (oldValue,newValue) => {
+const downloadPdf = async () => {
+  // try {
+  //   const htmlContent = document.documentElement.outerHTML; // Get HTML content of the entire page
+  //   await generatePdf(htmlContent, 'page1.pdf');
+  //   // Repeat the above steps for other pages as needed
+  // } catch (error) {
+  //   console.error('Error generating PDF:', error);
+  // }
+  window.print()
+}
+
+const getBranches = async () => {
+  const result = await axios.get(`http://${host}:${port}/api/v1/branches`, {
+    headers: {
+      bearer: localStorage.getItem("authToken"),
+    },
+  });
+  console.log(result);
+  branches.value = result.data.rows;
+};
+const filter = async () => {
+  const currentQueryParams = { ...route.query };
+  if(childBranches.value === 0){
+    currentQueryParams.branch_id = "";
+    currentQueryParams.parent_branch = "";
+  }
+  // Add or update query parameters
+  currentQueryParams.branch_id = selectedBranch.value;
+  console.log(childBranches.value);
+  currentQueryParams.parent_branch = childBranches.value.F_ID *1;
+  store.commit("setChildBranchId",selectedBranch.value);
+  // currentQueryParams.param2 = 'value2';
+
+  // Navigate to the same route with updated query parameters
+  router.push({ path: route.path, query: currentQueryParams });
+}
+watch(() => localStorage.getItem("image"), (oldValue, newValue) => {
   image.value = newValue;
 });
 
 onMounted(() => {
   username.value = store.getters.username;
   getImage();
+  getBranches();
 });
 </script>
 
@@ -65,23 +107,44 @@ onMounted(() => {
           <i class="far fa-envelope fa-lg"></i>
         </div>
       </div> -->
+      <div class="dropdown">
+        <v-btn class="btn   dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Фильтр
+        </v-btn>
+        <ul class="dropdown-menu w-full">
+          <div class="inputBlock ">
+            <select class="form-select" v-model="childBranches">
+              <option selected disabled value="0">Выберите филиал</option>
+              <option value="0">Все</option>
+              <option v-for="br in branches" :key="br.id" :value="br">
+                {{ br.F_NAME }}
+              </option>
+            </select>
+
+            <select :disabled="!childBranches" class="form-select" v-model="selectedBranch" @change="filter()">
+              <option selected disabled value="0">Выберите отделение</option>
+              <option v-for="child in childBranches.children" :key="child.F_ID" :value="child.F_ID">
+                {{ child.F_NAME }}
+              </option>
+            </select>
+          </div>
+        </ul>
+      </div>
+      <div @click="downloadPdf()" class="dowloadPage cursor-pointer">
+        <i class="fas fa-file-download fa-2xl"></i>
+      </div>
       <div class="userInfo ">
         <div class="dropdown ">
-         
-          <button 
-            class="btn  dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-          
+
+          <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+            aria-expanded="false">
+
             <img :src="image" alt="" class="rounded-full" />
             {{ username }}
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li><router-link to="/profile" class="dropdown-item" href="#">Мой профиль</router-link></li>
-             <li><a @click="OnLogOut()" class="dropdown-item" href="#">Выход</a></li>
+            <li><a @click="OnLogOut()" class="dropdown-item" href="#">Выход</a></li>
           </ul>
         </div>
       </div>
@@ -94,32 +157,39 @@ onMounted(() => {
   transform: rotate(180deg);
   transition: 0.2s linear;
 }
+
 .header-container {
   width: 100%;
 
   background-color: rgb(232, 238, 238);
-  .toggleIcon{
+
+  .toggleIcon {
     cursor: pointer;
   }
+
   .headerInfo {
-    .userInfo{
-      .dropdown{
-        button{
-          
+    .userInfo {
+      .dropdown {
+        button {
+
           display: flex;
           justify-content: center;
           align-items: center;
-          img{
+
+          img {
             margin: 0 0.5rem;
             width: 40px;
           }
         }
       }
     }
+
     font: 50px;
+
     div {
       position: relative;
       margin: 0 .5rem 0 .5rem;
+
       .bell-amount {
         position: absolute;
         top: -50%;
@@ -129,7 +199,7 @@ onMounted(() => {
         font-weight: 700;
         color: red;
       }
-      
+
       .envelope-amount {
         position: absolute;
         top: -50%;

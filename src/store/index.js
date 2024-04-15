@@ -11,6 +11,8 @@ export default createStore({
     errorMessage: "",
     username: localStorage.getItem("login") || null,
     userInfo: '',
+    parentBranchId:'',
+    childBranchId:'',
   },
   mutations: {
     setAuthentication(state, isAuthenticated) {
@@ -22,6 +24,12 @@ export default createStore({
     setUsername(state, username) {
       state.username = username;
     },
+    setParentBranchId(state,parentBranchId){
+      state.parentBranchId = parentBranchId;
+    },
+    setChildBranchId(state,childBranchId){
+      state.childBranchId = childBranchId;
+    }
     
   },
   actions: {
@@ -101,11 +109,14 @@ export default createStore({
     clearErrorMessage({ commit }) {
       commit("setErrorMessage", "");
     },
+    
   },
   getters: {
     errorMessage: (state) => state.errorMessage,
     username: (state) => state.username,
-    userImage: (state)=> state.userImage
+    userImage: (state)=> state.userImage,
+    parentBranchId:(state)=>state.parentBranchId,
+    childBranchId:(state)=>state.childBranchId,
   },
   modules: {},
 });
