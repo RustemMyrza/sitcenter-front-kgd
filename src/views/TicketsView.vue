@@ -1,7 +1,7 @@
 <script setup>
 import axios from "axios";
 import { onMounted, ref, watch, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
@@ -34,6 +34,7 @@ const headers = [
 ];
 const desserts = ref([]);
 const route = useRoute();
+const router = useRouter();
 
 const getTicketList = async () => {
   try {
@@ -96,6 +97,26 @@ const filterTickets = async (value) => {
   } catch (err) {
     console.log(err);
   }
+}
+
+const reset = async () => {
+  const url = `http://${host}:${port}/api/v1/tickets/list?page=${pagination.value.pageNumber}&limit=100`;
+  try {
+    const result = await axios.get(url, {
+      headers: {
+        bearer: localStorage.getItem("authToken"),
+      },
+    });
+
+    pagination.value.pageCount = result.data.pages;
+    pagination.value.pageNumber = 1;
+    desserts.value = result.data.data.tickets;
+    router.push({ ...router.currentRoute.value, query: {} });
+  } catch (err) {
+    console.log(err);
+  }
+
+
 }
 
 watch(() => pagination.value.pageNumber, () => {
@@ -165,7 +186,8 @@ onMounted(() => {
       </div>
       <div class="pagi ">
         <div class="text-center">
-          <v-pagination v-model="pagination.pageNumber" :length="pagination.pageCount" :total-visible="10"></v-pagination>
+          <v-pagination v-model="pagination.pageNumber" :length="pagination.pageCount"
+            :total-visible="10"></v-pagination>
         </div>
       </div>
       <v-card title="Билеты" flat>

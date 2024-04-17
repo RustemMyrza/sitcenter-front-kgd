@@ -67,15 +67,15 @@ const getBranches = async () => {
 };
 const filter = async () => {
   const currentQueryParams = { ...route.query };
+  console.log(selectedBranch.value);
   if(childBranches.value === 0){
-    currentQueryParams.branch_id = "";
-    currentQueryParams.parent_branch = "";
+    router.push({ ...router.currentRoute.value, query: {} });
   }
   // Add or update query parameters
   currentQueryParams.branch_id = selectedBranch.value;
   console.log(childBranches.value);
   currentQueryParams.parent_branch = childBranches.value.F_ID *1;
-  store.commit("setChildBranchId",selectedBranch.value);
+  // store.commit("setChildBranchId",selectedBranch.value);
   // currentQueryParams.param2 = 'value2';
 
   // Navigate to the same route with updated query parameters
@@ -84,6 +84,13 @@ const filter = async () => {
 watch(() => localStorage.getItem("image"), (oldValue, newValue) => {
   image.value = newValue;
 });
+watch(() => childBranches.value, () => {
+  console.log(childBranches.value);
+  if(childBranches.value === 0){
+    router.push({ ...router.currentRoute.value, query: {} });
+  }
+});
+
 
 onMounted(() => {
   username.value = store.getters.username;
