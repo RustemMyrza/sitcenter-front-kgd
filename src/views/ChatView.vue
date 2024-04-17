@@ -10,7 +10,8 @@ const pie = ref({
       width: 300,
       type: "pie",
     },
-    labels: ["Потеряна связь", "Доступно", "Не используется", "Нет связи"],
+    labels: [ "Доступно",  "Нет связи","Не используется","Потеряна связь",],
+    colors:["#13ad02","#fc0f03","#ada5a5","#d9e00d"],
     responsive: [
       {
         breakpoint: 480,
@@ -58,6 +59,27 @@ const getUsers = async () => {
   users.value = result.data.data.users;
   console.log(result.data.data.users);
 }
+const getBranches = async()=>{
+  const result = await axios.get(`http://${host}:${port}/api/v1/branches`, {
+    headers: {
+      bearer: localStorage.getItem("authToken"),
+    },
+  });
+  const branches = result.data.rows;
+  let online=0;
+  let offline=0;
+  branches.map(e=>{
+    e.children.map(child=>{
+      if(child.ONN === 1){
+        online++;
+      }
+      else offline++;
+    })
+  });
+  pie.value.series = [online,offline];
+  console.log(pie.value)
+  console.log(result);
+}
 
 
 const sendMessage = async () => {
@@ -90,6 +112,7 @@ const sendMessage = async () => {
 onMounted(() => {
   getMessages();
   getUsers();
+  getBranches();
 })
 </script>
 

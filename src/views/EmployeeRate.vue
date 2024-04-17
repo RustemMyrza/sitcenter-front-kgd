@@ -21,7 +21,7 @@ const headers = [
   { key: 'F_DESCR', title: 'Описание', align: 'center', },
   { key: 'F_ID', title: 'ID оператора', align: 'center', },
   { key: 'F_NAME', title: 'Ф.И.О', align: 'center', },
-  { key: 'name', title: 'Ф.И.О', align: 'center', },
+  // { key: 's', title: 'Ф.И.О', align: 'center', },
   { key: 'timeDifference', title: 'Время', align: 'center', },
   { key: 'startTime', title: 'Время начала работы', align: 'center', },
 ];

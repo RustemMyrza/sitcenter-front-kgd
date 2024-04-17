@@ -101,7 +101,7 @@ const chartOptions = ref({
   },
   legend: {
     position: "top",
-    offsetY: 40,
+    offsetY: 5,
   },
   fill: {
     opacity: 1,
@@ -307,9 +307,13 @@ onMounted(() => {
 
     <h3>{{ totalTickets }}</h3>
     <div class="chartBlock">
-      <v-btn @click="backChart()" v-if="isChild" class="back"><i class="fas fa-arrow-left fa-2xl"></i></v-btn>
-      <apexchart ref="apexChart" type="bar" height="500" :options="chartOptions" :series="series"
+      
+      <v-btn @click="backChart()" v-if="isChild" class="back m-4"><i class="fas fa-arrow-left fa-2xl"></i></v-btn>
+      <div class="chart p-4">
+        <apexchart ref="apexChart"  height="500" :options="chartOptions" :series="series"
         @dataPointSelection="handleBarClick"></apexchart>
+      </div>
+      
     </div>
     <div class="tickets">
       <v-card title="Билеты" flat>

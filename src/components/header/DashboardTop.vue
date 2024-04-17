@@ -1,4 +1,3 @@
-
 <script setup>
 // import { ref } from "vue";
 // @ is an alias to /src
@@ -7,7 +6,9 @@ import BlockElement from "@/components/blocks/dashboard/top/BlockElement.vue";
 
 
 import axios from "axios";
-import { onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+
 
 
 // const offline = ref(0);
@@ -15,13 +16,15 @@ import { onMounted, ref} from "vue";
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
+const router = useRouter();
+
 const serverInfo = ref({
-    color: "#130950",
-    icon: "fas fa-server",
-    text: "Количество неработающих УГД",
-    number:11,
-    link: "/server",
-  });
+  color: "#130950",
+  icon: "fas fa-server",
+  text: "Количество неработающих УГД",
+  number: 11,
+  link: "/server",
+});
 const rateInfo = ref({
   color: "#10877A",
   icon: "fas fa-vote-yea",
@@ -61,9 +64,9 @@ const fetchData = async () => {
   let offline = 0;
   let total = 0;
   const servers = result.data.data.server_list;
-  servers.map(server =>{
-    server.children.map(child=>{
-      if(child.ONN === 0){
+  servers.map(server => {
+    server.children.map(child => {
+      if (child.ONN === 0) {
         offline++;
       }
       total++;
@@ -73,31 +76,45 @@ const fetchData = async () => {
   serverInfo.value.number = offline;
   const ratio = (offline / total).toFixed(2);
   console.log(ratio)
-  if(ratio >= 0.3){
+  if (ratio >= 0.3) {
     serverInfo.value.color = "red";
   }
   rateInfo.value.number = result.data.data.averageRate;
- 
+
 };
+
+const getValues = async () => {
+  try {
+    const result = await axios.get(`http://${host}:${port}/api/v1/tickets`, {
+      headers: {
+        bearer: localStorage.getItem("authToken"),
+      },
+    });
+    // console.log(result.data.data)
+    badRate.value.number = result.data.data.alarm.data[2].count;
+    badRate.value.color = badRate.value.number > 10 ? "red" : "#d2aa66";
+    maxWaitTime.value.number = result.data.data.alarm.data[1].count;
+    maxServTime.value.number = result.data.data.alarm.data[0].count;
+  } catch (err) {
+    alert("Нет билетов")
+    router.push({ path: "/login", });
+    if (err.response && err.response.status === 401) {
+      // Handle 401 Unauthorized error here
+      console.log("Unauthorized. Please login again.");
+      
+    } else {
+      // Handle other errors
+      console.log(err);
+    }
+  }
+
+}
 
 
 
 onMounted(() => {
   fetchData();
-  (async()=>{
-    const result = await axios.get(`http://${host}:${port}/api/v1/tickets`, {
-    headers: {
-      bearer: localStorage.getItem("authToken"),
-    },
-  });
-  // console.log(result.data.data)
-  badRate.value.number = result.data.data.alarm.data[2].count;
-  badRate.value.color = badRate.value.number > 10 ? "red" : "#d2aa66";
-  maxWaitTime.value.number = result.data.data.alarm.data[1].count;
-  maxServTime.value.number = result.data.data.alarm.data[0].count;
-    
-  })()
-
+  getValues();
 });
 
 

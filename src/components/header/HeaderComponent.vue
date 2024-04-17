@@ -17,9 +17,11 @@ const store = useStore(); // Use the store
 
 const username = ref(null);
 const image = ref('');
+
+
 const branches = ref(null);
 const childBranches = ref(0);
-const selectedBranch = ref(null);
+const selectedBranch = ref(0);
 
 const OnLogOut = () => {
   store.dispatch('logout'); // Dispatch the logout action
@@ -157,6 +159,10 @@ onMounted(() => {
   transform: rotate(180deg);
   transition: 0.2s linear;
 }
+.dropdown-menu.show{
+  width: 250px;
+  transform: translate(0px,50px)!important;
+}
 
 .header-container {
   width: 100%;
@@ -169,7 +175,9 @@ onMounted(() => {
 
   .headerInfo {
     .userInfo {
+      
       .dropdown {
+        
         button {
 
           display: flex;

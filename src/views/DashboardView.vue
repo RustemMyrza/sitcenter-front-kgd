@@ -18,6 +18,19 @@ const pickHours = ref({
       zoom: {
         enabled: true,
       },
+      toolbar: {
+        show: true,
+        tools: {
+          download: true,
+          selection: true,
+          zoom: true,
+          zoomin: true,
+          zoomout: true,
+          pan: true,
+          reset: true,
+        }
+      }
+      
     },
     dataLabels: {
       enabled: false,
@@ -356,9 +369,12 @@ const fetchData = async () => {
       };
     });
     peakChart.value.updateOptions({
+     
       xaxis: {
         type: "category",
         categories: allClientData.map((point) => point.x),
+        tickPlacement: 'on',
+        
       },
       series: [
         {
