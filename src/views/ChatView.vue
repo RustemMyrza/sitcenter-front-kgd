@@ -76,7 +76,7 @@ const getBranches = async()=>{
       else offline++;
     })
   });
-  pie.value.series = [online,offline];
+  pie.value.series = [online,offline,0,0];
   console.log(pie.value)
   console.log(result);
 }

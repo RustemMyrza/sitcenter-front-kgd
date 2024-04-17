@@ -79,7 +79,11 @@ const fetchData = async () => {
   if (ratio >= 0.3) {
     serverInfo.value.color = "red";
   }
+  
   rateInfo.value.number = result.data.data.averageRate;
+  if(rateInfo.value.number <=3){
+    rateInfo.value.color = "red";
+  }
 
 };
 
