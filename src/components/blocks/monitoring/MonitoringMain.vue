@@ -145,7 +145,7 @@ onMounted(() => {
       <div v-if="branches" class="windows">
         <div class="waits">
           <WaitingComponent :waitover="wait.waitover === 'true'" v-for="wait in waitClient" :key="wait.id" />
-          <WaitingComponent :waitover="true" />
+          <!-- <WaitingComponent :waitover="true" /> -->
           <!-- <WaitingComponent :waitover="true"  /> -->
         </div>
         <div class="tables">

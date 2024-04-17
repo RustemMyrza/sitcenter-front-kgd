@@ -43,7 +43,11 @@ export default {
     methods: {
         async createBoard() {
             const url = `http://${host}:${port}/api/v1/board`;
+            if(this.boardObject.title==="" || this.boardObject.board_body === ""){
+                return alert("Некоторые поля остались пустыми")
+            }
             try {
+                
                 await axios.post(url, this.boardObject, {
                     headers: {
                         bearer: localStorage.getItem("authToken")
@@ -149,14 +153,14 @@ export default {
                             <div class="title-input">
                                 <label for="title">Заголовок</label>
                                 <input v-model="boardObject.title" type="text" name="title" class=""
-                                    placeholder="Заголовок">
+                                    placeholder="Заголовок" required>
                             </div>
                             <div class="body-input">
                                 <label for="body">Текст</label>
                                 <textarea v-model="boardObject.board_body" placeholder="Текст" name="body" id=""
-                                    cols="20" rows="10"></textarea>
+                                    cols="20" rows="10" required></textarea>
                             </div>
-                            <input v-model="boardObject.valid_to" type="date">
+                            <input v-model="boardObject.valid_to" type="date" required>
                         </div>
                         <div class="modal-footer">
                             <button @click="resetObject()" type="button" class="btn btn-secondary text-white"

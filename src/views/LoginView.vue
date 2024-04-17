@@ -42,9 +42,9 @@ export default {
                   Классическое
                 </v-btn>
 
-                <v-btn value="op" variant="outlined ">
+                <!-- <v-btn value="op" variant="outlined ">
                   Оператор
-                </v-btn>
+                </v-btn> -->
                 <v-btn value="nomad" variant="outlined ">
                   Пользователь Номада
                 </v-btn>

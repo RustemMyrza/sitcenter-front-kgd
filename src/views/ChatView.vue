@@ -61,6 +61,9 @@ const getUsers = async () => {
 
 
 const sendMessage = async () => {
+  if(!msg.value){
+    return alert("Заполните поле")
+  }
   try {
      await axios.post(`http://${host}:${port}/api/v1/messages`, {
       txt: msg.value,
