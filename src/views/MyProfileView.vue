@@ -105,7 +105,7 @@ onMounted(() => {
 
                 <div class="input-group">
                     <input @change="handleFileChange" type="file" class="form-control" id="inputGroupFile04"
-                        aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                        aria-describedby="inputGroupFileAddon04" accept="image/*" aria-label="Upload">
                     <button @click="uploadImage()" class="btn btn-outline-secondary" type="button"
                         id="inputGroupFileAddon04">Загрузить</button>
                 </div>

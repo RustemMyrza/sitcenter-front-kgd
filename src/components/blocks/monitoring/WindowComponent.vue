@@ -77,8 +77,8 @@ const props = defineProps({
       width: auto;
       font-size: 0.7rem;
       position: absolute;
-      top: -40%;
-      left: 30%;
+      top: -50%;
+      left: 40%;
       z-index: 999;
       background-color: #ffffffc7;
       padding: .3rem ;

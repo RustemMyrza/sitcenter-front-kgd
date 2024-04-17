@@ -101,6 +101,10 @@ const filterTickets = async (value) => {
 watch(() => pagination.value.pageNumber, () => {
   getTicketList();
 });
+
+watch(() => route.query, () => {
+  getTicketList();
+});
 const formattedDesserts = computed(() => {
   return desserts.value.map(ticket => {
     return {
@@ -151,7 +155,7 @@ onMounted(() => {
   <div class="ticket-container">
     <div class="ticketMain">
       <div class="filter block">
-        <button class="btn btn-primary" @click="filterTickets('all')">Все билеты</button>
+        <button class="btn btn-primary" @click="reset()">Все билеты</button>
         <button class="btn btn-primary" @click="download()">Скачать</button>
         <button class="btn btn-warning" @click="filterTickets('bad-rate')">Плохие оценки</button>
         <button class="btn btn-warning" @click="filterTickets('serv')">

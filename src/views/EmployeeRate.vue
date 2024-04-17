@@ -44,21 +44,21 @@ const employeeChart = ref({
     dataLabels: {
       enabled: true,
       offsetX: -60,
-     
+
       formatter: function (value) {
-            return formatTime(value);
-            // if (value % 10 === 1 && value % 100 !== 11) {
-            //   return value + " час";
-            // } else if (
-            //   value % 10 >= 2 &&
-            //   value % 10 <= 4 &&
-            //   (value % 100 < 10 || value % 100 >= 20)
-            // ) {
-            //   return value + " часа";
-            // } else {
-            //   return value + " часов";
-            // }
-          }
+        return formatTime(value);
+        // if (value % 10 === 1 && value % 100 !== 11) {
+        //   return value + " час";
+        // } else if (
+        //   value % 10 >= 2 &&
+        //   value % 10 <= 4 &&
+        //   (value % 100 < 10 || value % 100 >= 20)
+        // ) {
+        //   return value + " часа";
+        // } else {
+        //   return value + " часов";
+        // }
+      }
     },
     xaxis: {
       categories: [
@@ -108,37 +108,37 @@ const getEmployee = async () => {
   );
   console.log(result.data.data);
   desserts.value = result.data.data;
-  console.log("Desserts",desserts.value)
+  console.log("Desserts", desserts.value)
 
 
   const employeeData = result.data.data.map(function (employee) {
-        return {
-          name: employee.F_NAME,
-          status: employee.timeDifference ? "Онлайн" : "Оффлайн",
-          // photo: "https://static.vecteezy.com/system/resources/thumbnails/024/905/590/small/smiling-indian-girl-in-traditional-clothing-outdoors-generated-by-ai-free-photo.jpg",
-          value:  employee.timeDifference,
-        };
-      });
+    return {
+      name: employee.F_NAME,
+      status: employee.timeDifference ? "Онлайн" : "Оффлайн",
+      // photo: "https://static.vecteezy.com/system/resources/thumbnails/024/905/590/small/smiling-indian-girl-in-traditional-clothing-outdoors-generated-by-ai-free-photo.jpg",
+      value: employee.timeDifference,
+    };
+  });
   const seriesData = employeeData.map(function (employee) {
-        return {
-          x: employee.name + " - " + employee.status,
-          y: employee.value,
-          // photo: employee.photo,
-        };
-      });
+    return {
+      x: employee.name + " - " + employee.status,
+      y: employee.value,
+      // photo: employee.photo,
+    };
+  });
 
 
   chart.value.updateOptions({
     xaxis: {
       categories: seriesData.map(function (employee) {
-            return employee.x;
-          }),
+        return employee.x;
+      }),
     },
     series: [
       {
         name: "Показатели",
         data: seriesData,
-        
+
       },
     ],
   });
@@ -150,15 +150,53 @@ const formatTime = (milliseconds) => {
   const minutes = Math.floor((milliseconds % 3600000) / 60000);
   const seconds = Math.floor((milliseconds % 60000) / 1000);
   return `${hours}ч. ${minutes}м. ${seconds}сек.`;
-  
+
 };
+const downloadCSV = () => {
+  // Convert items to CSV format
+  try {
+    const excel = desserts.value.map(ticket => {
+      const start = ticket.startTime * 1;
+      return {
+        'ID отделения': ticket.F_BRANCH_ID,
+        'Описание': ticket.F_DESCR,
+        'ID оператора': ticket.F_ID,
+        'Ф.И.О': ticket.F_NAME,
+        'Время': formatTime(ticket.timeDifference),
+        'Время начала работы': ticket.timeDifference !== 0 ? new Date(start).toLocaleString("ru-RU") : "Оффлайн"
+     }
+    });
+    // console.log(excel);
+    const csvContent = convertToCSV(excel);
+
+    // Create a Blob object with the CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+
+    // Create a link element to trigger the download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'data.csv';
+
+    // Trigger the download
+    link.click();
+  } catch (err) {
+    console.log(err);
+  }
+
+}
+
+const convertToCSV = (items) => {
+  const header = Object.keys(items[0]).join(',');
+  const rows = items.map(item => Object.values(item).join(','));
+  return `${header}\n${rows.join('\n')}`;
+}
 const formattedDesserts = computed(() => {
   return desserts.value.map(ticket => {
-    const start =ticket.startTime*1;
+    const start = ticket.startTime * 1;
     return {
       ...ticket,
       timeDifference: formatTime(ticket.timeDifference),
-      startTime:ticket.timeDifference !== 0 ? new Date(start).toLocaleString("ru-RU") : "Оффлайн"
+      startTime: ticket.timeDifference !== 0 ? new Date(start).toLocaleString("ru-RU") : "Оффлайн"
     }
   }).sort((a, b) => {
     return a.starttime - b.starttime;
@@ -171,7 +209,8 @@ onMounted(() => {
 </script>
 <template>
   <div class="employee-container">
-     <div class="mainBlock">
+    <div class="mainBlock">
+    
       <div class="inputBlock">
         <select class="form-select" v-model="childBranches">
           <option selected disabled value="0">Выберите филиал</option>
@@ -180,38 +219,25 @@ onMounted(() => {
           </option>
         </select>
 
-        <select
-          :disabled="!childBranches"
-          class="form-select"
-          v-model="selectedBranch"
-          @change="getEmployee"
-        >
+        <select :disabled="!childBranches" class="form-select" v-model="selectedBranch" @change="getEmployee">
           <option selected disabled value="0">Выберите отделение</option>
-          <option
-            v-for="child in childBranches.children"
-            :key="child.F_ID"
-            :value="child.F_ID"
-          >
+          <option v-for="child in childBranches.children" :key="child.F_ID" :value="child.F_ID">
             {{ child.F_NAME }}
           </option>
         </select>
       </div>
       <div v-if="selectedBranch" class="employee-chart">
-        <apexchart
-          ref="chart"
-          height="500"
-          :options="employeeChart.options"
-          :series="employeeChart.series"
-        ></apexchart>
+        <apexchart ref="chart" height="800" :options="employeeChart.options" :series="employeeChart.series"></apexchart>
       </div>
 
       <div class="empl-data">
+        <v-btn v-if="selectedBranch" class="m-2" @click="downloadCSV()">Скачать</v-btn>
         <v-card title="Окна" flat>
           <template v-slot:text>
-            <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details
-              single-line></v-text-field>
+            <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined"
+              hide-details single-line></v-text-field>
           </template>
-  
+
           <v-data-table :headers="headers" :items="formattedDesserts" :search="search"></v-data-table>
         </v-card>
       </div>
@@ -222,6 +248,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .inputBlock {
   padding: 0.5rem 2rem;
+
   select {
     margin: 1rem auto;
   }

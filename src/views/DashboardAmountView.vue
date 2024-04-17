@@ -101,7 +101,7 @@ const chartOptions = ref({
   },
   legend: {
     position: "top",
-    offsetY: 5,
+    offsetY: 0,
   },
   fill: {
     opacity: 1,
@@ -161,12 +161,17 @@ const updateTicketByBranchId = async (branch) => {
 const handleBarClick = async (event, chartContext, config) => {
   const point = config.dataPointIndex;
   const branch = branchTickets.value[point];
-  // console.log(branch);
-  if (branch.children && !isChild.value) {
+  try{
+    if (branch.children && !isChild.value) {
     updateChartByBranchId(branch);
     isChild.value = true;
     updateTicketByBranchId(branch);
   }
+  }catch(err){
+    console.log(err);
+  }
+  // console.log(branch);
+ 
 
   // Add your custom logic here for handling bar clicks
 };

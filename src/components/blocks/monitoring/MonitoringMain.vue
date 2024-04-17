@@ -96,6 +96,42 @@ const formattedDesserts = computed(() => {
   });
 });
 
+const downloadCSV = () => {
+  // Convert items to CSV format
+  try {
+    const excel = desserts.value.map(window => {
+      return {
+        'Номер окна': window.winno,
+        'Id оператора': window.operatorId,
+        'Активен': window.active === true ? "Да" : "Нет",
+        'Название услуги': window.worktitle,
+        'Ф.И.О': window.name  }
+    });
+    // console.log(excel);
+    const csvContent = convertToCSV(excel);
+
+    // Create a Blob object with the CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+
+    // Create a link element to trigger the download
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'data.csv';
+
+    // Trigger the download
+    link.click();
+  } catch (err) {
+    console.log(err);
+  }
+
+}
+
+const convertToCSV = (items) => {
+  const header = Object.keys(items[0]).join(',');
+  const rows = items.map(item => Object.values(item).join(','));
+  return `${header}\n${rows.join('\n')}`;
+}
+
 watch(() => route.query, (oldValue,newValue) => {
     console.log(oldValue,newValue);
     childBranches.value = branches.value.find(e=>e.F_ID*1 === newValue.parent_branch*1);
@@ -166,6 +202,7 @@ onMounted(() => {
     </div>
 
     <div class="data-table">
+      <v-btn v-if="selectedBranch" class="m-2" @click="downloadCSV()">Скачать</v-btn>
       <v-card title="Окна" flat>
         <template v-slot:text>
           <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details
