@@ -106,15 +106,61 @@ const port = process.env.VUE_APP_SERVER_PORT;
 const pickHours = ref({
   options: {
     chart: {
-      height: 350,
-      type: "area",
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-    },
+        height: 350,
+        type: "area",
+        zoom: {
+          enabled: true,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "straight",
+      },
+      markers: {
+        size: 6,
+        hover: {
+          size: 8,
+        },
+      },
+      title: {
+        text: "",
+        align: "left",
+      },
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"],
+          opacity: 0.5,
+        },
+      },
+      xaxis: {
+        type: "category",
+        // categories: ["8:40", "9:00", "9:20", "9:40", "10:00"],
+      },
+      yaxis: [
+        {
+          axisTicks: {
+            show: true,
+          },
+          axisBorder: {
+            show: true,
+            color: "#FF5733",
+          },
+          labels: {
+            style: {
+              colors: "#FF5733",
+            },
+          },
+          title: {
+            text: "Среднее время обслуживания и ожидания",
+            style: {
+              color: "#FF5733",
+            },
+          },
+        },
+      ],
+      
   },
   series: [
     {
@@ -131,15 +177,61 @@ const pickHours = ref({
 const avg = ref({
   options: {
     chart: {
-      height: 350,
-      type: "area",
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-    },
+        height: 350,
+        type: "area",
+        zoom: {
+          enabled: true,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "straight",
+      },
+      markers: {
+        size: 6,
+        hover: {
+          size: 8,
+        },
+      },
+      title: {
+        text: "",
+        align: "left",
+      },
+      grid: {
+        row: {
+          colors: ["#f3f3f3", "transparent"],
+          opacity: 0.5,
+        },
+      },
+      xaxis: {
+        type: "category",
+        // categories: ["8:40", "9:00", "9:20", "9:40", "10:00"],
+      },
+      yaxis: [
+        {
+          axisTicks: {
+            show: true,
+          },
+          axisBorder: {
+            show: true,
+            color: "#FF5733",
+          },
+          labels: {
+            style: {
+              colors: "#FF5733",
+            },
+          },
+          title: {
+            text: "Среднее время обслуживания и ожидания",
+            style: {
+              color: "#FF5733",
+            },
+          },
+        },
+      ],
+      
   },
   series: [
     {
@@ -466,61 +558,6 @@ const fetchData = async () => {
           }),
         },
       ],
-      chart: {
-        height: 350,
-        type: "area",
-        zoom: {
-          enabled: true,
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: "straight",
-      },
-      markers: {
-        size: 6,
-        hover: {
-          size: 8,
-        },
-      },
-      title: {
-        text: "",
-        align: "left",
-      },
-      grid: {
-        row: {
-          colors: ["#f3f3f3", "transparent"],
-          opacity: 0.5,
-        },
-      },
-      xaxis: {
-        type: "category",
-        // categories: ["8:40", "9:00", "9:20", "9:40", "10:00"],
-      },
-      yaxis: [
-        {
-          axisTicks: {
-            show: true,
-          },
-          axisBorder: {
-            show: true,
-            color: "#FF5733",
-          },
-          labels: {
-            style: {
-              colors: "#FF5733",
-            },
-          },
-          title: {
-            text: "Среднее время обслуживания и ожидания",
-            style: {
-              color: "#FF5733",
-            },
-          },
-        },
-      ],
       tooltip: {
         custom: function ({ series, dataPointIndex, w }) {
           w
@@ -551,6 +588,7 @@ const fetchData = async () => {
           return tooltipContent;
         },
       },
+      
     });
   } catch (error) {
     console.error("Error fetching data:", error);
