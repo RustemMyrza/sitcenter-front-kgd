@@ -666,6 +666,8 @@ main {
   }
   .rightBlock {
     width: 30%;
+    display: grid;
+    place-items: centered;
   }
 }
 </style>

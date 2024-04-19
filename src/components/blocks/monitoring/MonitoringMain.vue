@@ -112,7 +112,7 @@ const downloadCSV = () => {
     const csvContent = convertToCSV(excel);
 
     // Create a Blob object with the CSV content
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob(["\ufeff", csvContent], { type: 'text/csv;charset=utf-8;' });
 
     // Create a link element to trigger the download
     const link = document.createElement('a');
