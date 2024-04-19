@@ -241,9 +241,9 @@ const getBranchTickets = async () => {
 
     if (route.query.branch_id) {
       console.log("route",route.query.branch_id);
-      console.log(branchTickets.value);
+      // console.log(branchTickets.value);
       const propBranch = branchTickets.value.find(e => e.branchId === route.query.branch_id);
-      console.log(propBranch);
+      // console.log(propBranch);
       updateChartByBranchId(propBranch);
       updateTicketByBranchId(propBranch);
       isChild.value = true;
