@@ -89,7 +89,8 @@ const formattedDesserts = computed(() => {
   return desserts.value.map(ticket => {
     return {
       ...ticket,
-      active:ticket.active === true ? "Да" : "Нет"
+      active:ticket.active === true ? "Да" : "Нет",
+      worktitle:ticket.worktitle === "null" ? "Нет" : ticket.worktitle,
     }
   }).sort((a, b) => {
     return a.starttime - b.starttime;
@@ -261,7 +262,7 @@ onMounted(() => {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-
+        overflow: auto;
         padding: 1rem;
       }
 

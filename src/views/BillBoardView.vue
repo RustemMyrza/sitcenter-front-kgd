@@ -117,7 +117,8 @@ export default {
                     valid_to: "",
                     role: localStorage.getItem("role") * 1
                 }
-        }
+        },
+        
 
     
 
@@ -126,7 +127,14 @@ export default {
         this.getBoardList();
     },
     computed: {
-
+        isDeletable() {
+        return id => {
+            const roleString = localStorage.getItem("role") * 1;
+            const role = roleString === 0 ? "admin" : roleString === 2 ? "dgd" : "ugd";
+            const board = this.list.find(e => e.id === id);
+            return role === board.role;
+        };
+    }
     }
 };
 </script>
@@ -178,7 +186,7 @@ export default {
                 :class="board.role" :style="{ transform: `rotate(${generateRotation()}deg)` }">
 
                 <div class="board-header ">
-                    <div @click="deleteBoard(board.id)" class="pin flex justify-center">
+                    <div v-if="isDeletable(board.id)" @click="deleteBoard(board.id)" class="pin flex justify-center">
                         <img :src="generatePin()" alt="" width="30%">
                     </div>
 

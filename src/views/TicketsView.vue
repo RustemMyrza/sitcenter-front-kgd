@@ -135,8 +135,8 @@ const formattedDesserts = computed(() => {
       rating: ticket.rating === "5" ? "Отлично" : ticket.rating === "4" ? "Хорошо" : ticket.rating === "4" ? "Плохо" : "Нет оценки",
       waitover: ticket.waitover === "true" ? "Да" : "Нет",
       servover: ticket.servover === "true" ? "Да" : "Нет",
-      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" : "Бронь",
-      idbranch: ticket.idbranch
+      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" :ticket.state === "INSERVICE" ? "Обслуживается" :"Бронь",
+     idbranch: ticket.idbranch
     }
   }).sort((a, b) => {
     return a.starttime - b.starttime;

@@ -196,7 +196,8 @@ const formattedDesserts = computed(() => {
     return {
       ...ticket,
       timeDifference: formatTime(ticket.timeDifference),
-      startTime: ticket.timeDifference !== 0 ? new Date(start).toLocaleString("ru-RU") : "Оффлайн"
+      startTime: ticket.timeDifference !== 0 ? new Date(start).toLocaleString("ru-RU") : "Оффлайн",
+      F_DESCR: ticket.F_DESCR === "null" ? "Нет" : ticket.F_DESCR
     }
   }).sort((a, b) => {
     return a.starttime - b.starttime;
