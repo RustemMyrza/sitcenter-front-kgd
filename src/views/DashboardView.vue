@@ -10,95 +10,120 @@ const serviceChart = ref(null);
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
+// const pickHours = ref({
+//   options: {
+//     chart: {
+//       height: 350,
+//       type: "area",
+//       zoom: {
+//         enabled: true,
+//       },
+//       toolbar: {
+//         show: true,
+//         tools: {
+//           download: true,
+//           selection: true,
+//           zoom: true,
+//           zoomin: true,
+//           zoomout: true,
+//           pan: true,
+//           reset: true,
+//         }
+//       }
+      
+//     },
+//     dataLabels: {
+//       enabled: false,
+//     },
+//     stroke: {
+//       curve: "straight",
+//     },
+//     markers: {
+//       size: 6,
+//       hover: {
+//         size: 8,
+//       },
+//     },
+//     title: {
+//       text: "",
+//       align: "left",
+//     },
+//     grid: {
+//       row: {
+//         colors: ["#f3f3f3", "transparent"],
+//         opacity: 0.5,
+//       },
+//     },
+
+//     yaxis: [
+//       {
+//         axisTicks: {
+//           show: true,
+//         },
+//         axisBorder: {
+//           show: true,
+//           color: "#FF5733",
+//         },
+//         labels: {
+//           style: {
+//             colors: "#FF5733",
+//           },
+//         },
+//         title: {
+//           text: "Количество билетов",
+//           style: {
+//             color: "#FF5733",
+//           },
+//         },
+//       },
+//     ],
+//     xaxis: {
+//       type: "datetime",
+//       categories: [
+//         "2018-09-19T00:00:00.000Z",
+//         "2018-09-19T01:30:00.000Z",
+//         "2018-09-19T02:30:00.000Z",
+//         "2018-09-19T03:30:00.000Z",
+//         "2018-09-19T04:30:00.000Z",
+//         "2018-09-19T05:30:00.000Z",
+//         "2018-09-19T06:30:00.000Z",
+//       ],
+//     },
+//     tooltip: {
+//       x: {
+//         format: "dd/MM/yy HH:mm",
+//       },
+//     },
+//   },
+//   series: [
+//     {
+//       name: "series1",
+//       data: [31, 40, 28, 51, 42, 109, 100],
+//     },
+//   ],
+// });
+
 const pickHours = ref({
   options: {
     chart: {
       height: 350,
       type: "area",
-      zoom: {
-        enabled: true,
-      },
-      toolbar: {
-        show: true,
-        tools: {
-          download: true,
-          selection: true,
-          zoom: true,
-          zoomin: true,
-          zoomout: true,
-          pan: true,
-          reset: true,
-        }
-      }
-      
     },
     dataLabels: {
       enabled: false,
     },
     stroke: {
-      curve: "straight",
-    },
-    markers: {
-      size: 6,
-      hover: {
-        size: 8,
-      },
-    },
-    title: {
-      text: "",
-      align: "left",
-    },
-    grid: {
-      row: {
-        colors: ["#f3f3f3", "transparent"],
-        opacity: 0.5,
-      },
-    },
-
-    yaxis: [
-      {
-        axisTicks: {
-          show: true,
-        },
-        axisBorder: {
-          show: true,
-          color: "#FF5733",
-        },
-        labels: {
-          style: {
-            colors: "#FF5733",
-          },
-        },
-        title: {
-          text: "Количество билетов",
-          style: {
-            color: "#FF5733",
-          },
-        },
-      },
-    ],
-    xaxis: {
-      type: "datetime",
-      categories: [
-        "2018-09-19T00:00:00.000Z",
-        "2018-09-19T01:30:00.000Z",
-        "2018-09-19T02:30:00.000Z",
-        "2018-09-19T03:30:00.000Z",
-        "2018-09-19T04:30:00.000Z",
-        "2018-09-19T05:30:00.000Z",
-        "2018-09-19T06:30:00.000Z",
-      ],
-    },
-    tooltip: {
-      x: {
-        format: "dd/MM/yy HH:mm",
-      },
+      curve: "smooth",
     },
   },
   series: [
     {
       name: "series1",
       data: [31, 40, 28, 51, 42, 109, 100],
+    },
+    {
+      name: "series2",
+      data: [11, 32, 45, 32, 34, 52, 41],
     },
   ],
 });
@@ -368,6 +393,8 @@ const fetchData = async () => {
         bad_grades: item.BAD,
       };
     });
+
+
     peakChart.value.updateOptions({
      
       xaxis: {
