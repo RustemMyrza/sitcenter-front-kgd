@@ -233,13 +233,14 @@ onMounted(() => {
 
       <div class="empl-data">
         <v-btn v-if="selectedBranch" class="m-2" @click="downloadCSV()">Скачать</v-btn>
-        <v-card title="Окна" flat>
+        <v-card title="Сотрудники" flat>
           <template v-slot:text>
             <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined"
               hide-details single-line></v-text-field>
           </template>
 
-          <v-data-table :headers="headers" :items="formattedDesserts" :search="search"></v-data-table>
+          <v-data-table :headers="headers" :items="formattedDesserts" :search="search"
+          no-data-text="Нет доступых данных" items-per-page-text="Элементов на странице"></v-data-table>
         </v-card>
       </div>
     </div>

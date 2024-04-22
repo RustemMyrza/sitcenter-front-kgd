@@ -117,9 +117,9 @@ onMounted(() => {
         </div>
       </div> -->
       <div class="dropdown">
-        <v-btn class="btn   dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <!-- <v-btn class="btn   dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Фильтр
-        </v-btn>
+        </v-btn> -->
         <ul class="dropdown-menu w-full">
           <div class="inputBlock ">
             <select class="form-select" v-model="childBranches">

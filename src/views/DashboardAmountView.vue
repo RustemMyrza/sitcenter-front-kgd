@@ -334,7 +334,8 @@ onMounted(() => {
           ></v-text-field>
         </template> -->
 
-        <v-data-table :headers="headers" :items="formattedDesserts" :search="search"></v-data-table>
+        <v-data-table :headers="headers" :items="formattedDesserts" :search="search"
+        no-data-text="Нет доступых билетов" items-per-page-text="Билетов на странице"></v-data-table>
       </v-card>
     </div>
   </div>

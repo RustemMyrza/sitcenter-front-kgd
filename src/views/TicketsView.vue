@@ -6,106 +6,94 @@ import { useRoute, useRouter } from "vue-router";
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
-
-
 const search = ref("");
 const pagination = ref({
   pageCount: 1,
   pageNumber: 1,
 });
 const headers = [
-  {
-    align: "center",
-    key: "iin",
-    sortable: false,
-    title: "ИИН",
-  },
+  { align: "center", key: "iin", sortable: false, title: "ИИН" },
   { align: "center", key: "ticketno", title: "Номер билета" },
   { align: "center", key: "servicename", title: "Название услуги" },
   { align: "center", key: "idbranch", title: "Отделение" },
   { align: "center", key: "operator", title: "Оператор" },
   { align: "center", key: "state", title: "Статус" },
   { align: "center", key: "starttime", title: "Время регистрации" },
-  // { key: "waittime", title: "Время ожидания" },
   { align: "center", key: "startservtime", title: "Время обслуживания" },
   { align: "center", key: "rating", title: "Оценка" },
   { align: "center", key: "waitover", title: "Превышение времени ожидания" },
   { align: "center", key: "servover", title: "Превышение времени обслуживания" },
 ];
+
 const desserts = ref([]);
 const route = useRoute();
 const router = useRouter();
 
 const getTicketList = async () => {
   try {
-    let url;
+    const params = new URLSearchParams({
+      page: pagination.value.pageNumber,
+      limit: 100,
+    });
+
+    let url = `http://${host}:${port}/api/v1/tickets/list`;
+
     if (route.query.branch_id) {
-      url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?page=${pagination.value.pageNumber}&limit=100`;
-    }
-    else if (route.query.tickets === "bad") {
-      url = `http://${host}:${port}/api/v1/tickets/list?filter=bad&page=${pagination.value.pageNumber}&limit=100`;
-    }
-    else {
-      url = `http://${host}:${port}/api/v1/tickets/list?page=${pagination.value.pageNumber}&limit=100`;
+      url += `/${route.query.branch_id}`;
     }
 
+    url += `?${params.toString()}`;
+
     const result = await axios.get(url, {
-      headers: {
-        bearer: localStorage.getItem("authToken"),
-      },
+      headers: { bearer: localStorage.getItem("authToken") },
     });
-    console.log(result.data)
+
     pagination.value.pageCount = result.data.pages;
     desserts.value = result.data.data.tickets;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
 const filterTickets = async (value) => {
   try {
-    let url;
+    const params = new URLSearchParams({
+      page: pagination.value.pageNumber,
+      limit: 100,
+      filter: value === "bad-rate" ? "bad" : value === "wait" ? "wait" : value === "serv" ? "serv" : undefined
+    });
+
+    let url = `http://${host}:${port}/api/v1/tickets/list`;
+
     if (route.query.branch_id) {
-      if (value === "bad-rate")
-        url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?filter=bad&page=${pagination.value.pageNumber}&limit=100`;
-      else if (value === 'wait')
-        url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?filter=wait&page=${pagination.value.pageNumber}&limit=100`;
-      else if (value === 'serv')
-        url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?filter=serv&page=${pagination.value.pageNumber}&limit=100`;
-      else url = `http://${host}:${port}/api/v1/tickets/list/${route.query.branch_id}?page=${pagination.value.pageNumber}&limit=100`;
-
-    } else {
-      if (value === "bad-rate")
-        url = `http://${host}:${port}/api/v1/tickets/list?filter=bad&page=${pagination.value.pageNumber}&limit=100`;
-      else if (value === 'wait')
-        url = `http://${host}:${port}/api/v1/tickets/list?filter=wait&page=${pagination.value.pageNumber}&limit=100`;
-      else if (value === 'serv')
-        url = `http://${host}:${port}/api/v1/tickets/list?filter=serv&page=${pagination.value.pageNumber}&limit=100`;
-      else url = `http://${host}:${port}/api/v1/tickets/list?page=${pagination.value.pageNumber}&limit=100`;
-
+      url += `/${route.query.branch_id}`;
     }
 
+    url += `?${params.toString()}`;
+
     const result = await axios.get(url, {
-      headers: {
-        bearer: localStorage.getItem("authToken"),
-      },
+      headers: { bearer: localStorage.getItem("authToken") },
     });
 
     pagination.value.pageCount = result.data.pages;
     pagination.value.pageNumber = 1;
     desserts.value = result.data.data.tickets;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
-}
+};
 
 const reset = async () => {
-  const url = `http://${host}:${port}/api/v1/tickets/list?page=${pagination.value.pageNumber}&limit=100`;
   try {
+    const params = new URLSearchParams({
+      page: pagination.value.pageNumber,
+      limit: 100,
+    });
+
+    let url = `http://${host}:${port}/api/v1/tickets/list?${params.toString()}`;
+
     const result = await axios.get(url, {
-      headers: {
-        bearer: localStorage.getItem("authToken"),
-      },
+      headers: { bearer: localStorage.getItem("authToken") },
     });
 
     pagination.value.pageCount = result.data.pages;
@@ -113,11 +101,9 @@ const reset = async () => {
     desserts.value = result.data.data.tickets;
     router.push({ ...router.currentRoute.value, query: {} });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
-
-
-}
+};
 
 watch(() => pagination.value.pageNumber, () => {
   getTicketList();
@@ -126,6 +112,7 @@ watch(() => pagination.value.pageNumber, () => {
 watch(() => route.query, () => {
   getTicketList();
 });
+
 const formattedDesserts = computed(() => {
   return desserts.value.map(ticket => {
     return {
@@ -135,9 +122,9 @@ const formattedDesserts = computed(() => {
       rating: ticket.rating === "5" ? "Отлично" : ticket.rating === "4" ? "Хорошо" : ticket.rating === "4" ? "Плохо" : "Нет оценки",
       waitover: ticket.waitover === "true" ? "Да" : "Нет",
       servover: ticket.servover === "true" ? "Да" : "Нет",
-      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" :ticket.state === "INSERVICE" ? "Обслуживается" :"Бронь",
-     idbranch: ticket.idbranch
-    }
+      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" : ticket.state === "INSERVICE" ? "Обслуживается" : "Бронь",
+      idbranch: ticket.idbranch
+    };
   }).sort((a, b) => {
     return a.starttime - b.starttime;
   });
@@ -162,9 +149,7 @@ const download = async () => {
   } catch (error) {
     console.error('Error downloading Excel:', error);
   }
-}
-
-
+};
 
 onMounted(() => {
   getTicketList();
@@ -190,18 +175,20 @@ onMounted(() => {
             :total-visible="10"></v-pagination>
         </div>
       </div>
-      <v-card title="Билеты" flat>
+      <v-card title="Талоны" flat>
         <!-- <template v-slot:text>
           <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details
             single-line></v-text-field>
         </template> -->
-
-        <v-data-table :headers="headers" :items="formattedDesserts" :search="search"
-          :hide-default-footer="true"></v-data-table>
+        <v-select label="Select"
+          :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"></v-select>
+        <v-data-table :headers="headers" :items="formattedDesserts" :search="search" :hide-default-footer="true"
+          no-data-text="Нет билетов" items-per-page-text="Билетов на странице"></v-data-table>
       </v-card>
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .ticket-container {
   margin: 1rem;
