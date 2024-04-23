@@ -93,7 +93,8 @@ watch(() => childBranches.value, () => {
 
 
 onMounted(() => {
-  username.value = store.getters.username;
+  // username.value = store.getters.username;
+  username.value = localStorage.getItem("login")
   getImage();
   getBranches();
 });

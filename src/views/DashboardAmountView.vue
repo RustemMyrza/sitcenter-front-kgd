@@ -111,31 +111,36 @@ const chartOptions = ref({
 const apexChart = ref(null);
 
 const updateChartByBranchId = async (branch) => {
-  categories.value = branch.children.map((e) => e.branchName);
+  try {
+    categories.value = branch.children.map((e) => e.branchName);
 
-  series.value = [
-    {
-      name: "Обслуженные",
-      data: branch.children.map((item) => item.stateTickets.COMPLETED),
-    },
-    {
-      name: "Обслуживающиеся",
-      data: branch.children.map((item) => item.stateTickets.INSERVICE),
-    },
-    {
-      name: "Ожидающие",
-      data: branch.children.map((item) => item.stateTickets.NEW),
-    },
-    {
-      name: "Не подошедшие",
-      data: branch.children.map((item) => item.stateTickets.MISSED),
-    },
-    {
-      name: "Alarm",
-      data: branch.children.map((item) => item.stateTickets.ALARM),
-    },
-  ];
-  updateChart();
+    series.value = [
+      {
+        name: "Обслуженные",
+        data: branch.children.map((item) => item.stateTickets.COMPLETED),
+      },
+      {
+        name: "Обслуживающиеся",
+        data: branch.children.map((item) => item.stateTickets.INSERVICE),
+      },
+      {
+        name: "Ожидающие",
+        data: branch.children.map((item) => item.stateTickets.NEW),
+      },
+      {
+        name: "Не подошедшие",
+        data: branch.children.map((item) => item.stateTickets.MISSED),
+      },
+      {
+        name: "Alarm",
+        data: branch.children.map((item) => item.stateTickets.ALARM),
+      },
+    ];
+    updateChart();
+  } catch (err) {
+    console.log(err)
+  }
+
 };
 
 const updateTicketByBranchId = async (branch) => {
@@ -161,17 +166,17 @@ const updateTicketByBranchId = async (branch) => {
 const handleBarClick = async (event, chartContext, config) => {
   const point = config.dataPointIndex;
   const branch = branchTickets.value[point];
-  try{
+  try {
     if (branch.children && !isChild.value) {
-    updateChartByBranchId(branch);
-    isChild.value = true;
-    updateTicketByBranchId(branch);
-  }
-  }catch(err){
+      updateChartByBranchId(branch);
+      isChild.value = true;
+      updateTicketByBranchId(branch);
+    }
+  } catch (err) {
     console.log(err);
   }
   // console.log(branch);
- 
+
 
   // Add your custom logic here for handling bar clicks
 };
@@ -240,7 +245,7 @@ const getBranchTickets = async () => {
     totalTickets.value = result.data.count;
 
     if (route.query.branch_id) {
-      console.log("route",route.query.branch_id);
+      console.log("route", route.query.branch_id);
       // console.log(branchTickets.value);
       const propBranch = branchTickets.value.find(e => e.branchId === route.query.branch_id);
       // console.log(propBranch);
@@ -283,7 +288,7 @@ const formattedDesserts = computed(() => {
       rating: ticket.rating === "5" ? "Отлично" : ticket.rating === "4" ? "Хорошо" : ticket.rating === "4" ? "Плохо" : "Нет оценки",
       waitover: ticket.waitover === "true" ? "Да" : "Нет",
       servover: ticket.servover === "true" ? "Да" : "Нет",
-      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" :ticket.state === "INSERVICE" ? "Обслуживается" :"Бронь",
+      state: ticket.state === "COMPLETED" ? "Обслужен" : ticket.state === "NEW" ? "Новый" : ticket.state === "INSERVICE" ? "Обслуживается" : "Бронь",
       idbranch: ticket.idbranch
     }
   }).sort((a, b) => {
@@ -313,13 +318,13 @@ onMounted(() => {
 
     <h3>{{ totalTickets }}</h3>
     <div class="chartBlock">
-      
+
       <v-btn @click="backChart()" v-if="isChild" class="back m-4"><i class="fas fa-arrow-left fa-2xl"></i></v-btn>
       <div class="chart p-4">
-        <apexchart ref="apexChart"  height="500" :options="chartOptions" :series="series"
-        @dataPointSelection="handleBarClick"></apexchart>
+        <apexchart ref="apexChart" height="500" :options="chartOptions" :series="series"
+          @dataPointSelection="handleBarClick"></apexchart>
       </div>
-      
+
     </div>
     <div class="tickets">
       <v-card title="Билеты" flat>
@@ -334,8 +339,8 @@ onMounted(() => {
           ></v-text-field>
         </template> -->
 
-        <v-data-table :headers="headers" :items="formattedDesserts" :search="search"
-        no-data-text="Нет доступых билетов" items-per-page-text="Билетов на странице"></v-data-table>
+        <v-data-table :headers="headers" :items="formattedDesserts" :search="search" no-data-text="Нет доступых билетов"
+          items-per-page-text="Билетов на странице"></v-data-table>
       </v-card>
     </div>
   </div>
@@ -358,5 +363,4 @@ onMounted(() => {
   transform: translateX(-50%)!important;
 }
 */
-
 </style>
