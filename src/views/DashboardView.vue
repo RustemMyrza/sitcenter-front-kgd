@@ -1,6 +1,9 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, ref,watch } from "vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const peakChart = ref(null);
 const avgChart = ref(null);
@@ -304,8 +307,10 @@ const service = ref({
 });
 
 const fetchDognutData = async () => {
+  let url = `http://${host}:${port}/api/v1/tickets/all`;
+  if(route.query.branch_id) url = `http://${host}:${port}/api/v1/tickets/all/${route.query.branch_id}`
   try {
-    const result = await axios.get(`http://${host}:${port}/api/v1/tickets`, {
+    const result = await axios.get(url, {
       headers: {
         bearer: localStorage.getItem("authToken"),
       },
@@ -386,7 +391,7 @@ const fetchDognutData = async () => {
 
 
     const serviceTickets = result.data.data.serviceTickets.data;
-    console.log(serviceTickets)
+    // console.log(serviceTickets)
     const MAX_LABEL_LENGTH = 6;
     const legend2 = serviceTickets.map((item) => {
       const truncatedLabel =
@@ -468,13 +473,16 @@ const fetchDognutData = async () => {
 };
 
 const fetchData = async () => {
+  let url = `http://${host}:${port}/api/v1/analytics`;
+  if(route.query.branch_id) url = `http://${host}:${port}/api/v1/analytics/${route.query.branch_id}`;
+  
   try {
-    const result = await axios.get(`http://${host}:${port}/api/v1/analytics`, {
+    const result = await axios.get(url, {
       headers: {
         bearer: localStorage.getItem("authToken"),
       },
     });
-    console.log(result.data);
+    // console.log(result.data);
     let allClientData = result.data.data.peakHours.map((item) => {
       return {
         x: item.time,
@@ -594,6 +602,10 @@ const fetchData = async () => {
     console.error("Error fetching data:", error);
   }
 };
+watch(() => route.query, () => {
+  fetchData();
+  fetchDognutData();
+});
 
 onMounted(() => {
   fetchData();

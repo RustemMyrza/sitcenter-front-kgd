@@ -244,10 +244,10 @@ const getBranchTickets = async () => {
     branchTickets.value = result.data.data;
     totalTickets.value = result.data.count;
 
-    if (route.query.branch_id) {
+    if (route.query.parent_branch) {
       console.log("route", route.query.branch_id);
       // console.log(branchTickets.value);
-      const propBranch = branchTickets.value.find(e => e.branchId === route.query.branch_id);
+      const propBranch = branchTickets.value.find(e => e.branchId === route.query.parent_branch);
       // console.log(propBranch);
       updateChartByBranchId(propBranch);
       updateTicketByBranchId(propBranch);

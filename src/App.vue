@@ -34,7 +34,10 @@ export default {
   <div class="main" :style="{ 'margin-left': !isLoginPage() ? sidebarWidth : 'auto' }">
     
       <div v-if="!isLoginPage()" class="head">
-        <header-component />
+        <div class="header">
+          <header-component  />
+        </div>
+        
         <div class="dashboard">
           <dashboard-top />
         </div>
@@ -77,9 +80,10 @@ export default {
   .side-bar{
     display: none;
   }
-  .head{
+  .header{
     display: none;
   }
+ 
   .main {
     margin-left: auto !important;
   }

@@ -1,4 +1,3 @@
-
 <script setup>
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
@@ -67,29 +66,35 @@ const getBranches = async () => {
 };
 const filter = async () => {
   const currentQueryParams = { ...route.query };
-  console.log(selectedBranch.value);
-  if(childBranches.value === 0){
+  console.log("Selected", selectedBranch.value);
+  console.log("ChildBranches", childBranches.value)
+
+
+  currentQueryParams.branch_id = selectedBranch.value;
+
+  currentQueryParams.parent_branch = childBranches.value.F_ID * 1;
+  router.push({ path: route.path, query: currentQueryParams });
+
+
+
+  // Add or update query parameters
+
+
+
+}
+const reset = () => {
+  console.log(typeof childBranches.value)
+  if (childBranches.value == 0) {
+    console.log("RESET")
+    selectedBranch.value = 0;
     router.push({ ...router.currentRoute.value, query: {} });
   }
-  // Add or update query parameters
-  currentQueryParams.branch_id = selectedBranch.value;
-  console.log(childBranches.value);
-  currentQueryParams.parent_branch = childBranches.value.F_ID *1;
-  // store.commit("setChildBranchId",selectedBranch.value);
-  // currentQueryParams.param2 = 'value2';
 
-  // Navigate to the same route with updated query parameters
-  router.push({ path: route.path, query: currentQueryParams });
-}
+};
 watch(() => localStorage.getItem("image"), (oldValue, newValue) => {
   image.value = newValue;
 });
-watch(() => childBranches.value, () => {
-  console.log(childBranches.value);
-  if(childBranches.value === 0){
-    router.push({ ...router.currentRoute.value, query: {} });
-  }
-});
+
 
 
 onMounted(() => {
@@ -118,14 +123,14 @@ onMounted(() => {
         </div>
       </div> -->
       <div class="dropdown">
-        <!-- <v-btn class="btn   dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <v-btn class="btn   dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           Фильтр
-        </v-btn> -->
+        </v-btn>
         <ul class="dropdown-menu w-full">
           <div class="inputBlock ">
-            <select class="form-select" v-model="childBranches">
-              <option selected disabled value="0">Выберите филиал</option>
-              <option value="0">Все</option>
+            <select class="form-select" v-model="childBranches" @change="reset()">
+              <option selected value="0">Выберите филиал</option>
+              <!-- <option value="0">Все</option> -->
               <option v-for="br in branches" :key="br.id" :value="br">
                 {{ br.F_NAME }}
               </option>
@@ -167,9 +172,10 @@ onMounted(() => {
   transform: rotate(180deg);
   transition: 0.2s linear;
 }
-.dropdown-menu.show{
+
+.dropdown-menu.show {
   width: 250px;
-  transform: translate(0px,50px)!important;
+  transform: translate(0px, 50px) !important;
 }
 
 .header-container {
@@ -183,9 +189,9 @@ onMounted(() => {
 
   .headerInfo {
     .userInfo {
-      
+
       .dropdown {
-        
+
         button {
 
           display: flex;

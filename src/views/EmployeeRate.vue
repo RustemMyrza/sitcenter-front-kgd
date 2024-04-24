@@ -1,6 +1,7 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed,watch } from "vue";
+import { useRoute } from "vue-router";
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
@@ -8,6 +9,8 @@ const branches = ref(null);
 
 const childBranches = ref(0);
 const selectedBranch = ref(0);
+
+const route = useRoute();
 
 
 
@@ -202,6 +205,18 @@ const formattedDesserts = computed(() => {
   }).sort((a, b) => {
     return a.starttime - b.starttime;
   });
+});
+
+watch(() => route.query, () => {
+    if(!route.query.branch_id){
+      childBranches.value = 0;
+      selectedBranch.value = 0;
+      desserts.value = [];
+      return
+    }
+     childBranches.value = branches.value.find(e=>e.F_ID*1 === route.query.parent_branch*1);
+    selectedBranch.value = route.query.branch_id;
+    getEmployee();
 });
 
 onMounted(() => {

@@ -79,7 +79,7 @@ const getWindows = async () => {
         info.value.online++;
       }
     });
-    console.log(result.data)
+    console.log(waitClient.value)
   } catch (err) {
     console.log(err);
   }
@@ -133,10 +133,16 @@ const convertToCSV = (items) => {
   return `${header}\n${rows.join('\n')}`;
 }
 
-watch(() => route.query, (oldValue,newValue) => {
-    console.log(oldValue,newValue);
-    childBranches.value = branches.value.find(e=>e.F_ID*1 === newValue.parent_branch*1);
-    selectedBranch.value = newValue.branch_id;
+watch(() => route.query, () => {
+  if(!route.query.branch_id){
+      childBranches.value = 0;
+      selectedBranch.value = 0;
+      desserts.value = [];
+      windows.value = [];
+      return
+    }
+     childBranches.value = branches.value.find(e=>e.F_ID*1 === route.query.parent_branch*1);
+    selectedBranch.value = route.query.branch_id;
     getWindows();
 });
 
@@ -181,7 +187,7 @@ onMounted(() => {
       </div>
       <div v-if="branches" class="windows">
         <div class="waits">
-          <WaitingComponent :waitover="wait.waitover === 'true'" v-for="wait in waitClient" :key="wait.id" />
+          <WaitingComponent v-for="wait in waitClient" :key="wait.id" :waitover="wait.waitover === 'true'"  />
           <!-- <WaitingComponent :waitover="true" /> -->
           <!-- <WaitingComponent :waitover="true"  /> -->
         </div>
