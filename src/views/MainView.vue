@@ -1,6 +1,5 @@
 <script>
 import axios from "axios";
-
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
 
@@ -180,12 +179,14 @@ export default {
       }
     },
     async selectRegion(region) {
-      this.serverInfo.online =0;
-      this.serverInfo.total =0;
+      this.serverInfo.online = 0;
+      this.serverInfo.total = 0;
+      console.log("Region", region);
       try {
         const select = regionsById.find((e) => region === e.id);
-        this.selectedRegion = select.name;
-        this.selectRegionId = select.branch_id;
+        console.log("Selected founded",select)
+        this.selectedRegion = select?.name;
+        this.selectRegionId = select?.branch_id;
         const result = await axios.get(
           `http://${host}:${port}/api/v1/tickets/map/${select.branch_id}`,
           {
@@ -198,17 +199,16 @@ export default {
         const server = result.data.data.server_list;
         // const off = result.data.data.offlineBranches;
         // console.log(result.data.data);
-        
-          server.children.map((child) => {
-            if (child.ONN === 1) {
-              this.serverInfo.online++;
-            }
-            this.serverInfo.total++;
-          });
-       
+
+        server.children.map((child) => {
+          if (child.ONN === 1) {
+            this.serverInfo.online++;
+          }
+          this.serverInfo.total++;
+        });
+
         this.ticketInfo = result.data.data.tickets;
         this.averageRate = result.data.data.averageRate;
-        
 
         if (this.currentRegion) {
           const previousRegion = document.getElementById(this.currentRegion);
@@ -227,11 +227,7 @@ export default {
           }
 
           previousRegion.style.fill = this.currentColor;
-
-          
-          
         }
-       
 
         this.currentRegion = region;
 
@@ -240,15 +236,12 @@ export default {
         mapPart.style.width = "300px";
         // console.log(mapPart.transform)
         mapPart.style.fill = "#4FCB1D";
-        
-        
       } catch (err) {
         console.log(err);
       }
     },
 
     goAmount() {
-      
       this.$router.push({
         path: `/amount-dash`,
         query: { branch_id: this.selectRegionId },
@@ -261,11 +254,20 @@ export default {
       });
     },
   },
-  computed:{
-    
+  computed: {},
+  watch: {
+    "$route.query": {
+      immediate: true,
+      handler(newQuery) {
+        if (newQuery.parent_branch) {
+          const region = regionsById.find((e) => newQuery.parent_branch*1 === e.branch_id)
+          this.selectRegion(region.id);
+          console.log("New query",newQuery.parent_branch);
+        }
+      },
+    },
   },
   mounted() {
-    
     this.getRegionInfo();
   },
 };

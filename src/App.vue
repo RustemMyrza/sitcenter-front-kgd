@@ -3,13 +3,16 @@ import SidebarComponent from "@/components/sidebar/SidebarComponent.vue";
 import { sidebarWidth } from "@/components/sidebar/state";
 import HeaderComponent from "./components/header/HeaderComponent.vue";
 import DashboardTop from "./components/header/DashboardTop.vue";
-import { useRoute } from 'vue-router';
+import { useRoute,  } from 'vue-router';
+// import { onMounted } from "vue";
 
 export default {
   components: { SidebarComponent, HeaderComponent, DashboardTop },
   setup() {
+    // const router = useRouter();
     const route = useRoute();
 
+   
     return { sidebarWidth, route };
   },
   data() {
@@ -22,6 +25,7 @@ export default {
       return this.$route.path === "/login";
     },
   },
+  
 
 };
 </script>
