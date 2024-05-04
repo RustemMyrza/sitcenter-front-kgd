@@ -5,7 +5,7 @@ import { toggleSidebar, collapsed } from "@/components/sidebar/state";
 import nonPhoto from "@/assets/avatart.jpg";
 
 import axios from "axios";
-import { onMounted,  onUpdated,  ref, watch } from "vue";
+import { onMounted,   ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 // import { generatePdf } from '@/utils/pdfUtils.js';

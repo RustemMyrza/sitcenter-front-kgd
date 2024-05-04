@@ -1,13 +1,19 @@
 <script setup>
 import axios from "axios";
-import { onBeforeMount,  ref } from "vue";
-import { useStore } from "vuex";
+import {  onMounted, ref } from "vue";
+import CanvasComponent from "@/components/chart/CanvasComponent.vue";
+// import { useStore } from "vuex";
 
-const store = useStore();
+// const store = useStore();
 
 const branches = ref([]);
 const isUgd = ref(true);
 
+
+const eventData = [
+        // Event 1: Starts at 09:00 and ends at 12:00, yPos is the y-position of the line
+        { start: "9:00", end: "12:34", yPos: 20, color: "red" },  // Event 3: Starts at 12:00 and ends at 17:00, yPos is the y-position of the line
+      ]
 // const menuValue = ref("");
 
 const host = process.env.VUE_APP_SERVER_HOST;
@@ -18,6 +24,9 @@ const port = process.env.VUE_APP_SERVER_PORT;
 const unFold = (id) => {
   const item = branches.value.find((e) => e.id === id);
   item.fold = !item.fold;
+  branches.value.map(br=>{
+    console.log(br.children)
+  })
 };
 
 const getBranches = async () => {
@@ -106,24 +115,24 @@ const setBlock = async (branchId, blockedValue) => {
   } else {
 
     url += `?value=1`;
-    
+
   }
-   branches.value.map(branch=>{
-    if(branch.F_ID === branchId){
-      
-      branch.children.map(ch=>{
+  branches.value.map(branch => {
+    if (branch.F_ID === branchId) {
+
+      branch.children.map(ch => {
         ch.isAvailable = !ch.isAvailable;
         ch.isSwitchable = !ch.isSwitchable;
-        ch.blocked = ch.blocked === 0 ? 1 :0;
+        ch.blocked = ch.blocked === 0 ? 1 : 0;
       })
     }
-   });
+  });
   //  console.log(branches.value)
-   
+
   // console.log(parent)
   const token = localStorage.getItem("authToken");
   try {
-     await axios.post(url, null, {
+    await axios.post(url, null, {
       headers: {
         bearer: token,
       },
@@ -134,9 +143,9 @@ const setBlock = async (branchId, blockedValue) => {
   }
 };
 
-const getUsername = () => {
-  return store.getters.username;
-};
+// const getUsername = () => {
+//   return store.getters.username;
+// };
 
 const changeMenu = async (id, menu) => {
   // console.log(id, menu)
@@ -165,7 +174,7 @@ const changeMenu = async (id, menu) => {
 //     },
 //   });
 //   console.log(result);
-  
+
 // }
 
 // const options = ref({
@@ -327,9 +336,10 @@ const changeMenu = async (id, menu) => {
 
 
 
-onBeforeMount(()=>{
-  console.log(getUsername());
+onMounted(() => {
+  
   getBranches();
+ 
   // getChartMenuType();
 })
 
@@ -345,13 +355,13 @@ onBeforeMount(()=>{
           <div class="text-center">Действие блок</div>
         </div>
         <div v-for="branch in branches" :key="branch.id" class="drop-item">
-          <div class="notfold" >
+          <div class="notfold">
             <div @click="unFold(branch.id)" class="item-name w-4/6">
-              <i   class="fas fa-plus mx-4"></i>
-             
+              <i class="fas fa-plus mx-4"></i>
+
               {{ branch.F_NAME }}
             </div>
-            
+
             <div class="item-amount w-2/6">
               <div v-if="!isUgd" class="form-switch">
                 <input @change="setBlock(branch.F_ID, branch.blocked)" :disabled="branch.isSwitchable === false"
@@ -361,29 +371,44 @@ onBeforeMount(()=>{
               </div>
             </div>
           </div>
-          <div v-if="branch.fold" class="unfold">
-            <div class="unfold-item" v-for="child in branch.children" :key="child.id">
-              <div class="unfold-name">{{ child.F_NAME }}</div>
-              
-              <div class="unfold-amount">
-                <select v-model="child.menu" @change="changeMenu(child.F_ID, child.menu)"
-                  :disabled="branch.blocked === 1 || !child.isSwitchable || !child.isAvailable" class="form-select"
-                  aria-label="Default select example">
-                  <option value="first" :selected="child.menu === 'first'">
-                    Автоматическое
-                  </option>
-                  <option value="second" :selected="child.menu === 'second'">Меню-2</option>
-                </select>
+          <div v-if="branch.fold"   class="unfold">
+            <div class="unfold-wrapper" v-for="child in branch.children" :key="child.id">
+              <div class="unfold-item">
+                <div class="unfold-name">{{ child.F_NAME }}</div>
+
+                <div class="unfold-amount">
+                  <select v-model="child.menu" @change="changeMenu(child.F_ID, child.menu)"
+                    :disabled="branch.blocked === 1 || !child.isSwitchable || !child.isAvailable" class="form-select"
+                    aria-label="Default select example">
+                    <option value="first" :selected="child.menu === 'first'">
+                      Автоматическое
+                    </option>
+                    <option value="second" :selected="child.menu === 'second'">Меню-2</option>
+                  </select>
+                </div>
+                <div class="unfold-name">{{ child.menu }}</div>
+                <div class="form-switch">
+                  <input @change="setBlock(child.F_ID, child.blocked)" class="form-check-input" type="checkbox"
+                    role="switch" id="flexSwitchCheckChecked"
+                    :disabled="branch.blocked === 1 || child.isSwitchable === false"
+                    :checked="branch.blocked === 1 || child.isSwitchable === false" />
+                  <label class="form-check-label mx-4" for="flexSwitchCheckChecked">Блокировка меню</label>
+                </div>
+
               </div>
-              <div class="unfold-name">{{ child.menu }}</div>
-              <div class="form-switch">
-                <input @change="setBlock(child.F_ID, child.blocked)" class="form-check-input" type="checkbox"
-                  role="switch" id="flexSwitchCheckChecked"
-                  :disabled="branch.blocked === 1 || child.isSwitchable === false"
-                  :checked="branch.blocked === 1 || child.isSwitchable === false" />
-                <label class="form-check-label mx-4" for="flexSwitchCheckChecked">Блокировка меню</label>
+                  <div class="menu-chart">
+                      <div class="menu-legends flex justify-center">
+                          <div class="menu mx-2 flex"><div id="first"></div><div class="flex justify-center items-center mx-2">Меню-1</div> </div>
+                          <div class="menu mx-2 flex"><span id="second"></span> <div class="flex justify-center items-center mx-2">Меню-2</div></div>
+                      </div>
+                      <div class="chart">
+                        <CanvasComponent :canvasWidth="1000" :canvasHeight="100" :eventData="eventData"/>
+                      </div>
+                  </div>
+              <div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -402,6 +427,19 @@ onBeforeMount(()=>{
 
 .control {
   margin: 0.5rem;
+}
+
+#first{
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  background-color: blue;
+}
+#second{
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  background-color: green;
 }
 
 .drop {
@@ -432,7 +470,7 @@ onBeforeMount(()=>{
       display: flex;
       justify-content: space-between;
 
-     
+
 
       .item-name {
         display: flex;
@@ -446,14 +484,18 @@ onBeforeMount(()=>{
       margin-top: 1rem;
       width: 100%;
 
-      .unfold-item {
-        display: flex;
-
-        justify-content: space-around;
+      .unfold-wrapper {
         background-color: rgba(255, 255, 255, 0.787);
         margin: 0.5rem;
         padding: 0.3rem;
         border-radius: 0.5rem;
+      }
+
+      .unfold-item {
+        display: flex;
+
+        justify-content: space-around;
+
 
         div {
           margin: 1rem;

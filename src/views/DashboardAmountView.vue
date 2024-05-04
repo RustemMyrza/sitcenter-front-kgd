@@ -182,17 +182,24 @@ const handleBarClick = async (event, chartContext, config) => {
 };
 
 const updateChart = () => {
-  apexChart.value.updateOptions({
-    xaxis: {
-      categories: categories.value,
-    },
-    series: [
-      {
-        data: series.value,
+  try {
+    apexChart.value.updateOptions({
+      xaxis: {
+        categories: categories.value,
       },
-    ],
-  });
+      series: [
+        {
+          data: series.value,
+        },
+      ],
+    });
+  } catch (error) {
+    console.error('Error updating chart:', error);
+  }
 };
+
+ 
+
 const backChart = () => {
   try {
     categories.value = branchTickets.value.map((e) => e.branchName);
