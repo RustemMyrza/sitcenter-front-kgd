@@ -340,6 +340,7 @@ onBeforeMount(()=>{
       <div class="drop">
         <div class="title-drop">
           <div>Название</div>
+          <div class="text-center">Переключение</div>
           <div class="text-center">Меню</div>
           <div class="text-center">Действие блок</div>
         </div>
@@ -371,9 +372,10 @@ onBeforeMount(()=>{
                   <option value="first" :selected="child.menu === 'first'">
                     Автоматическое
                   </option>
-                  <option value="second" :selected="child.meny === 'second'">Меню-2</option>
+                  <option value="second" :selected="child.menu === 'second'">Меню-2</option>
                 </select>
               </div>
+              <div class="unfold-name">{{ child.menu }}</div>
               <div class="form-switch">
                 <input @change="setBlock(child.F_ID, child.blocked)" class="form-check-input" type="checkbox"
                   role="switch" id="flexSwitchCheckChecked"

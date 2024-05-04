@@ -262,6 +262,7 @@ const getBranchTickets = async () => {
 
 const getTicketList = async () => {
   try {
+    
     const result = await axios.get(
       `http://${host}:${port}/api/v1/tickets/list`,
       {

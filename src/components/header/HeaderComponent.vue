@@ -107,9 +107,9 @@ onMounted(() => {
   getBranches();
   
 });
-onUpdated(()=>{
-  router.push({ ...router.currentRoute.value, query: {} });
-})
+// onUpdated(()=>{
+//   router.push({ ...router.currentRoute.value, query: {} });
+// })
 
 
 

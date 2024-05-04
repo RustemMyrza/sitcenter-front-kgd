@@ -244,7 +244,7 @@ export default {
     goAmount() {
       this.$router.push({
         path: `/amount-dash`,
-        query: { branch_id: this.selectRegionId },
+        query: { parent_branch: this.selectRegionId },
       });
     },
     goTickets() {
