@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import {  onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import CanvasComponent from "@/components/chart/CanvasComponent.vue";
 // import { useStore } from "vuex";
 
@@ -9,11 +9,13 @@ import CanvasComponent from "@/components/chart/CanvasComponent.vue";
 const branches = ref([]);
 const isUgd = ref(true);
 
+const componentKey = ref(0);
 
-const eventData = [
-        // Event 1: Starts at 09:00 and ends at 12:00, yPos is the y-position of the line
-        { start: "9:00", end: "12:34", yPos: 20, color: "red" },  // Event 3: Starts at 12:00 and ends at 17:00, yPos is the y-position of the line
-      ]
+
+// const eventData = [
+//   // Event 1: Starts at 09:00 and ends at 12:00, yPos is the y-position of the line
+//   { start: "9:00", end: "12:34", yPos: 20, color: "red" },  // Event 3: Starts at 12:00 and ends at 17:00, yPos is the y-position of the line
+// ]
 // const menuValue = ref("");
 
 const host = process.env.VUE_APP_SERVER_HOST;
@@ -21,13 +23,17 @@ const port = process.env.VUE_APP_SERVER_PORT;
 
 // const apexChart = ref(null);
 
+const forceRerender = () => {
+  componentKey.value += 1;
+};
+
 const unFold = (id) => {
   const item = branches.value.find((e) => e.id === id);
   item.fold = !item.fold;
-  branches.value.map(br=>{
-    console.log(br.children)
-  })
+  if (item.fold)
+    getChartMenuType(id);
 };
+
 
 const getBranches = async () => {
   const token = localStorage.getItem("authToken");
@@ -166,180 +172,62 @@ const changeMenu = async (id, menu) => {
 
 }
 
-// const getChartMenuType = async()=>{
-//   const url =  `http://${host}:${port}/api/v1/branch-list/br/type`;
-//   const result = await axios.get(url, {
-//     headers: {
-//       bearer: localStorage.getItem("authToken")
-//     },
-//   });
-//   console.log(result);
+const getChartMenuType = async (id) => {
+  // Find the branch with the specified ID
+  const branch = branches.value.find(e => e.id === id);
 
-// }
+  // Check if the branch with the specified ID exists
+  if (branch) {
+    // Map over the children branches and fetch menu types for each
+    const promises = branch.children.map(async (child) => {
+      child.eventData = [];
+      try {
+        const url = `http://${host}:${port}/api/v1/branch-list/br/type/${child.F_ID}`;
+        const result = await axios.get(url, {
+          headers: {
+            bearer: localStorage.getItem("authToken")
+          },
+        });
+        const schedule = result.data[`branchId: ${child.F_ID}`];
+        // console.log(schedule);
+        schedule.map(e => {
+          const eventObject = {
+            start: e.start,
+            end: e.end,
+            yPos: 30,
+            // color:"red"
+            color: e.menutype === "first" ? "blue" : "green",
+          }
 
-// const options = ref({
-//   chart: {
-//     height: 450,
-//     type: 'rangeBar'
-//   },
-//   plotOptions: {
-//     bar: {
-//       horizontal: true,
-//       barHeight: '80%'
-//     }
-//   },
-//   xaxis: {
-//     type: 'datetime'
-//   },
-//   stroke: {
-//     width: 1
-//   },
-//   fill: {
-//     type: 'solid',
-//     opacity: 0.6
-//   },
-//   legend: {
-//     position: 'top',
-//     horizontalAlign: 'left'
-//   }
+          child.eventData.push(eventObject);
 
-// });
-// const series = ref([
-//   {
-//     name: 'Bob',
-//     data: [
-//       {
-//         x: 'Design',
-//         y: [
-//           new Date('2019-03-05').getTime(),
-//           new Date('2019-03-08').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Code',
-//         y: [
-//           new Date('2019-03-02').getTime(),
-//           new Date('2019-03-05').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Code',
-//         y: [
-//           new Date('2019-03-05').getTime(),
-//           new Date('2019-03-07').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Test',
-//         y: [
-//           new Date('2019-03-03').getTime(),
-//           new Date('2019-03-09').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Test',
-//         y: [
-//           new Date('2019-03-08').getTime(),
-//           new Date('2019-03-11').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Validation',
-//         y: [
-//           new Date('2019-03-11').getTime(),
-//           new Date('2019-03-16').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Design',
-//         y: [
-//           new Date('2019-03-01').getTime(),
-//           new Date('2019-03-03').getTime()
-//         ],
-//       }
-//     ]
-//   },
-//   {
-//     name: 'Joe',
-//     data: [
-//       {
-//         x: 'Design',
-//         y: [
-//           new Date('2019-03-02').getTime(),
-//           new Date('2019-03-05').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Test',
-//         y: [
-//           new Date('2019-03-06').getTime(),
-//           new Date('2019-03-16').getTime()
-//         ],
-//         goals: [
-//           {
-//             name: 'Break',
-//             value: new Date('2019-03-10').getTime(),
-//             strokeColor: '#CD2F2A'
-//           }
-//         ]
-//       },
-//       {
-//         x: 'Code',
-//         y: [
-//           new Date('2019-03-03').getTime(),
-//           new Date('2019-03-07').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Deployment',
-//         y: [
-//           new Date('2019-03-20').getTime(),
-//           new Date('2019-03-22').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Design',
-//         y: [
-//           new Date('2019-03-10').getTime(),
-//           new Date('2019-03-16').getTime()
-//         ]
-//       }
-//     ]
-//   },
-//   {
-//     name: 'Dan',
-//     data: [
-//       {
-//         x: 'Code',
-//         y: [
-//           new Date('2019-03-10').getTime(),
-//           new Date('2019-03-17').getTime()
-//         ]
-//       },
-//       {
-//         x: 'Validation',
-//         y: [
-//           new Date('2019-03-05').getTime(),
-//           new Date('2019-03-09').getTime()
-//         ],
-//         goals: [
-//           {
-//             name: 'Break',
-//             value: new Date('2019-03-07').getTime(),
-//             strokeColor: '#CD2F2A'
-//           }
-//         ]
-//       },
-//     ]
-//   }
-// ]);
+        })
+        branches.value = [...branches.value];
+        forceRerender();
+      } catch (error) {
+        console.error('Error fetching menu types for child branch:', error);
+      }
+    });
+
+    // Wait for all promises to resolve
+    await Promise.all(promises);
+
+    // console.log('All menu types fetched');
+  } else {
+    console.error('Branch not found');
+  }
+};
+
+
+
+
 
 
 
 onMounted(() => {
-  
+
   getBranches();
- 
+
   // getChartMenuType();
 })
 
@@ -355,8 +243,8 @@ onMounted(() => {
           <div class="text-center">Действие блок</div>
         </div>
         <div v-for="branch in branches" :key="branch.id" class="drop-item">
-          <div class="notfold">
-            <div @click="unFold(branch.id)" class="item-name w-4/6">
+          <div class="notfold h-full">
+            <div @click="unFold(branch.id)" class="item-name w-4/6 h-full">
               <i class="fas fa-plus mx-4"></i>
 
               {{ branch.F_NAME }}
@@ -371,7 +259,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <div v-if="branch.fold"   class="unfold">
+          <div v-if="branch.fold" class="unfold">
             <div class="unfold-wrapper" v-for="child in branch.children" :key="child.id">
               <div class="unfold-item">
                 <div class="unfold-name">{{ child.F_NAME }}</div>
@@ -396,15 +284,21 @@ onMounted(() => {
                 </div>
 
               </div>
-                  <div class="menu-chart">
-                      <div class="menu-legends flex justify-center">
-                          <div class="menu mx-2 flex"><div id="first"></div><div class="flex justify-center items-center mx-2">Меню-1</div> </div>
-                          <div class="menu mx-2 flex"><span id="second"></span> <div class="flex justify-center items-center mx-2">Меню-2</div></div>
-                      </div>
-                      <div class="chart">
-                        <CanvasComponent :canvasWidth="1000" :canvasHeight="100" :eventData="eventData"/>
-                      </div>
+              <div class="menu-chart">
+                <div class="menu-legends flex justify-center">
+                  <div class="menu mx-2 flex">
+                    <div id="first"></div>
+                    <div class="flex justify-center items-center mx-2">Меню-1</div>
                   </div>
+                  <div class="menu mx-2 flex"><span id="second"></span>
+                    <div class="flex justify-center items-center mx-2">Меню-2</div>
+                  </div>
+                </div>
+                <div class="chart">
+                  <CanvasComponent :key="componentKey" v-if="branch.fold" class="mx-auto" :canvasWidth="1000"
+                    :canvasHeight="100" :eventData="child.eventData" />
+                </div>
+              </div>
               <div>
               </div>
             </div>
@@ -412,9 +306,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="changer-chart">
-        <!-- <apexchart ref="apexChart" :height="400" :options="options" :series="series"></apexchart> -->
-      </div>
+
     </div>
   </div>
 </template>
@@ -429,13 +321,14 @@ onMounted(() => {
   margin: 0.5rem;
 }
 
-#first{
+#first {
   width: 20px;
   height: 20px;
   border-radius: 100%;
   background-color: blue;
 }
-#second{
+
+#second {
   width: 20px;
   height: 20px;
   border-radius: 100%;
