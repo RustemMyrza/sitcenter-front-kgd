@@ -266,7 +266,7 @@ onMounted(() => {
 
                 <div class="unfold-amount">
                   <select v-model="child.menu" @change="changeMenu(child.F_ID, child.menu)"
-                    :disabled="branch.blocked === 1 || !child.isSwitchable || !child.isAvailable" class="form-select"
+                    :disabled="branch.blocked === 1 || !child.isSwitchable || !child.isAvailable || (child.menu !== 'first' || child.menu !== 'second' )" class="form-select"
                     aria-label="Default select example">
                     <option value="first" :selected="child.menu === 'first'">
                       Автоматическое
@@ -274,7 +274,7 @@ onMounted(() => {
                     <option value="second" :selected="child.menu === 'second'">Меню-2</option>
                   </select>
                 </div>
-                <div class="unfold-name">{{ child.menu }}</div>
+                <div class="unfold-name">{{ child.menu === "first" ? "Автоматический" : "Меню-2" }}</div>
                 <div class="form-switch">
                   <input @change="setBlock(child.F_ID, child.blocked)" class="form-check-input" type="checkbox"
                     role="switch" id="flexSwitchCheckChecked"

@@ -117,7 +117,7 @@ const getValues = async () => {
     maxServTime.value.number = result?.data?.data?.alarm?.data[0]?.count ?? 0;
 
   } catch (err) {
-    alert("Нет билетов")
+    //alert("Нет билетов")
     router.push({ path: "/login", });
     if (err.response && err.response.status === 401) {
       // Handle 401 Unauthorized error here
