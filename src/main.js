@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import './registerServiceWorker'
+
 import './index.css'
 import '@fortawesome/fontawesome-free/js/all'
 import VueApexCharts from "vue3-apexcharts";

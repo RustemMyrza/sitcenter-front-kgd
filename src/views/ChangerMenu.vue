@@ -266,7 +266,7 @@ onMounted(() => {
 
                 <div class="unfold-amount">
                   <select v-model="child.menu" @change="changeMenu(child.F_ID, child.menu)"
-                    :disabled="branch.blocked === 1 || !child.isSwitchable || !child.isAvailable || (child.menu !== 'first' || child.menu !== 'second' )" class="form-select"
+                    :disabled="branch.blocked === 1 || !child.isSwitchable || !child.isAvailable || (child.menu !== 'first' && child.menu !== 'second' )" class="form-select"
                     aria-label="Default select example">
                     <option value="first" :selected="child.menu === 'first'">
                       Автоматическое

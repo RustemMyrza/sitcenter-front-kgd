@@ -5,7 +5,7 @@ import { toggleSidebar, collapsed } from "@/components/sidebar/state";
 import nonPhoto from "@/assets/avatart.jpg";
 
 import axios from "axios";
-import { onMounted,   ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 // import { generatePdf } from '@/utils/pdfUtils.js';
@@ -28,20 +28,25 @@ const OnLogOut = () => {
 };
 
 const getImage = async () => {
-  const result = await axios.get(
-    `http://${host}:${port}/api/v1/users/get-info`,
-    {
-      headers: {
-        bearer: localStorage.getItem("authToken"),
-      },
-    }
-  );
-  // console.log(result.data.user[0].image);
-  if (result.data.user[0].image) {
-    const imgSrc = `http://${host}:${port}/images/` + result.data.user[0].image;
-    localStorage.setItem("image", imgSrc);
-    image.value = imgSrc;
-  } else image.value = nonPhoto;
+  try {
+    const result = await axios.get(
+      `http://${host}:${port}/api/v1/users/get-info`,
+      {
+        headers: {
+          bearer: localStorage.getItem("authToken"),
+        },
+      }
+    );
+    // console.log(result.data.user[0].image);
+    if (result.data.user[0].image) {
+      const imgSrc =
+        `http://${host}:${port}/images/` + result.data.user[0].image;
+      localStorage.setItem("image", imgSrc);
+      image.value = imgSrc;
+    } else image.value = nonPhoto;
+  } catch (err) {
+    console.log(err);
+  }
 };
 const downloadPdf = async () => {
   // try {
@@ -105,16 +110,11 @@ onMounted(() => {
   username.value = localStorage.getItem("login");
   getImage();
   getBranches();
-  
 });
 // onUpdated(()=>{
 //   router.push({ ...router.currentRoute.value, query: {} });
 // })
-
-
-
 </script>
-
 
 <template>
   <div class="header-container flex justify-between items-center">

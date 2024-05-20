@@ -7,89 +7,89 @@ const regionsById = [
   {
     id: "sev-kaz",
     name: "Северо-Казахстанская область",
-    branch_id: 4801,
+    branch_id: 4800,
     zoom: 50,
   },
   {
     id: "akm",
     name: "Акмолинская область",
-    branch_id: 301,
+    branch_id: 300,
   },
   {
     id: "kost",
     name: "Костанайская область",
-    branch_id: 3901,
+    branch_id: 3900,
   },
   {
     id: "pavl",
     name: "Павлодарская область",
-    branch_id: 4501,
+    branch_id: 4500,
   },
   {
     id: "akt",
     name: "Актюбинская область",
-    branch_id: 601,
+    branch_id: 600,
   },
   {
     id: "zap-kaz",
     name: "Западно-Казахстанская область",
-    branch_id: 2701,
+    branch_id: 2700,
   },
   {
     id: "atr",
     name: "Атырауская область",
-    branch_id: 1501,
+    branch_id: 1500,
   },
   {
     id: "man",
     name: "Мангистауская область",
-    branch_id: 4301,
+    branch_id: 4300,
   },
   {
     id: "kyz",
     name: "Кызылординская область",
-    branch_id: 3301,
+    branch_id: 3300,
   },
   {
     id: "uly",
     name: "Улытауская область",
-    branch_id: 7201,
+    branch_id: 7200,
   },
   {
     id: "turk",
     name: "Туркестанская область",
-    branch_id: 5801,
+    branch_id: 5800,
   },
   {
     id: "alm",
     name: "Алматинская область",
-    branch_id: 901,
+    branch_id: 900,
   },
   {
     id: "kar",
     name: "Карагандинская область",
-    branch_id: 3001,
+    branch_id: 3000,
   },
   {
     id: "zham",
     name: "Жамбыльская область",
-    branch_id: 2101,
+    branch_id: 2100,
   },
   {
     id: "zhet",
     name: "Жетысуская область",
-    branch_id: 7001,
+    branch_id: 7000,
   },
 
   {
     id: "vost-kaz",
     name: "Восточно-Казахстанская область",
-    branch_id: 1801,
+    branch_id: 1800,
   },
   {
     id: "abai",
     name: "Абайская область",
-    branch_id: 7101,
+    branch_id: 7100,
   },
 ];
 export default {
@@ -126,14 +126,16 @@ export default {
             },
           }
         );
+
         // console.log(result);
         // this.serverInfo.online = result.data.data.onlineServers;
         // this.serverInfo.total = result.data.data.total;
         this.ticketInfo = result.data.data.tickets;
         this.averageRate = result.data.data.averageRate;
         this.serverList = result.data.data.server_list;
+        console.log(this.serverList)
         // const off = result.data.data.offlineBranches;
-
+        console.log(this.serverList);
         this.serverList.map((e) => {
           e.children.map((child) => {
             if (child.ONN === 1) {
@@ -142,8 +144,11 @@ export default {
             this.serverInfo.total++;
           });
           const region = regionsById.find(
-            (element) => element.branch_id == e.F_ID
+            (element) => element.branch_id === e.F_ID*1
           );
+          
+          
+         
           if (region) {
             const element = document.getElementById(`${region.id}`);
             for (let i = 0; i < e.children.length; i++) {
@@ -153,7 +158,7 @@ export default {
                 element.style.fill = "red";
                 element.querySelector("title").textContent =
                   "Потеряно связь с серверами";
-                break; // Exit the loop when the condition is met
+                // break; // Exit the loop when the condition is met
               } else {
                 element.style.fill = "#6cb9e6";
               }
