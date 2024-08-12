@@ -207,7 +207,7 @@ onMounted(() => {
                 <div class="form-floating">
 
                   <textarea v-model="msg" class="form-control" placeholder="Leave a comment here"
-                    id="floatingTextarea"></textarea>
+                    id="floatingTextarea" maxlength="200"></textarea>
                   <label for="floatingTextarea">Сообщение...</label>
                   <!-- {{ msg }} -->
 
