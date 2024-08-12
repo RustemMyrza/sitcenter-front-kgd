@@ -205,9 +205,9 @@ onMounted(() => {
               ? window.INSERVICE[0].servicename
               : null
               " />
-          <WindowComponent  :table-number="12"
+          <!-- <WindowComponent  :table-number="12"
             :operator-name="'Harlem Shake'" :is-active="true"
-            :in-service="2" :is-client-alarm="false" :client-info="'Taxes and Money'" />
+            :in-service="2" :is-client-alarm="false" :client-info="'Taxes and Money'" /> -->
         </div>
       </div>
     </div>

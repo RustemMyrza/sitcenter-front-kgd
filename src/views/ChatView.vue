@@ -285,6 +285,9 @@ main {
 
           .message {
             position: relative;
+            overflow-wrap: break-word;
+            white-space: normal;
+
 
             .msg-date {
               position: absolute;
