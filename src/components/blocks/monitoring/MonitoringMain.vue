@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref,computed, watch } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 // import { useStore } from "vuex";
 import axios from "axios";
 import { useRoute } from "vue-router";
@@ -89,8 +89,8 @@ const formattedDesserts = computed(() => {
   return desserts.value.map(ticket => {
     return {
       ...ticket,
-      active:ticket.active === true ? "Да" : "Нет",
-      worktitle:ticket.worktitle === "null" ? "Нет" : ticket.worktitle,
+      active: ticket.active === true ? "Да" : "Нет",
+      worktitle: ticket.worktitle === "null" ? "Нет" : ticket.worktitle,
     }
   }).sort((a, b) => {
     return a.starttime - b.starttime;
@@ -106,7 +106,8 @@ const downloadCSV = () => {
         'Id оператора': window.operatorId,
         'Активен': window.active === true ? "Да" : "Нет",
         'Название услуги': window.worktitle,
-        'Ф.И.О': window.name  }
+        'Ф.И.О': window.name
+      }
     });
     // console.log(excel);
     const csvContent = convertToCSV(excel);
@@ -134,16 +135,16 @@ const convertToCSV = (items) => {
 }
 
 watch(() => route.query, () => {
-  if(!route.query.branch_id){
-      childBranches.value = 0;
-      selectedBranch.value = 0;
-      desserts.value = [];
-      windows.value = [];
-      return
-    }
-     childBranches.value = branches.value.find(e=>e.F_ID*1 === route.query.parent_branch*1);
-    selectedBranch.value = route.query.branch_id;
-    getWindows();
+  if (!route.query.branch_id) {
+    childBranches.value = 0;
+    selectedBranch.value = 0;
+    desserts.value = [];
+    windows.value = [];
+    return
+  }
+  childBranches.value = branches.value.find(e => e.F_ID * 1 === route.query.parent_branch * 1);
+  selectedBranch.value = route.query.branch_id;
+  getWindows();
 });
 
 onMounted(() => {
@@ -187,7 +188,7 @@ onMounted(() => {
       </div>
       <div v-if="branches" class="windows">
         <div class="waits">
-          <WaitingComponent v-for="wait in waitClient" :key="wait.id" :waitover="wait.waitover === 'true'"  />
+          <WaitingComponent v-for="wait in waitClient" :key="wait.id" :waitover="wait.waitover === 'true'" />
           <!-- <WaitingComponent :waitover="true" /> -->
           <!-- <WaitingComponent :waitover="true"  /> -->
         </div>
@@ -195,15 +196,18 @@ onMounted(() => {
 
 
 
-         
+
           <!-- <window-component :table-number="10" :is-active="false" :in-service="false" /> -->
 
           <WindowComponent v-for="window in windows" :key="window.id" :table-number="window.winno"
             :operator-name="window.name" :is-active="window.operatorId === 0 ? false : true"
             :in-service="window.INSERVICE.length !== 0" :is-client-alarm="window.INSERVICE[0]?.servover" :client-info="window.INSERVICE.length !== 0
-          ? window.INSERVICE[0].servicename
-          : null
-        " />
+              ? window.INSERVICE[0].servicename
+              : null
+              " />
+          <WindowComponent  :table-number="12"
+            :operator-name="'Harlem Shake'" :is-active="true"
+            :in-service="2" :is-client-alarm="false" :client-info="'Taxes and Money'" />
         </div>
       </div>
     </div>
@@ -216,8 +220,8 @@ onMounted(() => {
             single-line></v-text-field>
         </template>
 
-        <v-data-table :headers="headers" :items="formattedDesserts" :search="search"
-        no-data-text="Нет доступых данных" items-per-page-text="Элементов на странице" ></v-data-table>
+        <v-data-table :headers="headers" :items="formattedDesserts" :search="search" no-data-text="Нет доступых данных"
+          items-per-page-text="Элементов на странице"></v-data-table>
       </v-card>
     </div>
   </div>

@@ -2,8 +2,8 @@
 import { defineProps } from "vue";
 
 import worker from "@/assets/worker.png";
-import table from "@/assets/table.png";
-import table_transparent from "@/assets/table_transparent.png";
+import table from "@/assets/desktop.png";
+import table_transparent from "@/assets/desktop.png";
 import client from "@/assets/client.png";
 
 // const isActive = ref(true);
@@ -66,6 +66,7 @@ const props = defineProps({
   margin: 5rem auto;
   
   font-weight: 700;
+  
 
   .operator {
     position: absolute;
@@ -92,6 +93,7 @@ const props = defineProps({
     top: 25%;
     width: 40%;
     z-index: 1;
+    
     .tableImgInfo .active {
       animation: pulseAnimation 1.5s ease-in-out infinite alternate;
       /* Apply the animation */;

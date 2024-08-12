@@ -109,6 +109,10 @@ const sendMessage = async () => {
   }
 }
 
+// const getImage = ()=>{
+//   return localStorage.getItem("image");
+// }
+
 onMounted(() => {
   getMessages();
   getUsers();
@@ -136,6 +140,9 @@ onMounted(() => {
                   <div class="msg-date  text-sm">
                     {{ message.created_at }}
                   </div>
+                </div>
+                <div class="reply text-3xl cursor-pointer">
+                  <i class="fas fa-reply"></i>
                 </div>
               </div>
 
