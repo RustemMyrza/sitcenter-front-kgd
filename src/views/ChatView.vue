@@ -1,6 +1,8 @@
 <script setup>
 import axios from "axios";
 import { onMounted, ref } from "vue";
+import { API_BASE } from "@/utils/api";
+
 
 const host = process.env.VUE_APP_SERVER_HOST;
 const port = process.env.VUE_APP_SERVER_PORT;
@@ -10,8 +12,8 @@ const pie = ref({
       width: 300,
       type: "pie",
     },
-    labels: [ "Доступно",  "Нет связи","Не используется","Потеряна связь",],
-    colors:["#13ad02","#fc0f03","#ada5a5","#d9e00d"],
+    labels: ["Доступно", "Нет связи", "Не используется", "Потеряна связь",],
+    colors: ["#13ad02", "#fc0f03", "#ada5a5", "#d9e00d"],
     responsive: [
       {
         breakpoint: 480,
@@ -33,6 +35,12 @@ const pie = ref({
 const messages = ref([]);
 const users = ref([]);
 const msg = ref('');
+const reply = ref(false);
+const reply_obj = ref({
+  id:0,
+  message:'',
+  login:''
+})
 
 const getMessages = async () => {
   const result = await axios(`http://${host}:${port}/api/v1/messages`, {
@@ -59,49 +67,61 @@ const getUsers = async () => {
   users.value = result.data.data.users;
   console.log(result.data.data.users);
 }
-const getBranches = async()=>{
+const getBranches = async () => {
   const result = await axios.get(`http://${host}:${port}/api/v1/branches`, {
     headers: {
       bearer: localStorage.getItem("authToken"),
     },
   });
   const branches = result.data.rows;
-  let online=0;
-  let offline=0;
-  branches.map(e=>{
-    e.children.map(child=>{
-      if(child.ONN === 1){
+  let online = 0;
+  let offline = 0;
+  branches.map(e => {
+    e.children.map(child => {
+      if (child.ONN === 1) {
         online++;
       }
       else offline++;
     })
   });
-  pie.value.series = [online,offline,0,0];
+  pie.value.series = [online, offline, 0, 0];
   console.log(pie.value)
   console.log(result);
 }
 
 
 const sendMessage = async () => {
-  if(!msg.value){
+  if (!msg.value) {
     return alert("Заполните поле")
   }
   try {
-     await axios.post(`http://${host}:${port}/api/v1/messages`, {
-      txt: msg.value,
-    }, {
-      headers: {
-        bearer: localStorage.getItem("authToken"),
-      },
-    });
-   
-    const newMessages = {
-      user_login:localStorage.getItem("login"),
-      message_txt:msg.value,
-      created_at:new Date().toLocaleString("RU-ru")
+    if (!reply.value) {
+      await axios.post(`http://${host}:${port}/api/v1/messages`, {
+        txt: msg.value,
+      }, {
+        headers: {
+          bearer: localStorage.getItem("authToken"),
+        },
+      });
     }
-    messages.value.push(newMessages)
-    
+    else {
+      console.log(reply_obj.value)
+      await axios.post(`http://${host}:${port}/api/v1/messages/reply`, {
+        txt: msg.value,
+        reply_id: reply_obj.value.id
+      }, {
+        headers: {
+          bearer: localStorage.getItem("authToken"),
+        },
+      });
+      reply_obj.value.id=0;
+      reply_obj.value.message = "";
+      reply_obj.value.login = "";
+      reply.value = false;
+    }
+
+    await getMessages();
+
     msg.value = "";
     // console.log(result)
   } catch (err) {
@@ -110,8 +130,17 @@ const sendMessage = async () => {
 }
 
 // const getImage = ()=>{
-//   return localStorage.getItem("image");
+//   return messages;
 // }
+
+const replyTheMessage = (login, id, msg) => {
+  // id
+  // console.log("sds")
+  reply.value = true;
+  reply_obj.value.message = msg;
+  reply_obj.value.login = login;
+  reply_obj.value.id = id;
+}
 
 onMounted(() => {
   getMessages();
@@ -127,47 +156,72 @@ onMounted(() => {
         <div class="chat">
           <div class="inner">
             <div class="messages">
+              <div class="my-2" v-for="message in messages" :key="message.id">
+                <div v-if="message.reply" class="reply flex p-2 w-full ">
+                  <div class="reply_login ">
+                    {{ message.reply_login }}
+                  </div>
+                  <div class="reply_body w-full bg-slate-300 rounded-lg text-sm mx-2">
+                    {{ message.reply_msg }}
+                  </div>
 
-              <div v-for="message in messages" :key="message.id" class="message flex shadow-md rounded-xl mx-auto my-3">
-                <div class="userImg m-1 h-full">
-                  <img src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
-                  <div class="login m-2">{{ message.user_login }}</div>
                 </div>
-                <div class="msg p-2 m-1 w-full h-full">
-                  <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">
-                    {{ message.message_txt }}
+                <div class="message flex shadow-md rounded-xl mx-auto ">
+                  <div class="userImg m-1 h-full">
+                    <img v-if="message.user_img" :src='API_BASE + `/images/${message.user_img}`' class="rounded-full"
+                      width="50px" alt="" />
+                    <img v-else src="../assets/avatart.jpg" class="rounded-full" width="50px" alt="" />
+                    <div class="login m-2">{{ message.user_login }}</div>
                   </div>
-                  <div class="msg-date  text-sm">
-                    {{ message.created_at }}
+                  <div class="msg p-2 m-1 w-full h-full">
+                    <div class="msg-body text-left bg-gray-100 rounded-lg p-2 text-sm">
+                      {{ message.message_txt }}
+                    </div>
+                    <div class="msg-date  text-sm">
+                      {{ message.created_at }}
+                    </div>
                   </div>
-                </div>
-                <div class="reply text-3xl cursor-pointer">
-                  <i class="fas fa-reply"></i>
+                  <div @click="replyTheMessage(message.user_login, message.message_id, message.message_txt)"
+                    class="reply text-3xl cursor-pointer">
+                    <i class="fas fa-reply"></i>
+                  </div>
                 </div>
               </div>
 
 
             </div>
-            <div class="send-mess">
+            <div :style="{ marginTop: reply ? '0' : '7%', }" class="send-mess">
+              <div v-if="reply" class="rep p-3 flex w-full">
+                <div class="loginRep">
+                  {{ reply_obj.login }}
+                </div>
+                <div class="msgRep w-full mx-2 rounded-lg bg-slate-200">
+                  {{ reply_obj.message }}
+                </div>
+                <div @click="reply = !reply" class="cancelRep cursor-pointer">
+                  <i class="fas fa-times"></i>
+                </div>
+              </div>
               <div class="input-group">
+
                 <div class="form-floating">
-                 
+
                   <textarea v-model="msg" class="form-control" placeholder="Leave a comment here"
                     id="floatingTextarea"></textarea>
                   <label for="floatingTextarea">Сообщение...</label>
-                    <!-- {{ msg }} -->
-                   
+                  <!-- {{ msg }} -->
+
                 </div>
                 <button @click="sendMessage" class="btn btn-primary">Отправить</button>
-                  
-                
+
+
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="right-chat">
-      
+
         <div class="pieChart ">
           <!-- <h5 class="m-4">Серверы</h5> -->
           <apexchart :height="400" :options="pie.options" :series="pie.series"></apexchart>
@@ -224,7 +278,7 @@ main {
         background-color: white;
 
         .messages {
-          height: 90%;
+          height: 80%;
           width: 100%;
           padding: 0.5rem;
           overflow-y: scroll;
@@ -241,7 +295,7 @@ main {
         }
 
         .send-mess {
-          height: 10%;
+          height: 20%;
           width: 100%;
 
           .input-group {

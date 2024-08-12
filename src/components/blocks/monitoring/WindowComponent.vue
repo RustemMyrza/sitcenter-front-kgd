@@ -89,8 +89,8 @@ const props = defineProps({
 
   .tableImg {
     position: absolute;
-    left: 25%;
-    top: 25%;
+    left: 28%;
+    top: 30%;
     width: 40%;
     z-index: 1;
     
