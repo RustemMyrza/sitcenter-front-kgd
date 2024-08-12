@@ -155,7 +155,7 @@ onMounted(() => {
       <div class="chat-left">
         <div class="chat">
           <div class="inner">
-            <div class="messages">
+            <div class="messages" :style="{ height: reply ? '80%' : '90%', }">
               <div class="my-2" v-for="message in messages" :key="message.id">
                 <div v-if="message.reply" class="reply flex p-2 w-full ">
                   <div class="reply_login ">
@@ -190,7 +190,7 @@ onMounted(() => {
 
 
             </div>
-            <div :style="{ marginTop: reply ? '0' : '7%', }" class="send-mess">
+            <div  class="send-mess">
               <div v-if="reply" class="rep p-3 flex w-full">
                 <div class="loginRep">
                   {{ reply_obj.login }}
