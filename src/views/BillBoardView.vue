@@ -43,6 +43,9 @@ export default {
             if (this.boardObject.title === "" || this.boardObject.board_body === "") {
                 return alert("Некоторые поля остались пустыми");
             }
+            if(this.list.length===15){
+                return alert("Нельзя создать больше объявлений");
+            }
             try {
                 const result = await createBoard(this.boardObject);
 
@@ -157,7 +160,7 @@ export default {
                             <div class="body-input">
                                 <label for="body">Текст</label>
                                 <textarea v-model="boardObject.board_body" placeholder="Текст" name="body" id=""
-                                    cols="20" rows="10" required></textarea>
+                                    cols="20" rows="10" maxlength="200" required></textarea>
                             </div>
                             <input v-model="boardObject.valid_to" type="date" required />
                         </div>
@@ -330,6 +333,9 @@ export default {
                         font-weight: bold;
                     }
                 }
+            }
+            .board-text{
+                overflow-wrap: break-word;
             }
         }
     }
