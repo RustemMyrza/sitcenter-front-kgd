@@ -59,6 +59,7 @@ const getBranches = async () => {
 };
 
 const getWindows = async () => {
+  info.value = 0;
   try {
     const result = await axios.get(
       `http://${host}:${port}/api/v1/windows/${selectedBranch.value}`,
