@@ -59,7 +59,7 @@ const getBranches = async () => {
 };
 
 const getWindows = async () => {
-  info.value = 0;
+  info.value.online = 0;
   try {
     const result = await axios.get(
       `http://${host}:${port}/api/v1/windows/${selectedBranch.value}`,
@@ -71,7 +71,10 @@ const getWindows = async () => {
     );
     // console.log(result.data);
     desserts.value = result.data.windows;
+    // console.log(desserts.value)
+    // console.log( result.data.INSERVICE)
     info.value.inservice = result.data.INSERVICE;
+    
     info.value.wait = result.data.NEW.length;
     windows.value = result.data.windows;
     waitClient.value = result.data.NEW;
