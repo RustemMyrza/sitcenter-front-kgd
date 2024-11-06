@@ -36,7 +36,7 @@ export default {
      <SidebarLink to="/tickets" icon="fas fa-ticket-alt">Билеты</SidebarLink>
       <span class="divider"></span>
      <SidebarLink to="/chat" icon="fas fa-comments">Чат</SidebarLink>
-     <!-- <SidebarLink to="/users" icon="fas fa-user-tie">Пользователи</SidebarLink> -->
+     <SidebarLink to="/users" icon="fas fa-user-tie">Пользователи</SidebarLink>
      <!-- <span class="divider"></span> -->
      <SidebarLink to="/server" icon="fas fa-server">Серверы</SidebarLink>
      <SidebarLink to="/changer" icon="fas fa-toggle-on" >Переключение режимов</SidebarLink>
