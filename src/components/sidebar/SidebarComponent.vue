@@ -7,7 +7,14 @@ export default {
   components: { SidebarLink },
   setup() {
     return { collapsed, toggleSidebar, sidebarWidth }
+  },
+  methods:{
+    isAdmin(){
+    const role = localStorage.getItem("role")*1;
+    return role===0?true:false;
   }
+  }
+ 
 }
 </script>
 
@@ -36,7 +43,7 @@ export default {
      <SidebarLink to="/tickets" icon="fas fa-ticket-alt">Билеты</SidebarLink>
       <span class="divider"></span>
      <SidebarLink to="/chat" icon="fas fa-comments">Чат</SidebarLink>
-     <SidebarLink to="/users" icon="fas fa-user-tie">Пользователи</SidebarLink>
+     <SidebarLink v-if="isAdmin()" to="/users" icon="fas fa-user-tie">Пользователи</SidebarLink>
      <!-- <span class="divider"></span> -->
      <SidebarLink to="/server" icon="fas fa-server">Серверы</SidebarLink>
      <SidebarLink to="/changer" icon="fas fa-toggle-on" >Переключение режимов</SidebarLink>
