@@ -10,7 +10,7 @@ import { deleteUser, createUser, } from "@/utils/user";
 const search = ref("");
 const headers = ref([
     { key: "action", title: "Действия", align: "center", sortable: false, },
-    { key: "update", title: "Изменить", align: "center", sortable: false, },
+    // { key: "update", title: "Изменить", align: "center", sortable: false, },
     { align: "center", key: "login", title: "Имя пользователя", },
     { key: "password", title: "Пароль", align: "center" },
     { key: "firstname", title: "Имя", align: "center" },
